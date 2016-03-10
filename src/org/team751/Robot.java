@@ -46,35 +46,35 @@ public class Robot extends IterativeRobot {
         // instantiate the command used for the autonomous period
         autonomousCommand = new Autonomous();
                 
-        motorControlServer = new MotorControlUDP(new MotorPacketResponder() {
-			@Override
-			public void setMotorSpeed(int idx, double speed) {
-				Robot.drivetrain.isDrivingAutonomously = Math.abs(speed) -.01 >= 0;
-				if (!Robot.drivetrain.isDrivingAutonomously) return;
-				switch (idx) {
-				case 0:
-					Robot.drivetrain.setLeftSpeed(-speed);
-					break;
-				case 1:
-					Robot.drivetrain.setRightSpeed(speed);
-					break;
-				case 2:
-					Robot.intake.intakeController.set(speed);
-				default:
-					break;
-				}
-			}
-		}, 9000);
+//        motorControlServer = new MotorControlUDP(new MotorPacketResponder() {
+//			@Override
+//			public void setMotorSpeed(int idx, double speed) {
+//				Robot.drivetrain.isDrivingAutonomously = Math.abs(speed) -.01 >= 0;
+////				if (!Robot.drivetrain.isDrivingAutonomously) return;
+//				switch (idx) {
+//				case 0:
+//					Robot.drivetrain.setLeftSpeed(-speed);
+//					break;
+//				case 1:
+//					Robot.drivetrain.setRightSpeed(speed);
+//					break;
+//				case 2:
+//					Robot.intake.intakeController.set(speed);
+//				default:
+//					break;
+//				}
+//			}
+//		}, 9000);
         
-        Thread motorControlThread = new Thread(motorControlServer);
-        motorControlThread.start();
-        
-        try {
-			stateSenderUDP = new StateSenderUDP("10.7.51.76", 6000);
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//        Thread motorControlThread = new Thread(motorControlServer);
+//        motorControlThread.start();
+//        
+//        try {
+//			stateSenderUDP = new StateSenderUDP("10.7.51.76", 6000);
+//		} catch (UnknownHostException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
         
     }
 	
@@ -83,12 +83,12 @@ public class Robot extends IterativeRobot {
         SmartDashboard.putNumber("leftEncoder", Robot.drivetrain.leftEncoder.getDistance());
         SmartDashboard.putNumber("rightEncoder", -Robot.drivetrain.rightEncoder.getDistance());
         
-        try {
-			stateSenderUDP.sendState(RobotState.DISABLED, 0);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//        try {
+//			stateSenderUDP.sendState(RobotState.DISABLED, 0);
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 	}
 
     public void autonomousInit() {
@@ -127,12 +127,12 @@ public class Robot extends IterativeRobot {
         SmartDashboard.putNumber("leftEncoder", Robot.drivetrain.leftEncoder.getDistance());
         SmartDashboard.putNumber("rightEncoder", -Robot.drivetrain.rightEncoder.getDistance() * 2);
         
-        try {
-			stateSenderUDP.sendState(RobotState.TELEOP, 0);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//        try {
+//			stateSenderUDP.sendState(RobotState.TELEOP, 0);
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
     }
     
     /**
