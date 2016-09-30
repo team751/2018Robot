@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.command.Command;
  *
  */
 public class JoystickDrive extends Command {
+	private static final double SENSITIVITY_THRESHOLD = 0.1;
 	CheesyDrive cheesyDrive = new CheesyDrive();
 	
     public JoystickDrive() {
@@ -28,10 +29,14 @@ public class JoystickDrive extends Command {
     	double y = Robot.oi.driverStick.getRawAxis(5);
     	boolean quickTurn = !Robot.oi.driverStick.getRawButton(2);
     	
-    	MotorOutputs output = cheesyDrive.cheesyDrive(-y, x, quickTurn);
+    	// prevent tiny movements on joystick from causing drive to freak out
+    	if(x > JoystickDrive.SENSITIVITY_THRESHOLD || y > JoystickDrive.SENSITIVITY_THRESHOLD || quickTurn){
     	
-    	Robot.drivetrain.setLeftSpeed(-output.left);
-    	Robot.drivetrain.setRightSpeed(output.right);
+    		MotorOutputs output = cheesyDrive.cheesyDrive(-y, x, quickTurn);
+    	
+    		Robot.drivetrain.setLeftSpeed(-output.left);
+    		Robot.drivetrain.setRightSpeed(output.right);
+    	}
     }
 
     // Make this return true when this Command no longer needs to run execute()
