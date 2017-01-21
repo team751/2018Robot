@@ -1,6 +1,8 @@
 package org.team751;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.buttons.Button;
+import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -8,6 +10,7 @@ import edu.wpi.first.wpilibj.Joystick;
  */
 public class OI {
 	public Joystick driverStick = new Joystick(0);
+	public Button autoButton = new JoystickButton(driverStick, 0);
 	public Joystick operatorStick = new Joystick(1);
 	
     //// CREATING BUTTONS

@@ -7,11 +7,11 @@ import edu.wpi.first.wpilibj.command.Command;
 /**
  *
  */
-public class ArmController extends Command {
+public class WinchController extends Command {
 
-    public ArmController() {
+    public WinchController() {
         // Use requires() here to declare subsystem dependencies
-        requires(Robot.arms);
+        requires(Robot.winch);
     }
 
     // Called just before this Command runs the first time
@@ -20,7 +20,18 @@ public class ArmController extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	Robot.arms.armsController.set(Robot.oi.driverStick.getY() * .9);
+    	final boolean up = Robot.oi.driverStick.getRawButton(1);
+    	final boolean down = Robot.oi.driverStick.getRawButton(2);
+    	
+    	if(up ^ down){
+    		// one of them is pressed, go in direction
+    		if(up){
+    			Robot.winch.forward();
+    		}
+    		if(down){
+    			Robot.winch.reverse();
+    		}
+    	}
     }
 
     // Make this return true when this Command no longer needs to run execute()
@@ -30,7 +41,6 @@ public class ArmController extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
-    	Robot.arms.armsController.set(0);
     }
 
     // Called when another command which requires one or more of the same

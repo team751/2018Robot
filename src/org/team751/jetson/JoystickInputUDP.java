@@ -1,24 +1,15 @@
-package org.team751.ros;
+package org.team751.jetson;
 
 import java.io.IOException;
 import java.net.*;
 
-public class MotorControlUDP implements Runnable {
+public class JoystickInputUDP implements Runnable {
 	private boolean isRunning = true;
-	private MotorPacketResponder responder;
 	private final int port;
+	private double x, y; // axes of operation
 	
-	public static interface MotorPacketResponder {
-		public void setMotorSpeed(int idx, double speed);
-	}
-	
-	public MotorControlUDP(MotorPacketResponder responder) {
-		this(responder, 9999);
-	}
-	
-	public MotorControlUDP(MotorPacketResponder motorPacketResponder, int port) {
+	public JoystickInputUDP(int port) {
 		this.port = port;
-		this.responder = motorPacketResponder;
 	}
 	
 	@Override
@@ -43,31 +34,31 @@ public class MotorControlUDP implements Runnable {
 			}
 
             String modifiedSentence = new String(receivePacket.getData(), receivePacket.getOffset(), receivePacket.getLength());
+            // form: [x, y]
             
             if (modifiedSentence.length() <= 0 || modifiedSentence.charAt(0) != '[' || modifiedSentence.charAt(modifiedSentence.length() - 1) != ']') {
                 System.err.println("Malformed data packet: " + modifiedSentence);
                 continue;
             }
-
-            String dividedString[] = modifiedSentence.replaceAll("\\[", "").replaceAll("\\]","").split(",");
-
-            for (int i = 0; i < dividedString.length; i++) {
-                String speedString = dividedString[i];
-
-                if (speedString.equals("null")) setMotorSpeed(i, 0);
-                else setMotorSpeed(i, Double.parseDouble(speedString));
-            }
+            
+            String dividedString[] = modifiedSentence.replaceAll("\\[", "").replaceAll("\\]","").split(","); // "[x, y]" -> "x", " y"
+            
+            // synchronization issue with getters?
+            this.x = Double.parseDouble(dividedString[0]);
+            this.y = Double.parseDouble(dividedString[1]);
         }
-
         clientSocket.close();	
 	}
 	
+	public double getX() {
+		return x;
+	}
+
+	public double getY() {
+		return y;
+	}
+
 	public void stop() {
 		this.isRunning = false;
 	}
-	
-	private void setMotorSpeed(int id, double speed) {
-		responder.setMotorSpeed(id, speed);
-	}
-
 }

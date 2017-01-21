@@ -1,23 +1,20 @@
 
 package org.team751;
 
-import java.io.IOException;
 import java.net.UnknownHostException;
+
+import org.team751.commands.Autonomous;
+import org.team751.commands.GearPlacement;
+import org.team751.jetson.JoystickInputUDP;
+import org.team751.jetson.StateSenderUDP;
+import org.team751.subsystems.Drivetrain;
+import org.team751.subsystems.Winch;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
-import org.team751.commands.Autonomous;
-import org.team751.ros.MotorControlUDP;
-import org.team751.ros.RobotState;
-import org.team751.ros.StateSenderUDP;
-import org.team751.ros.MotorControlUDP.MotorPacketResponder;
-import org.team751.subsystems.Arms;
-import org.team751.subsystems.Drivetrain;
-import org.team751.subsystems.Intake;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -28,11 +25,10 @@ import org.team751.subsystems.Intake;
  */
 public class Robot extends IterativeRobot {
 	public static final Drivetrain drivetrain = new Drivetrain();
-	public static final Intake intake = new Intake();
-	public static final Arms arms = new Arms();
+	public static final Winch winch = new Winch();
 	public static OI oi;
 	
-	public static MotorControlUDP motorControlServer;
+	public static JoystickInputUDP autonomousJoystickSimulator;
 	public static StateSenderUDP stateSenderUDP;
 
     Command autonomousCommand;
@@ -43,38 +39,18 @@ public class Robot extends IterativeRobot {
      */
     public void robotInit() {
 		oi = new OI();
+		oi.autoButton.whenPressed(new GearPlacement());
         // instantiate the command used for the autonomous period
-        autonomousCommand = new Autonomous();
-                
-//        motorControlServer = new MotorControlUDP(new MotorPacketResponder() {
-//			@Override
-//			public void setMotorSpeed(int idx, double speed) {
-//				Robot.drivetrain.isDrivingAutonomously = Math.abs(speed) -.01 >= 0;
-////				if (!Robot.drivetrain.isDrivingAutonomously) return;
-//				switch (idx) {
-//				case 0:
-//					Robot.drivetrain.setLeftSpeed(-speed);
-//					break;
-//				case 1:
-//					Robot.drivetrain.setRightSpeed(speed);
-//					break;
-//				case 2:
-//					Robot.intake.intakeController.set(speed);
-//				default:
-//					break;
-//				}
-//			}
-//		}, 9000);
+        autonomousCommand = new Autonomous();        
+        Thread motorControlThread = new Thread(autonomousJoystickSimulator);
+        motorControlThread.start();
         
-//        Thread motorControlThread = new Thread(motorControlServer);
-//        motorControlThread.start();
-//        
-//        try {
-//			stateSenderUDP = new StateSenderUDP("10.7.51.76", 6000);
-//		} catch (UnknownHostException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+        try {
+			stateSenderUDP = new StateSenderUDP("10.7.51.76", 6000);
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         
     }
 	
