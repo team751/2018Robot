@@ -41,9 +41,11 @@ public class Robot extends IterativeRobot {
 		oi = new OI();
 		oi.autoButton.whenPressed(new GearPlacement());
         // instantiate the command used for the autonomous period
-        autonomousCommand = new Autonomous();        
+        autonomousCommand = new Autonomous();    
         Thread motorControlThread = new Thread(autonomousJoystickSimulator);
         motorControlThread.start();
+        
+        Thread imuThread = new Thread();
         
         try {
 			stateSenderUDP = new StateSenderUDP("10.7.51.76", 6000);
