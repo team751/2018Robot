@@ -10,8 +10,10 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
  */
 public class OI {
 	public Joystick driverStick = new Joystick(0);
-	public Button autoButton = new JoystickButton(driverStick, 0);
+	public Button autoButton = new JoystickButton(driverStick, 1); // x button, 
 	public Joystick operatorStick = new Joystick(1);
+	
+	// XBOX controller button mappings found here: https://gist.github.com/calebreister/8018231
 	
     //// CREATING BUTTONS
     // One type of button is a joystick button which is any button on a joystick.
