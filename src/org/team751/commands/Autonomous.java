@@ -9,10 +9,6 @@ import edu.wpi.first.wpilibj.command.Command;
  *
  */
 public class Autonomous extends Command {
-	private static double timeToDrive = 3;
-	private static double speed = 0.5;
-	
-	Timer timer = new Timer();
 	
     public Autonomous() {
         // Use requires() here to declare subsystem dependencies
@@ -21,24 +17,21 @@ public class Autonomous extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	timer.start();
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	Robot.drivetrain.setLeftSpeed(-speed);
-    	Robot.drivetrain.setRightSpeed(speed);
+    	Robot.drivetrain.setRPMOnJoystick(0, 1.0); // full speed ahead!
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return timer.get() >= timeToDrive;
+    	return false;
     }
 
     // Called once after isFinished returns true
     protected void end() {
-    	Robot.drivetrain.setLeftSpeed(0);
-    	Robot.drivetrain.setRightSpeed(0);
+    	Robot.drivetrain.setRPMOnJoystick(0, 0);
     }
 
     // Called when another command which requires one or more of the same

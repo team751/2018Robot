@@ -32,13 +32,13 @@ public class StateSenderUDP {
 		this.port = port;
 	}
 	
-	public void sendState(RobotState state) throws IOException{
+	public void sendEncoderData() throws IOException{
 		DatagramSocket serverSocket = new DatagramSocket(port);
 		InetAddress IPAddress = ipAddress;
 		
         StringBuilder messageString = new StringBuilder("[");
-        messageString.append(Robot.drivetrain.leftEncoder.get() + ",");
-        messageString.append(Robot.drivetrain.rightEncoder.get() + "]");
+        messageString.append(Robot.drivetrain.left.leftEncoder.get() + ",");
+        messageString.append(Robot.drivetrain.right.rightEncoder.get() + "]");
         byte[] sendData = messageString.toString().getBytes();
         
         DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, port);

@@ -58,19 +58,10 @@ public class Robot extends IterativeRobot {
 	
 	public void disabledPeriodic() {
 		Scheduler.getInstance().run();
-        SmartDashboard.putNumber("leftEncoder", Robot.drivetrain.leftEncoder.getDistance());
-        SmartDashboard.putNumber("rightEncoder", -Robot.drivetrain.rightEncoder.getDistance());
-        
-//        try {
-//			stateSenderUDP.sendState(RobotState.DISABLED, 0);
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+        updateDashboard();
 	}
 
-    public void autonomousInit() {
-        // schedule the autonomous command (example)
+	public void autonomousInit() {
         if (autonomousCommand != null) autonomousCommand.start();
     }
 
@@ -82,10 +73,6 @@ public class Robot extends IterativeRobot {
     }
 
     public void teleopInit() {
-		// This makes sure that the autonomous stops running when
-        // teleop starts running. If you want the autonomous to 
-        // continue until interrupted by another command, remove
-        // this line or comment it out.
         if (autonomousCommand != null) autonomousCommand.cancel();
     }
 
@@ -101,16 +88,6 @@ public class Robot extends IterativeRobot {
      */
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
-        
-        SmartDashboard.putNumber("leftEncoder", Robot.drivetrain.leftEncoder.getDistance());
-        SmartDashboard.putNumber("rightEncoder", -Robot.drivetrain.rightEncoder.getDistance() * 2);
-        
-//        try {
-//			stateSenderUDP.sendState(RobotState.TELEOP, 0);
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
     }
     
     /**
@@ -119,4 +96,9 @@ public class Robot extends IterativeRobot {
     public void testPeriodic() {
         LiveWindow.run();
     }
+
+	private void updateDashboard() {
+		SmartDashboard.putNumber("leftEncoder", Robot.drivetrain.left.leftEncoder.getRate());
+	    SmartDashboard.putNumber("rightEncoder", Robot.drivetrain.right.rightEncoder.getRate());
+	}
 }
