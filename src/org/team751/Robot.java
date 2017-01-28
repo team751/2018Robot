@@ -45,8 +45,6 @@ public class Robot extends IterativeRobot {
         Thread motorControlThread = new Thread(autonomousJoystickSimulator);
         motorControlThread.start();
         
-        Thread imuThread = new Thread();
-        
         try {
 			stateSenderUDP = new StateSenderUDP("10.7.51.76", 6000);
 		} catch (UnknownHostException e) {
