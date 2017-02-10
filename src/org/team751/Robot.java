@@ -5,9 +5,11 @@ import java.net.UnknownHostException;
 
 import org.team751.commands.Autonomous;
 import org.team751.commands.GearPlacement;
+import org.team751.commands.LightToggle;
 import org.team751.jetson.JoystickInputUDP;
 import org.team751.jetson.StateSenderUDP;
 import org.team751.subsystems.Drivetrain;
+import org.team751.subsystems.Light;
 import org.team751.subsystems.Winch;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -26,6 +28,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends IterativeRobot {
 	public static final Drivetrain drivetrain = new Drivetrain();
 	public static final Winch winch = new Winch();
+	public static final Light cameraLight = new Light();
 	public static OI oi;
 	
 	public static JoystickInputUDP autonomousJoystickSimulator;
@@ -40,11 +43,13 @@ public class Robot extends IterativeRobot {
     public void robotInit() {
 		oi = new OI();
 		oi.autoButton.whenPressed(new GearPlacement());
+		oi.lightButton.whenPressed(new LightToggle());
         // instantiate the command used for the autonomous period
         autonomousCommand = new Autonomous();    
+        autonomousJoystickSimulator = new JoystickInputUDP(6001);
         Thread motorControlThread = new Thread(autonomousJoystickSimulator);
         motorControlThread.start();
-        
+                
         try {
 			stateSenderUDP = new StateSenderUDP("10.7.51.76", 6000);
 		} catch (UnknownHostException e) {
