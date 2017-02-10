@@ -18,8 +18,9 @@ public class Drivetrain extends Subsystem {
     public VictorSP rightDriveController2 = new VictorSP(4);
     public VictorSP rightDriveController3 = new VictorSP(5);
     
-    public Encoder leftEncoder = new Encoder(0, 1);
-    public Encoder rightEncoder = new Encoder(2, 3);
+    
+    public Encoder leftEncoder = new Encoder(0, 1, false, Encoder.EncodingType.k4X); //not sure about the encoding type yet
+    public Encoder rightEncoder = new Encoder(2, 3, false, Encoder.EncodingType.k4X);
     
     public boolean isDrivingAutonomously;
     
@@ -31,10 +32,11 @@ public class Drivetrain extends Subsystem {
         setDefaultCommand(new JoystickDrive());
     }
     
+    //motors are assembled in opposite directions
     public void setLeftSpeed(double speed) {
-    	leftDriveController1.set(speed);
-    	leftDriveController2.set(speed);
-    	leftDriveController3.set(speed);
+    	leftDriveController1.set(-speed);
+    	leftDriveController2.set(-speed);
+    	leftDriveController3.set(-speed);
     }
     
     public void setRightSpeed(double speed) {
