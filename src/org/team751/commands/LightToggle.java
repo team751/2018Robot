@@ -9,13 +9,14 @@ public class LightToggle extends Command {
 	
 	@Override
 	protected void initialize() {
-		super.initialize();
 		requires(Robot.cameraLight);
+		super.initialize();
 	}
 	
 	@Override
 	protected void execute() {
 		super.execute();
+		System.out.println("Light is now " + !isOn);
 		if(isOn){
 			Robot.cameraLight.off();
 			isOn = false;

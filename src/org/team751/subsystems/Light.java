@@ -15,10 +15,12 @@ public class Light extends Subsystem {
 	}
 	
 	public void on(){
+		System.out.println("on");
 		lightSpike.setDirection(Direction.kForward);
 	}
 	
 	public void off(){
+		System.out.println("off");
 		lightSpike.setDirection(Direction.kReverse);
 	}
 	
