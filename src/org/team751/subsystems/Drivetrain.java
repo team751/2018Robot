@@ -45,7 +45,6 @@ public class Drivetrain extends Subsystem {
      * 					   -
      */
     
-    
     public void setRPMOnJoystick(double x, double y){
     	// do normal first
     	// do initialization to vertical movement
