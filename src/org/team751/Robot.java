@@ -5,11 +5,9 @@ import java.net.UnknownHostException;
 
 import org.team751.commands.Autonomous;
 import org.team751.commands.GearPlacement;
-import org.team751.commands.LightToggle;
 import org.team751.jetson.JoystickInputUDP;
 import org.team751.jetson.StateSenderUDP;
 import org.team751.subsystems.Drivetrain;
-import org.team751.subsystems.Light;
 import org.team751.subsystems.Winch;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -28,7 +26,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends IterativeRobot {
 	public static final Drivetrain drivetrain = new Drivetrain();
 	public static final Winch winch = new Winch();
-	public static final Light cameraLight = new Light();
 	public static OI oi;
 	
 	public static JoystickInputUDP autonomousJoystickSimulator;
@@ -36,13 +33,6 @@ public class Robot extends IterativeRobot {
 
     Command autonomousCommand;
 
-		/*Encoder Distance Constants*/
-        public static final double wheelDiameter = 6.25; //wheel 6 plus something around it
-        public static final double pulsePerRevolution = 360; //not certain if this is right
-//      public static final double encoderGearRatio = 3; //not sure what this is
-//      public static final double gearRatio = 64.0/20.0;
-//      public static final double Fudgefactor = 1.0;
-	final double distancePerPulse = Math.PI * wheelDiameter / pulsePerRevolution;
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
@@ -50,18 +40,13 @@ public class Robot extends IterativeRobot {
     public void robotInit() {
 		oi = new OI();
 		oi.autoButton.whenPressed(new GearPlacement());
-		oi.lightButton.whenPressed(new LightToggle());
-	    
-	// set distancePerpulse for the encoders
-		drivetrain.left.leftEncoder.setDistancePerPulse(distancePerPulse);
-		drivetrain.right.rightEncoder.setDistancePerPulse(distancePerPulse);
-	    
         // instantiate the command used for the autonomous period
         autonomousCommand = new Autonomous();    
-        autonomousJoystickSimulator = new JoystickInputUDP(6001);
         Thread motorControlThread = new Thread(autonomousJoystickSimulator);
         motorControlThread.start();
-                
+        
+        Thread imuThread = new Thread();
+        
         try {
 			stateSenderUDP = new StateSenderUDP("10.7.51.76", 6000);
 		} catch (UnknownHostException e) {
@@ -73,10 +58,19 @@ public class Robot extends IterativeRobot {
 	
 	public void disabledPeriodic() {
 		Scheduler.getInstance().run();
-        updateDashboard();
+        SmartDashboard.putNumber("leftEncoder", Robot.drivetrain.leftEncoder.getDistance());
+        SmartDashboard.putNumber("rightEncoder", -Robot.drivetrain.rightEncoder.getDistance());
+        
+//        try {
+//			stateSenderUDP.sendState(RobotState.DISABLED, 0);
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 	}
 
-	public void autonomousInit() {
+    public void autonomousInit() {
+        // schedule the autonomous command (example)
         if (autonomousCommand != null) autonomousCommand.start();
     }
 
@@ -88,6 +82,10 @@ public class Robot extends IterativeRobot {
     }
 
     public void teleopInit() {
+		// This makes sure that the autonomous stops running when
+        // teleop starts running. If you want the autonomous to 
+        // continue until interrupted by another command, remove
+        // this line or comment it out.
         if (autonomousCommand != null) autonomousCommand.cancel();
     }
 
@@ -103,6 +101,16 @@ public class Robot extends IterativeRobot {
      */
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
+        
+        SmartDashboard.putNumber("leftEncoder", Robot.drivetrain.leftEncoder.getDistance());
+        SmartDashboard.putNumber("rightEncoder", -Robot.drivetrain.rightEncoder.getDistance() * 2);
+        
+//        try {
+//			stateSenderUDP.sendState(RobotState.TELEOP, 0);
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
     }
     
     /**
@@ -111,9 +119,4 @@ public class Robot extends IterativeRobot {
     public void testPeriodic() {
         LiveWindow.run();
     }
-
-	private void updateDashboard() {
-		SmartDashboard.putNumber("leftEncoder", Robot.drivetrain.left.leftEncoder.getRate());
-	    SmartDashboard.putNumber("rightEncoder", Robot.drivetrain.right.rightEncoder.getRate());
-	}
 }
