@@ -10,13 +10,13 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  *
  */
 public class Drivetrain extends Subsystem {
-    public VictorSP leftDriveController1 = new VictorSP(0);
-    public VictorSP leftDriveController2 = new VictorSP(1);
-    public VictorSP leftDriveController3 = new VictorSP(2);
+    public VictorSP leftDriveController1 = new VictorSP(1);
+    public VictorSP leftDriveController2 = new VictorSP(3);
+    public VictorSP leftDriveController3 = new VictorSP(5);
     
-    public VictorSP rightDriveController1 = new VictorSP(3);
-    public VictorSP rightDriveController2 = new VictorSP(4);
-    public VictorSP rightDriveController3 = new VictorSP(5);
+    public VictorSP rightDriveController1 = new VictorSP(0);
+    public VictorSP rightDriveController2 = new VictorSP(2);
+    public VictorSP rightDriveController3 = new VictorSP(4);
     
     public Encoder leftEncoder = new Encoder(0, 1);
     public Encoder rightEncoder = new Encoder(2, 3);

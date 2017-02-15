@@ -3,13 +3,14 @@ package org.team751.subsystems;
 import org.team751.commands.WinchController;
 
 import edu.wpi.first.wpilibj.Relay;
+import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
  *
  */
 public class Winch extends Subsystem {
-	public Relay winchHBridgeController = new Relay(1);
+	public VictorSP winchMotorController = new VictorSP(6);
 		
     // Put methods for controlling this subsystem
     // here. Call these from Commands.
@@ -21,15 +22,15 @@ public class Winch extends Subsystem {
     
     public void forward() {
     	System.out.println("intake");
-    	winchHBridgeController.set(Relay.Value.kForward);
+    	winchMotorController.set(1.0);
     }
     
     public void disable() {
-    	winchHBridgeController.set(Relay.Value.kOff);
+    	winchMotorController.set(0.0);
     }
     
     public void reverse() {
-    	winchHBridgeController.set(Relay.Value.kReverse);
+    	winchMotorController.set(-1.0);
     }
 }
 
