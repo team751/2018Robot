@@ -29,8 +29,9 @@ public class Winch extends Subsystem {
     	winchMotorController.set(0.0);
     }
     
-    public void reverse() {
-    	winchMotorController.set(-1.0);
-    }
+//    We don't need reverse
+//    public void reverse() {
+//    	winchMotorController.set(-1.0);
+//    }
 }
 

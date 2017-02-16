@@ -27,7 +27,7 @@ public class JoystickDrive extends Command {
     	if (Robot.drivetrain.isDrivingAutonomously) return;
     	double x = -Robot.oi.driverStick.getRawAxis(4) * .5;
     	double y = Robot.oi.driverStick.getRawAxis(5);
-    	boolean quickTurn = !Robot.oi.driverStick.getRawButton(2);
+    	boolean quickTurn = false;
     	
     	// prevent tiny movements on joystick from causing drive to freak out
     	if(x > JoystickDrive.SENSITIVITY_THRESHOLD || y > JoystickDrive.SENSITIVITY_THRESHOLD || quickTurn){

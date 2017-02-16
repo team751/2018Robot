@@ -21,16 +21,16 @@ public class WinchController extends Command {
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     	final boolean up = Robot.oi.driverStick.getRawButton(1);
-    	final boolean down = Robot.oi.driverStick.getRawButton(2);
+//    	final boolean down = Robot.oi.driverStick.getRawButton(2);
     	
-    	if(up ^ down){
-    		// one of them is pressed, go in direction
-    		if(up){
+    	if(up){
     			Robot.winch.forward();
-    		}
-    		if(down){
-    			Robot.winch.reverse();
-    		}
+		}
+//    		if(down){
+//    			Robot.winch.reverse();
+//    		}
+    	else if(!up){
+    		Robot.winch.disable();
     	}
     }
 
