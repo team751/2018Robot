@@ -26,8 +26,11 @@ public class Autonomous extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	Robot.drivetrain.setLeftSpeed(-speed);
-    	Robot.drivetrain.setRightSpeed(speed);
+//    	if(timer.get() < 3){
+//    		Robot.drivetrain.setLeftSpeed(-speed);
+//    		Robot.drivetrain.setRightSpeed(speed);
+//    	}
+    	
     }
 
     // Make this return true when this Command no longer needs to run execute()
