@@ -27,16 +27,22 @@ public class JoystickDrive extends Command {
     	if (Robot.drivetrain.isDrivingAutonomously) return;
     	double x = -Robot.oi.driverStick.getRawAxis(4) * .5;
     	double y = Robot.oi.driverStick.getRawAxis(5);
-    	boolean quickTurn = false;
+    	boolean quickTurn = true;
+    	
+    	System.out.println("x: " + x + ", y: " + y);
     	
     	// prevent tiny movements on joystick from causing drive to freak out
-    	if(x > JoystickDrive.SENSITIVITY_THRESHOLD || y > JoystickDrive.SENSITIVITY_THRESHOLD || quickTurn){
+    	//if(x > JoystickDrive.SENSITIVITY_THRESHOLD || y > JoystickDrive.SENSITIVITY_THRESHOLD || quickTurn){
     	
     		MotorOutputs output = cheesyDrive.cheesyDrive(-y, x, quickTurn);
-    	
+    	System.out.println("left: " + -output.left + ", right: " + output.right);
     		Robot.drivetrain.setLeftSpeed(-output.left);
     		Robot.drivetrain.setRightSpeed(output.right);
-    	}
+    	//}
+    	//else{
+    		//Robot.drivetrain.setLeftSpeed(0);
+    		//Robot.drivetrain.setRightSpeed(0);
+    	//}
     }
 
     // Make this return true when this Command no longer needs to run execute()

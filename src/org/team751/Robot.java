@@ -39,7 +39,7 @@ public class Robot extends IterativeRobot {
      */
     public void robotInit() {
 		oi = new OI();
-		oi.autoButton.whenPressed(new GearPlacement());
+		//oi.autoButton.whenPressed(new GearPlacement()); no gear placement autonomous
         // instantiate the command used for the autonomous period
         autonomousCommand = new Autonomous();    
         Thread motorControlThread = new Thread(autonomousJoystickSimulator);
