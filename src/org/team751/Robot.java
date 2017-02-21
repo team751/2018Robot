@@ -3,6 +3,7 @@ package org.team751;
 
 import java.net.UnknownHostException;
 
+import org.team751.arduino.ArduinoDataListener;
 import org.team751.commands.Autonomous;
 import org.team751.commands.GearPlacement;
 import org.team751.jetson.JoystickInputUDP;
@@ -30,6 +31,8 @@ public class Robot extends IterativeRobot {
 	
 	public static JoystickInputUDP autonomousJoystickSimulator;
 	public static StateSenderUDP stateSenderUDP;
+	public static boolean crushed = false;
+	public static ArduinoDataListener ADL = new ArduinoDataListener(6666);
 
     Command autonomousCommand;
 
@@ -57,10 +60,16 @@ public class Robot extends IterativeRobot {
     }
 	
 	public void disabledPeriodic() {
-		Scheduler.getInstance().run();
-        SmartDashboard.putNumber("leftEncoder", Robot.drivetrain.leftEncoder.getDistance());
-        SmartDashboard.putNumber("rightEncoder", -Robot.drivetrain.rightEncoder.getDistance());
-        
+//		Scheduler.getInstance().run();
+//        SmartDashboard.putNumber("leftEncoder", Robot.drivetrain.leftEncoder.getDistance());
+//        SmartDashboard.putNumber("rightEncoder", Robot.drivetrain.rightEncoder.getDistance());
+//        SmartDashboard.putNumber("Right Encoder Rate", Robot.drivetrain.rightEncoder.getRate());
+//        SmartDashboard.putNumber("Left Encoder Rate", Robot.drivetrain.rightEncoder.getRate());
+//        
+		
+//        System.out.println("leftEncoder" + Robot.drivetrain.leftEncoder.getDistance());
+//        System.out.println("RightEncoder" + -Robot.drivetrain.rightEncoder.getDistance());
+//        
 //        try {
 //			stateSenderUDP.sendState(RobotState.DISABLED, 0);
 //		} catch (IOException e) {
@@ -72,6 +81,7 @@ public class Robot extends IterativeRobot {
     public void autonomousInit() {
         // schedule the autonomous command (example)
         if (autonomousCommand != null) autonomousCommand.start();
+        crushed = false;
     }
 
     /**
@@ -79,6 +89,8 @@ public class Robot extends IterativeRobot {
      */
     public void autonomousPeriodic() {
         Scheduler.getInstance().run();
+        //System.out.println("Total Current: " + Robot.drivetrain.pdp.getTotalCurrent());
+        //System.out.println("Heading: " + ADL.getHeading());
     }
 
     public void teleopInit() {
@@ -87,6 +99,7 @@ public class Robot extends IterativeRobot {
         // continue until interrupted by another command, remove
         // this line or comment it out.
         if (autonomousCommand != null) autonomousCommand.cancel();
+        
     }
 
     /**
@@ -101,16 +114,23 @@ public class Robot extends IterativeRobot {
      */
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
+//        SmartDashboard.putNumber("leftEncoder", Robot.drivetrain.leftEncoder.getDistance());
+//        SmartDashboard.putNumber("rightEncoder", -Robot.drivetrain.rightEncoder.getDistance());
+//        System.out.println("leftEncoder" + Robot.drivetrain.leftEncoder.getDistance());
+//        System.out.println("RightEncoder" + Robot.drivetrain.rightEncoder.getDistance());
         
-        SmartDashboard.putNumber("leftEncoder", Robot.drivetrain.leftEncoder.getDistance());
-        SmartDashboard.putNumber("rightEncoder", -Robot.drivetrain.rightEncoder.getDistance() * 2);
-        
-//        try {
-//			stateSenderUDP.sendState(RobotState.TELEOP, 0);
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+//        System.out.println("Left Speed: " + Robot.drivetrain.leftDriveController1.getSpeed());
+//        System.out.println("Right Speed: " + Robot.drivetrain.rightDriveController1.getSpeed());
+       
+//Current check        
+//        System.out.println("Total Current: " + Robot.drivetrain.pdp.getTotalCurrent());
+//        System.out.print("Left Motors: " + "Motor1: " + Robot.drivetrain.pdp.getCurrent(3) + ",");
+//        System.out.print("Motor3: " + Robot.drivetrain.pdp.getCurrent(2) + ",");
+//        System.out.print("Motor5: " + Robot.drivetrain.pdp.getCurrent(1) + ",");
+//        System.out.print("Right Motors: " + "Motor0: " + Robot.drivetrain.pdp.getCurrent(0) + ",");
+//        System.out.print("Motor2: " + Robot.drivetrain.pdp.getCurrent(13) + ",");
+//        System.out.print("Motor4: " + Robot.drivetrain.pdp.getCurrent(14) + ",");
+//        System.out.println();
     }
     
     /**

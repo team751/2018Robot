@@ -2,9 +2,13 @@ package org.team751.subsystems;
 
 import org.team751.commands.JoystickDrive;
 
+
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.VictorSP;
+import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
+import edu.wpi.first.wpilibj.DigitalInput;
 
 /**
  *
@@ -18,14 +22,34 @@ public class Drivetrain extends Subsystem {
     public VictorSP rightDriveController2 = new VictorSP(2);
     public VictorSP rightDriveController3 = new VictorSP(4);
     
-    public Encoder leftEncoder = new Encoder(0, 1);
-    public Encoder rightEncoder = new Encoder(2, 3);
+    public DigitalInput switch4 = new DigitalInput (4);
+    public DigitalInput switch5 = new DigitalInput (5);
+    public DigitalInput switch6 = new DigitalInput (6);
+    public DigitalInput switch7= new DigitalInput (7);
+    public DigitalInput switch8 = new DigitalInput (8);
+    public DigitalInput[] switches = {switch4, switch5, switch6, switch7, switch8};
+    public boolean[] switchesStatus = {switch4.get(), switch5.get(), switch6.get(), switch7.get(), switch8.get()};
     
+//    public static final double WHEEL_DIAMETER = 6.0;
+//    public static final double PULSE_PER_REVOLUTION = 360;
+//    public static final double ENCODER_GEAR_RATIO = 1;
+//    public static final double GEAR_RATIO = 1.0; //unsure
+//    public static final double FUDGE_FACTOR = 1.0;
+    
+    public PowerDistributionPanel pdp = new PowerDistributionPanel();
+    
+//    public Encoder leftEncoder = new Encoder(2, 3, true, EncodingType.k4X);
+//    public Encoder rightEncoder = new Encoder(0, 1, true, EncodingType.k4X);
     public boolean isDrivingAutonomously;
+    
+    public Drivetrain(){
+//    	leftEncoder.setDistancePerPulse(Math.PI * WHEEL_DIAMETER / PULSE_PER_REVOLUTION);
+//    	rightEncoder.setDistancePerPulse(Math.PI * WHEEL_DIAMETER / PULSE_PER_REVOLUTION);
+    }
+    
     
     // Put methods for controlling this subsystem
     // here. Call these from Commands.
-
     public void initDefaultCommand() {
         // Set the default command for a subsystem here.
         setDefaultCommand(new JoystickDrive());

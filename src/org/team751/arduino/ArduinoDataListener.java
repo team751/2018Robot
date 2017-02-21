@@ -23,7 +23,7 @@ public class ArduinoDataListener implements Runnable {
 
 		if (clientSocket == null) return;
 		
-        byte[] receiveData = new byte[1024];
+        byte[] receiveData = new byte[4];
 
         while (clientSocket.isBound() && isRunning) {
             DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
