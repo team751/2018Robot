@@ -37,8 +37,8 @@ public class StateSenderUDP {
 		InetAddress IPAddress = ipAddress;
 		
         StringBuilder messageString = new StringBuilder("[");
-        messageString.append(Robot.drivetrain.leftEncoder.get() + ",");
-        messageString.append(Robot.drivetrain.rightEncoder.get() + "]");
+//        messageString.append(Robot.drivetrain.leftEncoder.get() + ",");
+//        messageString.append(Robot.drivetrain.rightEncoder.get() + "]");
         byte[] sendData = messageString.toString().getBytes();
         
         DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, port);

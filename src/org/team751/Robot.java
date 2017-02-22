@@ -89,7 +89,7 @@ public class Robot extends IterativeRobot {
      */
     public void autonomousPeriodic() {
         Scheduler.getInstance().run();
-        //System.out.println("Total Current: " + Robot.drivetrain.pdp.getTotalCurrent());
+        System.out.println("Total Current: " + Robot.drivetrain.pdp.getTotalCurrent());
         //System.out.println("Heading: " + ADL.getHeading());
     }
 
