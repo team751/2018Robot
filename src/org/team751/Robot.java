@@ -32,7 +32,7 @@ public class Robot extends IterativeRobot {
 	public static JoystickInputUDP autonomousJoystickSimulator;
 	public static StateSenderUDP stateSenderUDP;
 	public static boolean crushed = false;
-	public static ArduinoDataListener ADL = new ArduinoDataListener(6666);
+	public static ArduinoDataListener ADL = new ArduinoDataListener(7776);
 
     Command autonomousCommand;
 
@@ -48,7 +48,9 @@ public class Robot extends IterativeRobot {
         Thread motorControlThread = new Thread(autonomousJoystickSimulator);
         motorControlThread.start();
         
-        Thread imuThread = new Thread();
+        System.out.println("creating thread");
+        Thread listenerThread = new Thread(ADL);
+        listenerThread.start();
         
         try {
 			stateSenderUDP = new StateSenderUDP("10.7.51.76", 6000);
@@ -60,6 +62,8 @@ public class Robot extends IterativeRobot {
     }
 	
 	public void disabledPeriodic() {
+		printarduinoinfo();
+		
 //		Scheduler.getInstance().run();
 //        SmartDashboard.putNumber("leftEncoder", Robot.drivetrain.leftEncoder.getDistance());
 //        SmartDashboard.putNumber("rightEncoder", Robot.drivetrain.rightEncoder.getDistance());
@@ -78,6 +82,13 @@ public class Robot extends IterativeRobot {
 //		}
 	}
 
+	private void printarduinoinfo() {
+		SmartDashboard.putNumber("Heading", ADL.getHeading());
+		SmartDashboard.putNumber("Velocity", ADL.getVelocity());
+		SmartDashboard.putNumber("Distance", ADL.getDistance());
+		//System.out.println("Heading: " + ADL.getHeading() + ", Velocity: " + ADL.getVelocity() + ", Distance: " + ADL.getDistance());
+	}
+
     public void autonomousInit() {
         // schedule the autonomous command (example)
         if (autonomousCommand != null) autonomousCommand.start();
@@ -90,6 +101,7 @@ public class Robot extends IterativeRobot {
     public void autonomousPeriodic() {
         Scheduler.getInstance().run();
         System.out.println("Total Current: " + Robot.drivetrain.pdp.getTotalCurrent());
+        printarduinoinfo();
         //System.out.println("Heading: " + ADL.getHeading());
     }
 
@@ -114,6 +126,7 @@ public class Robot extends IterativeRobot {
      */
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
+        printarduinoinfo();
 //        SmartDashboard.putNumber("leftEncoder", Robot.drivetrain.leftEncoder.getDistance());
 //        SmartDashboard.putNumber("rightEncoder", -Robot.drivetrain.rightEncoder.getDistance());
 //        System.out.println("leftEncoder" + Robot.drivetrain.leftEncoder.getDistance());

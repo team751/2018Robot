@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class Autonomous extends Command {
 	private static double timeToDrive = 15;
-	private static double leftSpeed = 0.45;
+	private static double leftSpeed = 0.25;
 	// 1.216 (0.225/0.185) in C7
 	// 0.925 in Bellarmine
 	private static double ratio = 0.95;
@@ -29,31 +29,72 @@ public class Autonomous extends Command {
 		// Use requires() here to declare subsystem dependencies
 		// eg. requires(chassis);
 	}
+	
+	@Override
+	public synchronized void start() {
+		// TODO Auto-generated method stub
+		super.start();
+		timer.reset();
+		initDistance = Robot.ADL.getDistance();
+		initOrientation = Robot.ADL.getHeading();
+	}
 
 	// Called just before this Command runs the first time
 	protected void initialize() {
 		timer.start();
 	}
-
+	
+	
+	private double initDistance, initOrientation;
+	private static final int epsilon = 3;
+	
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
-		totalCurrent = Robot.drivetrain.pdp.getTotalCurrent();
-		double time = timer.get();
-
-		if (Robot.crushed) {
-			end();
-		} else if (Robot.drivetrain.switch4.get()) {
-			driveForward(time);
-			System.out.println("Working");
-		} else if (Robot.drivetrain.switch5.get()) {
-			centerForward(time);
-		} else if (Robot.drivetrain.switch6.get()) {
-			leftGoLeft(time);
-		} else if (Robot.drivetrain.switch7.get()) {
-			rightGoRight(time);
-		} else {
-			end(); //no auto when all switches are turned off
+		//totalCurrent = Robot.drivetrain.pdp.getTotalCurrent();
+		//double time = timer.get();
+		//drive(time);
+		if(Math.abs(Robot.ADL.getDistance() - initDistance) < 60){
+			Robot.drivetrain.setLeftSpeed(leftSpeed);
+			Robot.drivetrain.setRightSpeed(rightSpeed);
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		}
+		else{
+			if((Robot.ADL.getHeading() - (initOrientation + 180)) % 360 < epsilon){
+				Robot.drivetrain.setLeftSpeed(leftSpeed);
+				Robot.drivetrain.setRightSpeed(-rightSpeed);
+			}
+			else{
+				initDistance = Robot.ADL.getDistance();
+				initOrientation = Robot.ADL.getHeading();
+			}
+		}
+		
+//		if (Robot.crushed) {
+//			end();
+//		} else if (Robot.drivetrain.switch4.get()) {
+//			driveForward(time);
+//			System.out.println("Working");
+//		} else if (Robot.drivetrain.switch5.get()) {
+//			centerForward(time);
+//		} else if (Robot.drivetrain.switch6.get()) {
+//			leftGoLeft(time);
+//		} else if (Robot.drivetrain.switch7.get()) {
+//			rightGoRight(time);
+//		} else {
+//			end(); //no auto when all switches are turned off
+//		}
 	}
 
 	// Make this return true when this Command no longer needs to run execute()
@@ -72,6 +113,15 @@ public class Autonomous extends Command {
 	protected void interrupted() {
 	}
 
+	protected void drive(double time){
+		System.out.println("drive" + time);
+		if(time <= 2){
+			Robot.drivetrain.setLeftSpeed(leftSpeed);
+			Robot.drivetrain.setRightSpeed(rightSpeed);
+		}
+		else end();
+	}
+	
 	// methods for autonomous depending on the starting position
 	protected void driveForward(double time) {
 		if (time <= 5) { //to be adjusted in the field
