@@ -25,10 +25,12 @@ public class ArduinoDataListener implements Runnable {
 		System.out.println("Is going");
 
 		if (clientSocket == null) return;
+		System.out.println("clientSocket is not null");
 		
         byte[] receiveData = new byte[1024];
 
         while (clientSocket.isBound() && isRunning) {
+        	System.out.println("waiting for packet");
             DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
             try {
 				clientSocket.receive(receivePacket);
