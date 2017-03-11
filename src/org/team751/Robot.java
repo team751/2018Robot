@@ -80,6 +80,7 @@ public class Robot extends IterativeRobot {
 
     public void autonomousInit() {
         // schedule the autonomous command (example)
+    	crushed = false;
         if (autonomousCommand != null) autonomousCommand.start();
         crushed = false;
     }
@@ -90,7 +91,6 @@ public class Robot extends IterativeRobot {
     public void autonomousPeriodic() {
         Scheduler.getInstance().run();
         System.out.println("Total Current: " + Robot.drivetrain.pdp.getTotalCurrent());
-        //System.out.println("Heading: " + ADL.getHeading());
     }
 
     public void teleopInit() {

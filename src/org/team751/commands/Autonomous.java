@@ -21,7 +21,7 @@ public class Autonomous extends Command {
 	private static double totalCurrent;
 	
 	// Currentlimit when driving forward is 40 at Bellarmine
-	private static double currentLimit = 20;
+	private static double currentLimit = 40;
 
 	Timer timer = new Timer();
 
@@ -44,7 +44,6 @@ public class Autonomous extends Command {
 			end();
 		} else if (Robot.drivetrain.switch4.get()) {
 			driveForward(time);
-			System.out.println("Working");
 		} else if (Robot.drivetrain.switch5.get()) {
 			centerForward(time);
 		} else if (Robot.drivetrain.switch6.get()) {
