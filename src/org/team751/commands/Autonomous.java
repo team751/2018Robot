@@ -11,13 +11,12 @@ import edu.wpi.first.wpilibj.command.Command;
  *
  */
 public class Autonomous extends Command {
-	private static double timeToDrive = 15;
-	private static double leftSpeed = 0.45;
+	private static final double timeToDrive = 15;
+	private static final double leftSpeed = 0.45;
 	// 1.216 (0.225/0.185) in C7
 	// 0.925 in Bellarmine
-	private static double ratio = 0.95;
-	private static double rightSpeed = -leftSpeed;
-	CheesyDrive cheesyDrive = new CheesyDrive();
+	private static final double ratio = 0.95;
+	private static final double rightSpeed = -leftSpeed;
 	private static double totalCurrent;
 	
 	// Currentlimit when driving forward is 40 at Bellarmine
@@ -44,6 +43,14 @@ public class Autonomous extends Command {
 			end();
 		} else if (Robot.drivetrain.switch4.get()) {
 			driveForward(time);
+			System.out.println("left: ");
+			System.out.println(Robot.drivetrain.leftDriveController1.get());
+			System.out.println(Robot.drivetrain.leftDriveController2.get());
+			System.out.println(Robot.drivetrain.leftDriveController3.get());			
+			System.out.println("right: ");
+			System.out.println(Robot.drivetrain.rightDriveController1.get());
+			System.out.println(Robot.drivetrain.rightDriveController2.get());
+			System.out.println(Robot.drivetrain.rightDriveController3.get());
 		} else if (Robot.drivetrain.switch5.get()) {
 			centerForward(time);
 		} else if (Robot.drivetrain.switch6.get()) {

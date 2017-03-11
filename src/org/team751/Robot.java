@@ -61,15 +61,6 @@ public class Robot extends IterativeRobot {
 	
 	public void disabledPeriodic() {
 //		Scheduler.getInstance().run();
-//        SmartDashboard.putNumber("leftEncoder", Robot.drivetrain.leftEncoder.getDistance());
-//        SmartDashboard.putNumber("rightEncoder", Robot.drivetrain.rightEncoder.getDistance());
-//        SmartDashboard.putNumber("Right Encoder Rate", Robot.drivetrain.rightEncoder.getRate());
-//        SmartDashboard.putNumber("Left Encoder Rate", Robot.drivetrain.rightEncoder.getRate());
-//        
-		
-//        System.out.println("leftEncoder" + Robot.drivetrain.leftEncoder.getDistance());
-//        System.out.println("RightEncoder" + -Robot.drivetrain.rightEncoder.getDistance());
-//        
 //        try {
 //			stateSenderUDP.sendState(RobotState.DISABLED, 0);
 //		} catch (IOException e) {

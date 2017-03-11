@@ -37,10 +37,7 @@ public class Drivetrain extends Subsystem {
 //    public static final double FUDGE_FACTOR = 1.0;
     
     public PowerDistributionPanel pdp = new PowerDistributionPanel();
-    
-//    public Encoder leftEncoder = new Encoder(2, 3, true, EncodingType.k4X);
-//    public Encoder rightEncoder = new Encoder(0, 1, true, EncodingType.k4X);
-    public boolean isDrivingAutonomously;
+    public boolean isDrivingAutonomously = false;
     
     public Drivetrain(){
 //    	leftEncoder.setDistancePerPulse(Math.PI * WHEEL_DIAMETER / PULSE_PER_REVOLUTION);
