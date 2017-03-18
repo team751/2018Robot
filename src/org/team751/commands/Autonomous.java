@@ -38,19 +38,10 @@ public class Autonomous extends Command {
 	protected void execute() {
 		totalCurrent = Robot.drivetrain.pdp.getTotalCurrent();
 		double time = timer.get();
-
 		if (Robot.crushed) {
 			end();
 		} else if (Robot.drivetrain.switch4.get()) {
 			driveForward(time);
-			System.out.println("left: ");
-			System.out.println(Robot.drivetrain.leftDriveController1.get());
-			System.out.println(Robot.drivetrain.leftDriveController2.get());
-			System.out.println(Robot.drivetrain.leftDriveController3.get());			
-			System.out.println("right: ");
-			System.out.println(Robot.drivetrain.rightDriveController1.get());
-			System.out.println(Robot.drivetrain.rightDriveController2.get());
-			System.out.println(Robot.drivetrain.rightDriveController3.get());
 		} else if (Robot.drivetrain.switch5.get()) {
 			centerForward(time);
 		} else if (Robot.drivetrain.switch6.get()) {
@@ -64,7 +55,8 @@ public class Autonomous extends Command {
 
 	// Make this return true when this Command no longer needs to run execute()
 	protected boolean isFinished() {
-		return timer.get() >= timeToDrive;
+		return false;
+		//timer.get() >= timeToDrive;
 	}
 
 	// Called once after isFinished returns true
@@ -80,12 +72,12 @@ public class Autonomous extends Command {
 
 	// methods for autonomous depending on the starting position
 	protected void driveForward(double time) {
-		if (time <= 5) { //to be adjusted in the field
+		if (time <= 3.75) { //to be adjusted in the field
 			if (time > 1 && totalCurrent > currentLimit) {
 				Robot.crushed = true;
 			}
-			Robot.drivetrain.setLeftSpeed(leftSpeed * 0.75);
-			Robot.drivetrain.setRightSpeed(rightSpeed * 0.75);
+			Robot.drivetrain.setLeftSpeed(leftSpeed*0.75);
+			Robot.drivetrain.setRightSpeed(rightSpeed*0.75);
 		}
 	}
 
@@ -94,8 +86,8 @@ public class Autonomous extends Command {
 			if (time > 1 && totalCurrent > currentLimit) {
 				Robot.crushed = true;
 			}
-			Robot.drivetrain.setLeftSpeed(leftSpeed * 0.5);
-			Robot.drivetrain.setRightSpeed(rightSpeed * 0.5);
+			Robot.drivetrain.setLeftSpeed(leftSpeed * 0.75);
+			Robot.drivetrain.setRightSpeed(rightSpeed * 0.75);
 		}
 	}
 
@@ -134,15 +126,15 @@ public class Autonomous extends Command {
 
 	// turn clockwise
 	protected void turnCW() {
-		Robot.drivetrain.setLeftSpeed(0.65);
-		Robot.drivetrain.setRightSpeed(0.65);
+		Robot.drivetrain.setLeftSpeed(0.45);
+		Robot.drivetrain.setRightSpeed(0.45);
 	}
 
 	// turn counterclockwise
 	protected void turnCCW() {
 		//if turnCW speed and turn CCW speed are equal they don't really turn the same
-		Robot.drivetrain.setLeftSpeed(-0.90);
-		Robot.drivetrain.setRightSpeed(-0.95);
+		Robot.drivetrain.setLeftSpeed(-0.45);
+		Robot.drivetrain.setRightSpeed(-0.45);
 	}
 
 }

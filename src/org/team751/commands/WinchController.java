@@ -24,11 +24,11 @@ public class WinchController extends Command {
 //    	final boolean down = Robot.oi.driverStick.getRawButton(2);
     	
     	if(up){
-    			Robot.winch.forward();
+    		Robot.winch.forward();
 		}
-//    		if(down){
-//    			Robot.winch.reverse();
-//    		}
+//    	else if(down){
+//    		Robot.winch.reverse();
+//    	}
     	else if(!up){
     		Robot.winch.disable();
     	}

@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
  *
  */
 public class Drivetrain extends Subsystem {
+
     public VictorSP leftDriveController1 = new VictorSP(1);
     public VictorSP leftDriveController2 = new VictorSP(3);
     public VictorSP leftDriveController3 = new VictorSP(5);
@@ -22,13 +23,13 @@ public class Drivetrain extends Subsystem {
     public VictorSP rightDriveController2 = new VictorSP(2);
     public VictorSP rightDriveController3 = new VictorSP(4);
     
-    public DigitalInput switch4 = new DigitalInput (4);
-    public DigitalInput switch5 = new DigitalInput (5);
-    public DigitalInput switch6 = new DigitalInput (6);
-    public DigitalInput switch7= new DigitalInput (7);
-    public DigitalInput switch8 = new DigitalInput (8);
-    public DigitalInput[] switches = {switch4, switch5, switch6, switch7, switch8};
-    public boolean[] switchesStatus = {switch4.get(), switch5.get(), switch6.get(), switch7.get(), switch8.get()};
+	  public DigitalInput switch4 = new DigitalInput (4);
+	  public DigitalInput switch5 = new DigitalInput (5);
+	  public DigitalInput switch6 = new DigitalInput (6);
+	  public DigitalInput switch7= new DigitalInput (7);
+	  public DigitalInput switch8 = new DigitalInput (8);
+	  public DigitalInput[] switches = {switch4, switch5, switch6, switch7, switch8};
+	  public boolean[] switchesStatus = {switch4.get(), switch5.get(), switch6.get(), switch7.get(), switch8.get()};
     
 //    public static final double WHEEL_DIAMETER = 6.0;
 //    public static final double PULSE_PER_REVOLUTION = 360;
@@ -37,7 +38,7 @@ public class Drivetrain extends Subsystem {
 //    public static final double FUDGE_FACTOR = 1.0;
     
     public PowerDistributionPanel pdp = new PowerDistributionPanel();
-    public boolean isDrivingAutonomously = false;
+//    public boolean isDrivingAutonomously = false;
     
     public Drivetrain(){
 //    	leftEncoder.setDistancePerPulse(Math.PI * WHEEL_DIAMETER / PULSE_PER_REVOLUTION);
