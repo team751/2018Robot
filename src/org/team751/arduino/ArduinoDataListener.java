@@ -2,6 +2,10 @@ package org.team751.arduino;
 
 import java.io.IOException;
 import java.net.*;
+import java.util.Arrays;
+
+import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.SerialPort;
 
 public class ArduinoDataListener implements Runnable {
 	private boolean isRunning = true;
@@ -14,6 +18,39 @@ public class ArduinoDataListener implements Runnable {
 		this.port = port;
 	}
 	
+	@Override
+	public void run() {
+		SerialPort port = new SerialPort(9600, SerialPort.Port.kUSB);
+		port.setReadBufferSize(32);
+		port.setTimeout(0.01);
+		while(true){
+			final String message = port.readString();
+			//final String[] parts = message.split("[");
+			System.out.print(message);
+			
+			//String[] data = parts[].split(",");
+			//System.out.println(Arrays.toString(data));
+			//this.heading = Double.parseDouble(data[0]);
+            //this.velocity = Double.parseDouble(data[1]);
+            //this.distance = Double.parseDouble(data[2]);
+		}
+	}
+	
+	
+	/*
+	@Override
+	public void run() {
+		byte[] buffer = new byte[4];
+		I2C serialPort = new I2C(I2C.Port.kOnboard, 0b0101011_1);
+		while(true){
+			serialPort.read(0b01010110, 4, buffer);
+			System.out.println((char) buffer[0] + (char) buffer[1] + (char) buffer[2]);
+		}
+		//serialPort.free();
+	}
+	*/
+	
+	/*
 	@Override
 	public void run() {
 		DatagramSocket clientSocket = null;
@@ -49,7 +86,7 @@ public class ArduinoDataListener implements Runnable {
         }
         clientSocket.close();	
 	}
-	
+	*/
 	public double getHeading() {
 		return heading;
 	}
