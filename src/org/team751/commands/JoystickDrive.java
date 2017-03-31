@@ -25,19 +25,32 @@ public class JoystickDrive extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-//    	if (Robot.drivetrain.isDrivingAutonomously) return;
     	double x = -Robot.oi.driverStick.getRawAxis(4);
     	double y = Robot.oi.driverStick.getRawAxis(5);
     	boolean quickTurn = true;
        
     	if (Math.abs(x) < SENSITIVITY){x = 0;}
     	if (Math.abs(y) < SENSITIVITY){y = 0;}
-//    	System.out.println("x: " + x + ", y: " + y);
+    	//System.out.println("x: " + x + ", y: " + y);
 
     	MotorOutputs output = cheesyDrive.cheesyDrive(y, x, quickTurn);
-    	//System.out.println("left: " + -output.left + ", right: " + output.right);
-    	Robot.drivetrain.setLeftSpeed(-output.left);
-    	Robot.drivetrain.setRightSpeed(output.right);
+    	//System.out.println("Before left: " + -output.left + ", right: " + output.right);
+    	double left = -output.left;
+    	double right = output.right;
+    	// apply linear bump
+    	final double MAX_NATURAL = 0.69;
+    	left /= MAX_NATURAL;
+    	right /= MAX_NATURAL;
+    	
+    	boolean slowButton = Robot.oi.driverStick.getRawButton(7); // y button
+    	if (slowButton){
+    		System.out.println("bumper pressed");
+    		left /= 2.0;
+    		right /= 2.0;
+    	}
+    	System.out.println("After left: " + left + "; Right: " + right);
+    	Robot.drivetrain.setLeftSpeed(left);
+    	Robot.drivetrain.setRightSpeed(right);
     }
 
     // Make this return true when this Command no longer needs to run execute()
