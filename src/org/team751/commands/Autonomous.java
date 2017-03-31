@@ -23,6 +23,7 @@ public class Autonomous extends Command {
 	private static double currentLimit = 40;
 
 	Timer timer = new Timer();
+	Timer backupTimer = null;
 
 	public Autonomous() {
 		// Use requires() here to declare subsystem dependencies
@@ -38,7 +39,7 @@ public class Autonomous extends Command {
 	protected void execute() {
 		totalCurrent = Robot.drivetrain.pdp.getTotalCurrent();
 		double time = timer.get();
-		if (Robot.crushed) {
+		if (Robot.totallyCrushed){
 			end();
 		} else if (Robot.drivetrain.switch4.get()) {
 			driveForward(time);
@@ -81,13 +82,36 @@ public class Autonomous extends Command {
 		}
 	}
 
+	// this is the one almost always used
 	protected void centerForward(double time) {
-		if (time <= 5) {
-			if (time > 1 && totalCurrent > currentLimit) {
-				Robot.crushed = true;
+		if (time > 1 && totalCurrent > currentLimit) {
+			Robot.crushed = true;
+			
+		}
+		Robot.drivetrain.setLeftSpeed(leftSpeed * 0.75);
+		Robot.drivetrain.setRightSpeed(rightSpeed * 0.75);
+		
+		if (Robot.crushed) {
+			if(backupTimer == null){
+				backupTimer = new Timer();
+				backupTimer.start();
 			}
-			Robot.drivetrain.setLeftSpeed(leftSpeed * 0.75);
-			Robot.drivetrain.setRightSpeed(rightSpeed * 0.75);
+			else if(backupTimer.get() > 4){
+				Robot.drivetrain.setLeftSpeed(-leftSpeed * 0.75);
+				Robot.drivetrain.setRightSpeed(-rightSpeed * 0.75);
+			}
+			else if(backupTimer.get() > 6){
+				Robot.drivetrain.setLeftSpeed(leftSpeed * 0.75);
+				Robot.drivetrain.setRightSpeed(rightSpeed * 0.75);
+			}
+			// should theoretically reach by 7, but to be safe...
+			else if(backupTimer.get() > 6.5){
+				// begin checking
+				if(totalCurrent > currentLimit){
+					// stop
+					Robot.totallyCrushed = true;
+				}
+			}
 		}
 	}
 

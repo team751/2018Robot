@@ -31,6 +31,7 @@ public class Robot extends IterativeRobot {
 	public static JoystickInputUDP autonomousJoystickSimulator;
 //	public static StateSenderUDP stateSenderUDP;
 	public static boolean crushed = false;
+	public static boolean totallyCrushed = false;
 //	public static ArduinoDataListener ADL = new ArduinoDataListener(7776);
 
     Command autonomousCommand;
