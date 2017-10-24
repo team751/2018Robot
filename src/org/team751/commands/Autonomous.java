@@ -1,6 +1,6 @@
 package org.team751.commands;
 
-import org.team751.CheesyDrive;
+import edu.wpi.first.wpilibj.RobotDrive;
 import org.team751.Robot;
 import org.team751.CheesyDrive.MotorOutputs;
 
@@ -18,7 +18,7 @@ public class Autonomous extends Command {
 	// 1.216 (0.225/0.185) in C7
 	// 0.925 in Bellarmine
 	private static double ratio = 0.95;
-	CheesyDrive cheesyDrive = new CheesyDrive();
+	RobotDrive robotDrive = new RobotDrive();
 	private static double totalCurrent;
 	private double initDistance, initOrientation;
 	private static final int maxError = 5;
