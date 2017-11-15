@@ -92,26 +92,40 @@ public class Autonomous extends Command {
 		Robot.drivetrain.setRightSpeed(rightSpeed * 0.75);
 		
 		if (Robot.crushed) {
+			if(backupTimer != null){
+				System.out.println("Current :" + totalCurrent + ", Timer: " + backupTimer.get());
+			}
 			if(backupTimer == null){
 				backupTimer = new Timer();
 				backupTimer.start();
-			}
-			else if(backupTimer.get() > 4){
-				Robot.drivetrain.setLeftSpeed(-leftSpeed * 0.75);
-				Robot.drivetrain.setRightSpeed(-rightSpeed * 0.75);
+				System.out.println("backing");
 			}
 			else if(backupTimer.get() > 6){
-				Robot.drivetrain.setLeftSpeed(leftSpeed * 0.75);
-				Robot.drivetrain.setRightSpeed(rightSpeed * 0.75);
-			}
-			// should theoretically reach by 7, but to be safe...
-			else if(backupTimer.get() > 6.5){
 				// begin checking
 				if(totalCurrent > currentLimit){
 					// stop
 					Robot.totallyCrushed = true;
 				}
+				else{
+					Robot.drivetrain.setLeftSpeed(leftSpeed * 0.75);
+					Robot.drivetrain.setRightSpeed(rightSpeed * 0.75);
+				}
 			}
+			else if(backupTimer.get() > 5){
+				Robot.drivetrain.setLeftSpeed(leftSpeed * 0.75);
+				Robot.drivetrain.setRightSpeed(rightSpeed * 0.75);
+			}
+			else if(backupTimer.get() > 4.5){
+				Robot.drivetrain.setLeftSpeed(leftSpeed * 0);
+				Robot.drivetrain.setRightSpeed(rightSpeed * 0);
+			}
+			else if(backupTimer.get() > 4){
+				Robot.drivetrain.setLeftSpeed(-leftSpeed * 0.75);
+				Robot.drivetrain.setRightSpeed(-rightSpeed * 0.75);
+			}
+			
+			// should theoretically reach by 7, but to be safe...
+			
 		}
 	}
 
