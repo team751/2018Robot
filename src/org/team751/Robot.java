@@ -1,11 +1,10 @@
 
 package org.team751;
 
-import java.net.UnknownHostException;
+//import java.net.UnknownHostException;
 
 import org.team751.arduino.ArduinoDataListener;
 import org.team751.commands.Autonomous;
-import org.team751.commands.GearPlacement;
 import org.team751.jetson.JoystickInputUDP;
 import org.team751.jetson.StateSenderUDP;
 import org.team751.subsystems.Drivetrain;
@@ -30,9 +29,14 @@ public class Robot extends IterativeRobot {
 	public static OI oi;
 	
 	public static JoystickInputUDP autonomousJoystickSimulator;
-	public static StateSenderUDP stateSenderUDP;
+//	public static StateSenderUDP stateSenderUDP;
 	public static boolean crushed = false;
+<<<<<<< HEAD
 	public static ArduinoDataListener ADL = new ArduinoDataListener();
+=======
+	public static boolean totallyCrushed = false;
+//	public static ArduinoDataListener ADL = new ArduinoDataListener(7776);
+>>>>>>> b211dd129c62d33b192db035c12da7f5b7e5f334
 
     Command autonomousCommand;
 
@@ -48,20 +52,25 @@ public class Robot extends IterativeRobot {
         Thread motorControlThread = new Thread(autonomousJoystickSimulator);
         motorControlThread.start();
         
+<<<<<<< HEAD
         System.out.println("creating thread");
         Thread listenerThread = new Thread(ADL);
         listenerThread.start();
+=======
+//        Thread imuThread = new Thread();
+>>>>>>> b211dd129c62d33b192db035c12da7f5b7e5f334
         
-        try {
-			stateSenderUDP = new StateSenderUDP("10.7.51.76", 6000);
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//        try {
+//			stateSenderUDP = new StateSenderUDP("10.7.51.76", 6000);
+//		} catch (UnknownHostException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
         
     }
 	
 	public void disabledPeriodic() {
+<<<<<<< HEAD
 		printarduinoinfo();
 		
 //		Scheduler.getInstance().run();
@@ -74,6 +83,9 @@ public class Robot extends IterativeRobot {
 //        System.out.println("leftEncoder" + Robot.drivetrain.leftEncoder.getDistance());
 //        System.out.println("RightEncoder" + -Robot.drivetrain.rightEncoder.getDistance());
 //        
+=======
+        Scheduler.getInstance().run();
+>>>>>>> b211dd129c62d33b192db035c12da7f5b7e5f334
 //        try {
 //			stateSenderUDP.sendState(RobotState.DISABLED, 0);
 //		} catch (IOException e) {
@@ -91,8 +103,9 @@ public class Robot extends IterativeRobot {
 
     public void autonomousInit() {
         // schedule the autonomous command (example)
+    	crushed = false;
         if (autonomousCommand != null) autonomousCommand.start();
-        crushed = false;
+        totallyCrushed = false;
     }
 
     /**
@@ -100,9 +113,13 @@ public class Robot extends IterativeRobot {
      */
     public void autonomousPeriodic() {
         Scheduler.getInstance().run();
+<<<<<<< HEAD
         System.out.println("Total Current: " + Robot.drivetrain.pdp.getTotalCurrent());
         printarduinoinfo();
         //System.out.println("Heading: " + ADL.getHeading());
+=======
+        //System.out.println("Total Current: " + Robot.drivetrain.pdp.getTotalCurrent());
+>>>>>>> b211dd129c62d33b192db035c12da7f5b7e5f334
     }
 
     public void teleopInit() {
@@ -110,7 +127,7 @@ public class Robot extends IterativeRobot {
         // teleop starts running. If you want the autonomous to 
         // continue until interrupted by another command, remove
         // this line or comment it out.
-        if (autonomousCommand != null) autonomousCommand.cancel();
+    	if (autonomousCommand != null) autonomousCommand.cancel();
         
     }
 
@@ -126,6 +143,7 @@ public class Robot extends IterativeRobot {
      */
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
+<<<<<<< HEAD
         printarduinoinfo();
 //        SmartDashboard.putNumber("leftEncoder", Robot.drivetrain.leftEncoder.getDistance());
 //        SmartDashboard.putNumber("rightEncoder", -Robot.drivetrain.rightEncoder.getDistance());
@@ -134,6 +152,8 @@ public class Robot extends IterativeRobot {
         
 //        System.out.println("Left Speed: " + Robot.drivetrain.leftDriveController1.getSpeed());
 //        System.out.println("Right Speed: " + Robot.drivetrain.rightDriveController1.getSpeed());
+=======
+>>>>>>> b211dd129c62d33b192db035c12da7f5b7e5f334
        
 //Current check        
 //        System.out.println("Total Current: " + Robot.drivetrain.pdp.getTotalCurrent());

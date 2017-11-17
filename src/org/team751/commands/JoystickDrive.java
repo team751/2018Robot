@@ -25,7 +25,6 @@ public class JoystickDrive extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	if (Robot.drivetrain.isDrivingAutonomously) return;
     	double x = -Robot.oi.driverStick.getRawAxis(4);
     	double y = Robot.oi.driverStick.getRawAxis(5);
     	boolean quickTurn = true;
@@ -35,7 +34,11 @@ public class JoystickDrive extends Command {
     	//System.out.println("x: " + x + ", y: " + y);
 
     	MotorOutputs output = cheesyDrive.cheesyDrive(y, x, quickTurn);
+<<<<<<< HEAD
     	System.out.println("Before left: " + -output.left + ", right: " + output.right);
+=======
+    	//System.out.println("Before left: " + -output.left + ", right: " + output.right);
+>>>>>>> b211dd129c62d33b192db035c12da7f5b7e5f334
     	double left = -output.left;
     	double right = output.right;
     	// apply linear bump

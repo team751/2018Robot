@@ -21,10 +21,9 @@ public class Winch extends Subsystem {
     }
     
     public void forward() {
-    	System.out.println("intake");
+//    	System.out.println("intake");
     	winchMotorController.set(1.0);
     }
-    
     public void disable() {
     	winchMotorController.set(0.0);
     }
