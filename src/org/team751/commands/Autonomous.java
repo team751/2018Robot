@@ -2,7 +2,6 @@ package org.team751.commands;
 
 import edu.wpi.first.wpilibj.RobotDrive;
 import org.team751.Robot;
-import org.team751.CheesyDrive.MotorOutputs;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
@@ -12,22 +11,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  *
  */
 public class Autonomous extends Command {
-<<<<<<< HEAD
 	private static double timeToDrive = 15;
 	private static double leftSpeed = 0.5;
 	private static double rightSpeed = -leftSpeed;
 	// 1.216 (0.225/0.185) in C7
 	// 0.925 in Bellarmine
 	private static double ratio = 0.95;
-	RobotDrive robotDrive = new RobotDrive();
-=======
-	private static final double timeToDrive = 15;
-	private static final double leftSpeed = 0.45;
-	// 1.216 (0.225/0.185) in C7
-	// 0.925 in Bellarmine
-	private static final double ratio = 0.95;
-	private static final double rightSpeed = -leftSpeed;
->>>>>>> b211dd129c62d33b192db035c12da7f5b7e5f334
+	RobotDrive robotDrive = 
 	private static double totalCurrent;
 	private double initDistance, initOrientation;
 	private static final int maxError = 5;
@@ -53,15 +43,9 @@ public class Autonomous extends Command {
 	private static final int rightSecondDist = 63;
 	
 	// Currentlimit when driving forward is 40 at Bellarmine
-<<<<<<< HEAD
 	private static double currentLimit = 20;
 	
-=======
-	private static double currentLimit = 40;
-
->>>>>>> b211dd129c62d33b192db035c12da7f5b7e5f334
 	Timer timer = new Timer();
-	Timer backupTimer = null;
 
 	public Autonomous() {
 		// Use requires() here to declare subsystem dependencies
@@ -87,7 +71,6 @@ public class Autonomous extends Command {
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
 		totalCurrent = Robot.drivetrain.pdp.getTotalCurrent();
-<<<<<<< HEAD
 		//double time = timer.get();
 		//drive(time);
 		
@@ -95,13 +78,6 @@ public class Autonomous extends Command {
 			end();
 		} else if (Robot.drivetrain.switch4.get()) {
 			driveForDistance(passLineDist);
-=======
-		double time = timer.get();
-		if (Robot.totallyCrushed){
-			end();
-		} else if (Robot.drivetrain.switch4.get()) {
-			driveForward(time);
->>>>>>> b211dd129c62d33b192db035c12da7f5b7e5f334
 		} else if (Robot.drivetrain.switch5.get()) {
 			driveForDistance(centralDist);
 		} else if (Robot.drivetrain.switch6.get()) {
@@ -117,8 +93,7 @@ public class Autonomous extends Command {
 
 	// Make this return true when this Command no longer needs to run execute()
 	protected boolean isFinished() {
-		return false;
-		//timer.get() >= timeToDrive;
+		return timer.get() >= timeToDrive;
 	}
 
 	// Called once after isFinished returns true
@@ -206,59 +181,22 @@ public class Autonomous extends Command {
 	
 	// methods for autonomous depending on the starting position
 	protected void driveForward(double time) {
-		if (time <= 3.75) { //to be adjusted in the field
+		if (time <= 5) { //to be adjusted in the field
 			if (time > 1 && totalCurrent > currentLimit) {
 				Robot.crushed = true;
 			}
-			Robot.drivetrain.setLeftSpeed(leftSpeed*0.75);
-			Robot.drivetrain.setRightSpeed(rightSpeed*0.75);
+			Robot.drivetrain.setLeftSpeed(leftSpeed * 0.75);
+			Robot.drivetrain.setRightSpeed(rightSpeed * 0.75);
 		}
 	}
 
-	// this is the one almost always used
 	protected void centerForward(double time) {
-		if (time > 1 && totalCurrent > currentLimit) {
-			Robot.crushed = true;
-			
-		}
-		Robot.drivetrain.setLeftSpeed(leftSpeed * 0.75);
-		Robot.drivetrain.setRightSpeed(rightSpeed * 0.75);
-		
-		if (Robot.crushed) {
-			if(backupTimer != null){
-				System.out.println("Current :" + totalCurrent + ", Timer: " + backupTimer.get());
+		if (time <= 5) {
+			if (time > 1 && totalCurrent > currentLimit) {
+				Robot.crushed = true;
 			}
-			if(backupTimer == null){
-				backupTimer = new Timer();
-				backupTimer.start();
-				System.out.println("backing");
-			}
-			else if(backupTimer.get() > 6){
-				// begin checking
-				if(totalCurrent > currentLimit){
-					// stop
-					Robot.totallyCrushed = true;
-				}
-				else{
-					Robot.drivetrain.setLeftSpeed(leftSpeed * 0.75);
-					Robot.drivetrain.setRightSpeed(rightSpeed * 0.75);
-				}
-			}
-			else if(backupTimer.get() > 5){
-				Robot.drivetrain.setLeftSpeed(leftSpeed * 0.75);
-				Robot.drivetrain.setRightSpeed(rightSpeed * 0.75);
-			}
-			else if(backupTimer.get() > 4.5){
-				Robot.drivetrain.setLeftSpeed(leftSpeed * 0);
-				Robot.drivetrain.setRightSpeed(rightSpeed * 0);
-			}
-			else if(backupTimer.get() > 4){
-				Robot.drivetrain.setLeftSpeed(-leftSpeed * 0.75);
-				Robot.drivetrain.setRightSpeed(-rightSpeed * 0.75);
-			}
-			
-			// should theoretically reach by 7, but to be safe...
-			
+			Robot.drivetrain.setLeftSpeed(leftSpeed * 0.5);
+			Robot.drivetrain.setRightSpeed(rightSpeed * 0.5);
 		}
 	}
 
@@ -297,15 +235,16 @@ public class Autonomous extends Command {
 
 	// turn clockwise
 	protected void turnCW() {
-		Robot.drivetrain.setLeftSpeed(0.45);
-		Robot.drivetrain.setRightSpeed(0.45);
+		Robot.drivetrain.setLeftSpeed(0.65);
+		Robot.drivetrain.setRightSpeed(0.65);
+		Robot.
 	}
 
 	// turn counterclockwise
 	protected void turnCCW() {
 		//if turnCW speed and turn CCW speed are equal they don't really turn the same
-		Robot.drivetrain.setLeftSpeed(-0.45);
-		Robot.drivetrain.setRightSpeed(-0.45);
+		Robot.drivetrain.setLeftSpeed(-0.90);
+		Robot.drivetrain.setRightSpeed(-0.95);
 	}
 
 }

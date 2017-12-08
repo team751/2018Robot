@@ -1,5 +1,6 @@
 package org.team751.subsystems;
 
+import org.team751.MultiSpeedController;
 import org.team751.commands.JoystickDrive;
 
 
@@ -14,27 +15,25 @@ import edu.wpi.first.wpilibj.DigitalInput;
  *
  */
 public class Drivetrain extends Subsystem {
-<<<<<<< HEAD
     public VictorSP leftDriveController1 = new VictorSP(3);
     public VictorSP leftDriveController2 = new VictorSP(4);
-=======
-
-    public VictorSP leftDriveController1 = new VictorSP(1);
-    public VictorSP leftDriveController2 = new VictorSP(3);
->>>>>>> b211dd129c62d33b192db035c12da7f5b7e5f334
     public VictorSP leftDriveController3 = new VictorSP(5);
     
     public VictorSP rightDriveController1 = new VictorSP(0);
     public VictorSP rightDriveController2 = new VictorSP(1);
     public VictorSP rightDriveController3 = new VictorSP(2);
     
-	  public DigitalInput switch4 = new DigitalInput (4);
-	  public DigitalInput switch5 = new DigitalInput (5);
-	  public DigitalInput switch6 = new DigitalInput (6);
-	  public DigitalInput switch7= new DigitalInput (7);
-	  public DigitalInput switch8 = new DigitalInput (8);
-	  public DigitalInput[] switches = {switch4, switch5, switch6, switch7, switch8};
-	  public boolean[] switchesStatus = {switch4.get(), switch5.get(), switch6.get(), switch7.get(), switch8.get()};
+    public MultiSpeedController leftSpeedController = new MultiSpeedController(leftDriveController1,leftDriveController2,leftDriveController3);
+    public MultiSpeedController rightSpeedController = new MultiSpeedController(rightDriveController1,rightDriveController2,rightDriveController3);
+    
+    
+    public DigitalInput switch4 = new DigitalInput (4);
+    public DigitalInput switch5 = new DigitalInput (5);
+    public DigitalInput switch6 = new DigitalInput (6);
+    public DigitalInput switch7= new DigitalInput (7);
+    public DigitalInput switch8 = new DigitalInput (8);
+    public DigitalInput[] switches = {switch4, switch5, switch6, switch7, switch8};
+    public boolean[] switchesStatus = {switch4.get(), switch5.get(), switch6.get(), switch7.get(), switch8.get()};
     
 //    public static final double WHEEL_DIAMETER = 6.0;
 //    public static final double PULSE_PER_REVOLUTION = 360;
@@ -43,7 +42,10 @@ public class Drivetrain extends Subsystem {
 //    public static final double FUDGE_FACTOR = 1.0;
     
     public PowerDistributionPanel pdp = new PowerDistributionPanel();
-//    public boolean isDrivingAutonomously = false;
+    
+//    public Encoder leftEncoder = new Encoder(2, 3, true, EncodingType.k4X);
+//    public Encoder rightEncoder = new Encoder(0, 1, true, EncodingType.k4X);
+    public boolean isDrivingAutonomously;
     
     public Drivetrain(){
 //    	leftEncoder.setDistancePerPulse(Math.PI * WHEEL_DIAMETER / PULSE_PER_REVOLUTION);
