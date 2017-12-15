@@ -1,7 +1,5 @@
 package org.team751.commands;
 
-import org.team751.CheesyDrive;
-import org.team751.CheesyDrive.MotorOutputs;
 import org.team751.Robot;
 
 import edu.wpi.first.wpilibj.RobotDrive;
@@ -28,27 +26,7 @@ public class JoystickDrive extends Command {
     	if (Robot.drivetrain.isDrivingAutonomously) return;
     	double x = -Robot.oi.driverStick.getRawAxis(4);
     	double y = Robot.oi.driverStick.getRawAxis(5);
-    	if (Math.abs(y) < SENSITIVITY){y = 0;}
-    	//System.out.println("x: " + x + ", y: " + y);
-
-    	MotorOutputs output = Robot.robotDrive(y, x, quickTurn);
-    	System.out.println("Before left: " + -output.left + ", right: " + output.right);
-    	double left = -output.left;
-    	double right = output.right;
-    	// apply linear bump
-    	final double MAX_NATURAL = 0.69;
-    	left /= MAX_NATURAL;
-    	right /= MAX_NATURAL;
-    	
-    	boolean slowButton = Robot.oi.driverStick.getRawButton(7); // y button
-    	if (slowButton){
-    		System.out.println("bumper pressed");
-    		left /= 2.0;
-    		right /= 2.0;
-    	}
-    	System.out.println("After left: " + left + "; Right: " + right);
-    	Robot.drivetrain.setLeftSpeed(left);
-    	Robot.drivetrain.setRightSpeed(right);
+    	Robot.robotDrive.arcadeDrive(Robot.oi.driverStick, true);
     }
 
     // Make this return true when this Command no longer needs to run execute()

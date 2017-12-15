@@ -5,7 +5,6 @@ import java.net.UnknownHostException;
 
 import org.team751.arduino.ArduinoDataListener;
 import org.team751.commands.Autonomous;
-import org.team751.commands.GearPlacement;
 import org.team751.jetson.JoystickInputUDP;
 import org.team751.jetson.StateSenderUDP;
 import org.team751.subsystems.Drivetrain;

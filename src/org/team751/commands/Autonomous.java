@@ -17,7 +17,6 @@ public class Autonomous extends Command {
 	// 1.216 (0.225/0.185) in C7
 	// 0.925 in Bellarmine
 	private static double ratio = 0.95;
-	RobotDrive robotDrive = 
 	private static double totalCurrent;
 	private double initDistance, initOrientation;
 	private static final int maxError = 5;
@@ -237,7 +236,6 @@ public class Autonomous extends Command {
 	protected void turnCW() {
 		Robot.drivetrain.setLeftSpeed(0.65);
 		Robot.drivetrain.setRightSpeed(0.65);
-		Robot.
 	}
 
 	// turn counterclockwise
@@ -246,5 +244,5 @@ public class Autonomous extends Command {
 		Robot.drivetrain.setLeftSpeed(-0.90);
 		Robot.drivetrain.setRightSpeed(-0.95);
 	}
-
+	
 }
