@@ -29,11 +29,12 @@ public class Robot extends IterativeRobot {
 	public static final RobotDrive robotDrive = new RobotDrive(drivetrain.leftSpeedController,drivetrain.rightSpeedController);
 	public static final Winch winch = new Winch();
 	public static OI oi;
+	
 	Command autonomousCommand;
 	public static JoystickInputUDP autonomousJoystickSimulator;
 	public static StateSenderUDP stateSenderUDP;
 	public static boolean crushed;
-	public static ArduinoDataListener ADL;
+	public static ArduinoDataListener ADL =new ArduinoDataListener();;
 
     /**
      * This function is run when the robot is first started up and should be
@@ -41,7 +42,6 @@ public class Robot extends IterativeRobot {
      */
     public void robotInit() {
 		oi = new OI();
-		ADL = new ArduinoDataListener();
 		crushed = false;
         // instantiate the command used for the autonomous period
         autonomousCommand = new Autonomous(); 
