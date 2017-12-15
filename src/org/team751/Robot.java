@@ -26,15 +26,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Robot extends IterativeRobot {
 	public static final Drivetrain drivetrain = new Drivetrain();
+	public static final RobotDrive robotDrive = new RobotDrive(drivetrain.leftSpeedController,drivetrain.rightSpeedController);
 	public static final Winch winch = new Winch();
 	public static OI oi;
-	
+	Command autonomousCommand;
 	public static JoystickInputUDP autonomousJoystickSimulator;
 	public static StateSenderUDP stateSenderUDP;
-	public static boolean crushed = false;
-	public static ArduinoDataListener ADL = new ArduinoDataListener();
-	public static RobotDrive robotDrive = new RobotDrive(drivetrain.leftSpeedController,drivetrain.rightSpeedController);
-    Command autonomousCommand;
+	public static boolean crushed;
+	public static ArduinoDataListener ADL;
 
     /**
      * This function is run when the robot is first started up and should be
@@ -42,9 +41,10 @@ public class Robot extends IterativeRobot {
      */
     public void robotInit() {
 		oi = new OI();
-		//oi.autoButton.whenPressed(new GearPlacement()); no gear placement autonomous
+		ADL = new ArduinoDataListener();
+		crushed = false;
         // instantiate the command used for the autonomous period
-        autonomousCommand = new Autonomous();    
+        autonomousCommand = new Autonomous(); 
         Thread motorControlThread = new Thread(autonomousJoystickSimulator);
         motorControlThread.start();
         
@@ -58,7 +58,7 @@ public class Robot extends IterativeRobot {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        
+        Command autonomousCommand;
     }
 	
 	public void disabledPeriodic() {
@@ -125,6 +125,7 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
+    	System.out.println("the constructor");
         Scheduler.getInstance().run();
         printarduinoinfo();
 //        SmartDashboard.putNumber("leftEncoder", Robot.drivetrain.leftEncoder.getDistance());

@@ -50,6 +50,9 @@ public class Drivetrain extends Subsystem {
     public Drivetrain(){
 //    	leftEncoder.setDistancePerPulse(Math.PI * WHEEL_DIAMETER / PULSE_PER_REVOLUTION);
 //    	rightEncoder.setDistancePerPulse(Math.PI * WHEEL_DIAMETER / PULSE_PER_REVOLUTION);
+    	leftSpeedController = new MultiSpeedController(leftDriveController1,leftDriveController2,leftDriveController3);
+        rightSpeedController = new MultiSpeedController(rightDriveController1,rightDriveController2,rightDriveController3);
+        
     }
     
     
