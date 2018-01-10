@@ -15,16 +15,16 @@ import edu.wpi.first.wpilibj.DigitalInput;
  *
  */
 public class Drivetrain extends Subsystem {
-    public VictorSP leftDriveController1 = new VictorSP(3);
-    public VictorSP leftDriveController2 = new VictorSP(4);
-    public VictorSP leftDriveController3 = new VictorSP(5);
+    public VictorSP leftDriveController1;
+    public VictorSP leftDriveController2;
+    public VictorSP leftDriveController3;
     
-    public VictorSP rightDriveController1 = new VictorSP(0);
-    public VictorSP rightDriveController2 = new VictorSP(1);
-    public VictorSP rightDriveController3 = new VictorSP(2);
+    public VictorSP rightDriveController1;
+    public VictorSP rightDriveController2;
+    public VictorSP rightDriveController3;
     
-    public MultiSpeedController leftSpeedController = new MultiSpeedController(leftDriveController1,leftDriveController2,leftDriveController3);
-    public MultiSpeedController rightSpeedController = new MultiSpeedController(rightDriveController1,rightDriveController2,rightDriveController3);
+   // public MultiSpeedController leftSpeedController;
+   // public MultiSpeedController rightSpeedController;
     
     
     public DigitalInput switch4 = new DigitalInput (4);
@@ -50,9 +50,15 @@ public class Drivetrain extends Subsystem {
     public Drivetrain(){
 //    	leftEncoder.setDistancePerPulse(Math.PI * WHEEL_DIAMETER / PULSE_PER_REVOLUTION);
 //    	rightEncoder.setDistancePerPulse(Math.PI * WHEEL_DIAMETER / PULSE_PER_REVOLUTION);
-    	leftSpeedController = new MultiSpeedController(leftDriveController1,leftDriveController2,leftDriveController3);
-        rightSpeedController = new MultiSpeedController(rightDriveController1,rightDriveController2,rightDriveController3);
+//    	leftSpeedController = new MultiSpeedController(leftDriveController1,leftDriveController2,leftDriveController3);
+//        rightSpeedController = new MultiSpeedController(rightDriveController1,rightDriveController2,rightDriveController3);
+    	leftDriveController1 = new VictorSP(3);
+    	leftDriveController2 = new VictorSP(4);
+    	leftDriveController3 = new VictorSP(5);
         
+    	rightDriveController1 = new VictorSP(0);
+    	rightDriveController2 = new VictorSP(1);
+    	rightDriveController3 = new VictorSP(2);
     }
     
     

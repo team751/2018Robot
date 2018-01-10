@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class JoystickDrive extends Command {
 	
-	private static final double SENSITIVITY = 0.15;
 	
     public JoystickDrive() {
         // Use requires() here to declare subsystem dependencies
@@ -25,8 +24,8 @@ public class JoystickDrive extends Command {
     protected void execute() {
     	if (Robot.drivetrain.isDrivingAutonomously) return;
     	double x = -Robot.oi.driverStick.getRawAxis(4);
-    	double y = Robot.oi.driverStick.getRawAxis(5);
-    	Robot.robotDrive.arcadeDrive(Robot.oi.driverStick, true);
+    	double y = -Robot.oi.driverStick.getRawAxis(5);
+    	Robot.robotDrive.arcadeDrive(y,x, true);
     }
 
     // Make this return true when this Command no longer needs to run execute()

@@ -6,7 +6,8 @@ public class MultiSpeedController implements SpeedController{
 	    private double speed;
 
 	    public MultiSpeedController(SpeedController motor1, SpeedController motor2, SpeedController motor3) {
-	        speedControllers[0]= motor1;
+	    	speedControllers = new SpeedController[3]; 
+	        speedControllers[0] = motor1;
 	        speedControllers[1] = motor2;
 	        speedControllers[2] = motor3;
 	        this.set(0.0);

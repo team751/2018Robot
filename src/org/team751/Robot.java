@@ -12,10 +12,12 @@ import org.team751.subsystems.Winch;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.RobotDrive;
+import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.SpeedController;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -26,7 +28,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Robot extends IterativeRobot {
 	public static final Drivetrain drivetrain = new Drivetrain();
-	public static final RobotDrive robotDrive = new RobotDrive(drivetrain.leftSpeedController,drivetrain.rightSpeedController);
+	
+	public static SpeedController leftSpeedController; 
+	public static SpeedController rightSpeedController; 
+	
+	public static RobotDrive robotDrive;
+	
+	
 	public static final Winch winch = new Winch();
 	public static OI oi;
 	
@@ -51,6 +59,10 @@ public class Robot extends IterativeRobot {
         System.out.println("creating thread");
         Thread listenerThread = new Thread(ADL);
         listenerThread.start();
+        
+        leftSpeedController = new MultiSpeedController(drivetrain.leftDriveController1, drivetrain.leftDriveController2, drivetrain.leftDriveController3);
+        rightSpeedController = new MultiSpeedController(drivetrain.rightDriveController1, drivetrain.rightDriveController2, drivetrain.rightDriveController3);
+        robotDrive = new RobotDrive(leftSpeedController, rightSpeedController);
         
         try {
 			stateSenderUDP = new StateSenderUDP("10.7.51.76", 6000);
