@@ -52,13 +52,13 @@ public class Drivetrain extends Subsystem {
 //    	rightEncoder.setDistancePerPulse(Math.PI * WHEEL_DIAMETER / PULSE_PER_REVOLUTION);
 //    	leftSpeedController = new MultiSpeedController(leftDriveController1,leftDriveController2,leftDriveController3);
 //        rightSpeedController = new MultiSpeedController(rightDriveController1,rightDriveController2,rightDriveController3);
-    	leftDriveController1 = new VictorSP(3);
-    	leftDriveController2 = new VictorSP(4);
+    	leftDriveController1 = new VictorSP(1);
+    	leftDriveController2 = new VictorSP(3);
     	leftDriveController3 = new VictorSP(5);
         
     	rightDriveController1 = new VictorSP(0);
-    	rightDriveController2 = new VictorSP(1);
-    	rightDriveController3 = new VictorSP(2);
+    	rightDriveController2 = new VictorSP(2);
+    	rightDriveController3 = new VictorSP(4);
     }
     
     

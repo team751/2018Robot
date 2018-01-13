@@ -27,11 +27,16 @@ public class ArduinoDataListener implements Runnable {
 
 	@Override
 	public void run() {
-		/*
 		SerialPort port = new SerialPort(9600, SerialPort.Port.kUSB);
 		port.setReadBufferSize(1024);
-		port.setTimeout(0.01);
+		port.setTimeout(0.001);
+		
+		long requestNumber = 0;
 		while (true) {
+			writeString()
+			
+			
+			
 			final String message = port.readString();
 			System.out.print(message);
 			String[] lines = message.split("\\n");
@@ -47,7 +52,7 @@ public class ArduinoDataListener implements Runnable {
 			this.heading = Double.parseDouble(data[2]);
 			
 		}
-		*/
+		
 	}
 
 	public void stop() {

@@ -11,7 +11,7 @@ import org.team751.subsystems.Drivetrain;
 import org.team751.subsystems.Winch;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.RobotDrive;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -32,7 +32,7 @@ public class Robot extends IterativeRobot {
 	public static SpeedController leftSpeedController; 
 	public static SpeedController rightSpeedController; 
 	
-	public static RobotDrive robotDrive;
+	public static DifferentialDrive robotDrive;
 	
 	
 	public static final Winch winch = new Winch();
@@ -62,7 +62,8 @@ public class Robot extends IterativeRobot {
         
         leftSpeedController = new MultiSpeedController(drivetrain.leftDriveController1, drivetrain.leftDriveController2, drivetrain.leftDriveController3);
         rightSpeedController = new MultiSpeedController(drivetrain.rightDriveController1, drivetrain.rightDriveController2, drivetrain.rightDriveController3);
-        robotDrive = new RobotDrive(leftSpeedController, rightSpeedController);
+        
+        robotDrive = new DifferentialDrive(leftSpeedController, rightSpeedController);
         
         try {
 			stateSenderUDP = new StateSenderUDP("10.7.51.76", 6000);
