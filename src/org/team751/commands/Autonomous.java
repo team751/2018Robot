@@ -56,7 +56,7 @@ public class Autonomous extends Command {
 		// TODO Auto-generated method stub
 		super.start();
 		timer.reset();
-		initDistance = Robot.ADL.getY();
+//		initDistance = Robot.ADL.getY();
 		initOrientation = Robot.ADL.getHeading();
 		timeToDrive = 15;
 	}
@@ -69,25 +69,25 @@ public class Autonomous extends Command {
 	
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
-		totalCurrent = Robot.drivetrain.pdp.getTotalCurrent();
-		//double time = timer.get();
-		//drive(time);
-		
-		if (Robot.crushed) {
-			end();
-		} else if (Robot.drivetrain.switch4.get()) {
-			driveForDistance(passLineDist);
-		} else if (Robot.drivetrain.switch5.get()) {
-			driveForDistance(centralDist);
-		} else if (Robot.drivetrain.switch6.get()) {
-			leftGoLeftDistance(leftFirstDist, angle, leftSecondDist);
-		} else if (Robot.drivetrain.switch7.get()) {
-			rightGoRightDistance(rightFirstDist, angle, rightSecondDist);
-		} else {
-			end(); //no auto when all switches are turned off
-		}
-		
-		leftGoLeftDistance(60,60,30);
+//		totalCurrent = Robot.drivetrain.pdp.getTotalCurrent();
+//		//double time = timer.get();
+//		//drive(time);
+//		
+//		if (Robot.crushed) {
+//			end();
+//		} else if (Robot.drivetrain.switch4.get()) {
+//			driveForDistance(passLineDist);
+//		} else if (Robot.drivetrain.switch5.get()) {
+//			driveForDistance(centralDist);
+//		} else if (Robot.drivetrain.switch6.get()) {
+//			leftGoLeftDistance(leftFirstDist, angle, leftSecondDist);
+//		} else if (Robot.drivetrain.switch7.get()) {
+//			rightGoRightDistance(rightFirstDist, angle, rightSecondDist);
+//		} else {
+//			end(); //no auto when all switches are turned off
+//		}
+//		
+//		leftGoLeftDistance(60,60,30);
 	}
 
 	// Make this return true when this Command no longer needs to run execute()
@@ -105,69 +105,69 @@ public class Autonomous extends Command {
 	// subsystems is scheduled to run
 	protected void interrupted() {
 	}
-
-	protected void driveForDistance(int goal) {
-		System.out.println("Init Distance"+ initDistance);
-		System.out.println("Distance" + Robot.ADL.getY());
-		double controlRatio = 1 - (Robot.ADL.getY() - initDistance) / goal;
-		
-		if(Math.abs(Robot.ADL.getY() - initDistance) < goal){
-			Robot.drivetrain.setLeftSpeed(0.25 * controlRatio);
-			Robot.drivetrain.setRightSpeed(-0.25 * controlRatio);
-		}
-	}
-	
-	protected void leftGoLeftDistance(int firstDist, int angle, int secondDist){
-		if(Math.abs(Robot.ADL.getY() - initDistance) < firstDist){
-			driveForDistance(firstDist);
-		}
-		else{
-			double finalPosition = initOrientation - angle + 360;
-			double controlRatio = 1 - Math.abs(Robot.ADL.getHeading() - initOrientation)/Math.abs(Robot.ADL.getHeading() - finalPosition%360);
-			
-			System.out.println("Heading" + Robot.ADL.getHeading());
-			System.out.println("Init"+ initOrientation);
-			System.out.println("Difference" + Math.abs((Robot.ADL.getHeading() - finalPosition%360)));
-			
-			if(Math.abs((Robot.ADL.getHeading() - finalPosition%360)) > maxError){
-				Robot.drivetrain.setLeftSpeed(leftSpeed * controlRatio);
-				Robot.drivetrain.setRightSpeed(-rightSpeed * controlRatio);
-			} 
-			else{
-				initDistance = Robot.ADL.getY();
-				System.out.println("last init" + initDistance);
-				driveForDistance(secondDist);
-				end();
-				timeToDrive = 0;
-			}
-		}
-	}
-	
-	protected void rightGoRightDistance(int firstDist, int angle, int secondDist){
-		if(Math.abs(Robot.ADL.getY() - initDistance) < firstDist){
-			driveForDistance(firstDist);
-		}
-		else{
-			double finalPosition = initOrientation - angle + 360;
-			double controlRatio = 1 - Math.abs(Robot.ADL.getHeading() - initOrientation)/Math.abs(Robot.ADL.getHeading() - finalPosition%360);
-			
-			System.out.println("Heading" + Robot.ADL.getHeading());
-			System.out.println("Init"+ initOrientation);
-			System.out.println("Difference" + Math.abs((Robot.ADL.getHeading() - finalPosition%360)));
-			
-			if(Math.abs((Robot.ADL.getHeading() - finalPosition%360)) > maxError){
-				Robot.drivetrain.setLeftSpeed(-leftSpeed * controlRatio);
-				Robot.drivetrain.setRightSpeed(rightSpeed * controlRatio);
-			} 
-			else{
-				initDistance = Robot.ADL.getY();
-				System.out.println("last init" + initDistance);
-				driveForDistance(secondDist);
-				end();
-				timeToDrive = 0;
-			}
-		}
-	}
+//
+//	protected void driveForDistance(int goal) {
+//		System.out.println("Init Distance"+ initDistance);
+//		System.out.println("Distance" + Robot.ADL.getY());
+//		double controlRatio = 1 - (Robot.ADL.getY() - initDistance) / goal;
+//		
+//		if(Math.abs(Robot.ADL.getY() - initDistance) < goal){
+//			Robot.drivetrain.setLeftSpeed(0.25 * controlRatio);
+//			Robot.drivetrain.setRightSpeed(-0.25 * controlRatio);
+//		}
+//	}
+//	
+//	protected void leftGoLeftDistance(int firstDist, int angle, int secondDist){
+//		if(Math.abs(Robot.ADL.getY() - initDistance) < firstDist){
+//			driveForDistance(firstDist);
+//		}
+//		else{
+//			double finalPosition = initOrientation - angle + 360;
+//			double controlRatio = 1 - Math.abs(Robot.ADL.getHeading() - initOrientation)/Math.abs(Robot.ADL.getHeading() - finalPosition%360);
+//			
+//			System.out.println("Heading" + Robot.ADL.getHeading());
+//			System.out.println("Init"+ initOrientation);
+//			System.out.println("Difference" + Math.abs((Robot.ADL.getHeading() - finalPosition%360)));
+//			
+//			if(Math.abs((Robot.ADL.getHeading() - finalPosition%360)) > maxError){
+//				Robot.drivetrain.setLeftSpeed(leftSpeed * controlRatio);
+//				Robot.drivetrain.setRightSpeed(-rightSpeed * controlRatio);
+//			} 
+//			else{
+//				initDistance = Robot.ADL.getY();
+//				System.out.println("last init" + initDistance);
+//				driveForDistance(secondDist);
+//				end();
+//				timeToDrive = 0;
+//			}
+//		}
+//	}
+//	
+//	protected void rightGoRightDistance(int firstDist, int angle, int secondDist){
+//		if(Math.abs(Robot.ADL.getY() - initDistance) < firstDist){
+//			driveForDistance(firstDist);
+//		}
+//		else{
+//			double finalPosition = initOrientation - angle + 360;
+//			double controlRatio = 1 - Math.abs(Robot.ADL.getHeading() - initOrientation)/Math.abs(Robot.ADL.getHeading() - finalPosition%360);
+//			
+//			System.out.println("Heading" + Robot.ADL.getHeading());
+//			System.out.println("Init"+ initOrientation);
+//			System.out.println("Difference" + Math.abs((Robot.ADL.getHeading() - finalPosition%360)));
+//			
+//			if(Math.abs((Robot.ADL.getHeading() - finalPosition%360)) > maxError){
+//				Robot.drivetrain.setLeftSpeed(-leftSpeed * controlRatio);
+//				Robot.drivetrain.setRightSpeed(rightSpeed * controlRatio);
+//			} 
+//			else{
+//				initDistance = Robot.ADL.getY();
+//				System.out.println("last init" + initDistance);
+//				driveForDistance(secondDist);
+//				end();
+//				timeToDrive = 0;
+//			}
+//		}
+//	}
 	
 	protected void drive(double time){
 		System.out.println("drive" + time);

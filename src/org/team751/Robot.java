@@ -97,8 +97,8 @@ public class Robot extends IterativeRobot {
 
 	private void printarduinoinfo() {
 		//SmartDashboard.putNumber("Heading", ADL.getHeading());
-		SmartDashboard.putNumber("X", ADL.getX());
-		SmartDashboard.putNumber("Y", ADL.getY());
+//		SmartDashboard.putNumber("X", ADL.getX());
+//		SmartDashboard.putNumber("Y", ADL.getY());
 		//System.out.println("Heading: " + ADL.getHeading() + ", Velocity: " + ADL.getVelocity() + ", Distance: " + ADL.getDistance());
 	}
 

@@ -5,20 +5,21 @@ import java.util.Arrays;
 import edu.wpi.first.wpilibj.SerialPort;
 
 public class ArduinoDataListener implements Runnable {
-	private double x, y, heading;
+	private double distance, velocity, heading;
+	private long requestNumber = 0;
 
 	public ArduinoDataListener() {
-		this.x = 0.0;
-		this.y = 0.0;
-		this.heading = 0.0;
+		distance = 0.0;
+		velocity = 0.0;
+		heading = 0.0;
 	}
 
-	public double getX() {
-		return x;
+	public double getDistance() {
+		return distance;
 	}
 
-	public double getY() {
-		return y;
+	public double getVelocity() {
+		return velocity;
 	}
 	
 	public double getHeading(){
@@ -31,26 +32,19 @@ public class ArduinoDataListener implements Runnable {
 		port.setReadBufferSize(1024);
 		port.setTimeout(0.001);
 		
-		long requestNumber = 0;
+		
 		while (true) {
-			writeString()
-			
-			
-			
+			port.writeString("Q-" + requestNumber);
 			final String message = port.readString();
 			System.out.print(message);
-			String[] lines = message.split("\\n");
-			System.out.println(Arrays.toString(lines));
-			
-			final int lastIndex = message.lastIndexOf('\n');
-			final int secondLastIndex = message.lastIndexOf('\n', lastIndex - 1);
-			String dataLine = message.substring(secondLastIndex, lastIndex);
-			String[] data = dataLine.split(",");
-			
-			this.x = Double.parseDouble(data[0]);
-			this.y = Double.parseDouble(data[1]);
-			this.heading = Double.parseDouble(data[2]);
-			
+			String[] data = message.split("-");
+			long receivedNumber = Long.parseLong(data[0]);
+			if(requestNumber == receivedNumber){
+				this.velocity = Double.parseDouble(data[1]);
+				this.distance = Double.parseDouble(data[2]);
+				port.writeString("OK-" + requestNumber);
+			}
+			requestNumber++;
 		}
 		
 	}
