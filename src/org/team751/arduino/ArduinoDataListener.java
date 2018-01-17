@@ -43,8 +43,8 @@ public class ArduinoDataListener implements Runnable {
 				this.velocity = Double.parseDouble(data[1]);
 				this.distance = Double.parseDouble(data[2]);
 				port.writeString("OK-" + requestNumber);
+				requestNumber++;
 			}
-			requestNumber++;
 		}
 		
 	}

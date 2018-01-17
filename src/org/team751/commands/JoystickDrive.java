@@ -23,9 +23,9 @@ public class JoystickDrive extends Command {
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     	if (Robot.drivetrain.isDrivingAutonomously) return;
-    	double x = -Robot.oi.driverStick.getRawAxis(4);
-    	double y = -Robot.oi.driverStick.getRawAxis(5);
-    	Robot.robotDrive.arcadeDrive(y,x, true);
+    	double x = Robot.oi.driverStick.getRawAxis(4);
+    	double y = Robot.oi.driverStick.getRawAxis(5);
+    	Robot.robotDrive.arcadeDrive(-y,x, true);
     }
 
     // Make this return true when this Command no longer needs to run execute()
