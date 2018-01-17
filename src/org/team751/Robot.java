@@ -10,6 +10,7 @@ import org.team751.jetson.StateSenderUDP;
 import org.team751.subsystems.Drivetrain;
 import org.team751.subsystems.Winch;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.VictorSP;
@@ -44,6 +45,18 @@ public class Robot extends IterativeRobot {
 	public static boolean crushed;
 	public static ArduinoDataListener ADL =new ArduinoDataListener();;
 
+	private void setUpSwitchPosition(){
+		System.out.println("Gamedata getting...");
+		
+		String gameData;
+		
+		gameData = DriverStation.getInstance().getGameSpecificMessage();
+		
+		//isNearSwitchLeft = (gameData.charAt(0) == 'L');
+		
+		System.out.println("gameData="+gameData);
+	}
+	
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
@@ -62,7 +75,6 @@ public class Robot extends IterativeRobot {
         
         leftSpeedController = new MultiSpeedController(drivetrain.leftDriveController1, drivetrain.leftDriveController2, drivetrain.leftDriveController3);
         rightSpeedController = new MultiSpeedController(drivetrain.rightDriveController1, drivetrain.rightDriveController2, drivetrain.rightDriveController3);
-        
         robotDrive = new DifferentialDrive(leftSpeedController, rightSpeedController);
         
         try {
@@ -97,13 +109,14 @@ public class Robot extends IterativeRobot {
 
 	private void printarduinoinfo() {
 		//SmartDashboard.putNumber("Heading", ADL.getHeading());
-//		SmartDashboard.putNumber("X", ADL.getX());
-//		SmartDashboard.putNumber("Y", ADL.getY());
+		SmartDashboard.putNumber("X", ADL.getX());
+		SmartDashboard.putNumber("Y", ADL.getY());
 		//System.out.println("Heading: " + ADL.getHeading() + ", Velocity: " + ADL.getVelocity() + ", Distance: " + ADL.getDistance());
 	}
 
     public void autonomousInit() {
         // schedule the autonomous command (example)
+    	
         if (autonomousCommand != null) autonomousCommand.start();
         crushed = false;
     }

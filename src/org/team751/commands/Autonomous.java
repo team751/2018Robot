@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import org.team751.Robot;
 
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -45,10 +46,27 @@ public class Autonomous extends Command {
 	private static double currentLimit = 20;
 	
 	Timer timer = new Timer();
+	
+	// Whether the Near Switch 751 plate is left(and if false it is
+	// right).
+	
+	boolean isNearSwitchLeft;
 
 	public Autonomous() {
 		// Use requires() here to declare subsystem dependencies
 		// eg. requires(chassis);
+	}
+	
+	private void setUpSwitchPosition(){
+		System.out.println("Gamedata getting...");
+		
+		String gameData;
+		
+		gameData = DriverStation.getInstance().getGameSpecificMessage();
+		
+		isNearSwitchLeft = (gameData.charAt(0) == 'L');
+		
+		System.out.println("gameData="+gameData);
 	}
 	
 	@Override
@@ -59,6 +77,8 @@ public class Autonomous extends Command {
 //		initDistance = Robot.ADL.getY();
 		initOrientation = Robot.ADL.getHeading();
 		timeToDrive = 15;
+		
+		setUpSwitchPosition();
 	}
 
 	// Called just before this Command runs the first time
