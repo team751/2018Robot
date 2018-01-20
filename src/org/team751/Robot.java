@@ -43,7 +43,7 @@ public class Robot extends IterativeRobot {
 	public static JoystickInputUDP autonomousJoystickSimulator;
 	public static StateSenderUDP stateSenderUDP;
 	public static boolean crushed;
-	public static ArduinoDataListener ADL =new ArduinoDataListener();;
+	public static ArduinoDataListener ADL = new ArduinoDataListener();
 
 	private void setUpSwitchPosition(){
 		System.out.println("Gamedata getting...");
@@ -108,9 +108,13 @@ public class Robot extends IterativeRobot {
 	}
 
 	private void printarduinoinfo() {
-		//SmartDashboard.putNumber("Heading", ADL.getHeading());
-		SmartDashboard.putNumber("X", ADL.getX());
-		SmartDashboard.putNumber("Y", ADL.getY());
+		SmartDashboard.putNumber("Heading", ADL.getHeading());
+		
+		SmartDashboard.putNumber("Orientation", ADL.getOrientation());
+		SmartDashboard.putNumber("LeftPulses", ADL.getLeftPulses());
+		SmartDashboard.putNumber("RightPulses", ADL.getRightPulses());
+		//SmartDashboard.putNumber("X", ADL.getX());
+		//SmartDashboard.putNumber("Y", ADL.getY());
 		//System.out.println("Heading: " + ADL.getHeading() + ", Velocity: " + ADL.getVelocity() + ", Distance: " + ADL.getDistance());
 	}
 

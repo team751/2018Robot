@@ -14,7 +14,7 @@
  *  functions to implement it for other programs
  *  
  * Startup
- *  initialize
+ *  initialize 
  * Loop:
  *  print out the calibration data
  *  print out the temperature
