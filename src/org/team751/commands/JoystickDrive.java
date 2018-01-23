@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.command.Command;
 /**
  *
  */
-public class JoystickDrive extends Command {
+public class JoystickDrive extends Command{
 	
 	
     public JoystickDrive() {

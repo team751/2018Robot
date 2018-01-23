@@ -50,7 +50,7 @@ public class Autonomous extends Command {
 	// Whether the Near Switch 751 plate is left(and if false it is
 	// right).
 	
-	boolean isNearSwitchLeft;
+	public static boolean isNearSwitchLeft;
 
 	public Autonomous() {
 		// Use requires() here to declare subsystem dependencies
@@ -86,6 +86,16 @@ public class Autonomous extends Command {
 		timer.start();
 	}
 	
+	private void driveForTenFeet() {
+		Robot.drivetrain.setLeftSpeed(0.75);
+		Robot.drivetrain.setRightSpeed(0.75);
+		
+		// Wait until Distance reaches ten feet
+		while(Robot.ADL.getDistanceFeet() < 10.0) {}
+		
+		Robot.drivetrain.setLeftSpeed(0);
+		Robot.drivetrain.setRightSpeed(0);
+	}
 	
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
@@ -108,6 +118,8 @@ public class Autonomous extends Command {
 //		}
 //		
 //		leftGoLeftDistance(60,60,30);
+		
+		driveForTenFeet();
 	}
 
 	// Make this return true when this Command no longer needs to run execute()

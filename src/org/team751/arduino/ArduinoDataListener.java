@@ -1,21 +1,23 @@
 package org.team751.arduino;
 
 import java.util.Arrays;
+import java.lang.Math;
 
 import edu.wpi.first.wpilibj.SerialPort;
 
 public class ArduinoDataListener implements Runnable {
-	private final float WHEELRADIUS = 6.0f;
+	private final double WHEELRADIUS = 6.0;
 	
-	
-	private double distance, velocity, heading;
+	private double distanceFeet, distanceInches, velocity, heading;
 	private double orientation;
 	private long requestNumber = 0;
 	private long leftPulses, rightPulses;
 	private boolean stopSent = false;
 
 	public ArduinoDataListener() {
-		distance = 0.0;
+		distanceFeet = 0.0;
+		distanceInches = 0.0;
+		
 		velocity = 0.0;
 		heading = 0.0;
 		
@@ -23,8 +25,6 @@ public class ArduinoDataListener implements Runnable {
 		leftPulses = 0;
 		rightPulses = 0;
 	}
-
-	
 	
 	public double getOrientation(){
 		return orientation;
@@ -42,8 +42,12 @@ public class ArduinoDataListener implements Runnable {
 		return velocity;
 	}
 	
-	public double getDistance(){
-		return distance;
+	public double getDistanceInches(){
+		return distanceInches;
+	}
+	
+	public double getDistanceFeet(){
+		return distanceFeet;
 	}
 	
 	public double getHeading(){
@@ -51,7 +55,10 @@ public class ArduinoDataListener implements Runnable {
 	}
 	
 	private void refreshDistance(){
-		//
+		distanceInches = (Math.sqrt(this.WHEELRADIUS)*Math.PI)*
+								  this.leftPulses;
+		
+		this.distanceFeet = this.distanceInches/12;
 	}
 
 	@Override
