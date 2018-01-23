@@ -1,14 +1,14 @@
 
-package org.team751;
+package src.org.team751;
 
 import java.net.UnknownHostException;
 
-import org.team751.arduino.ArduinoDataListener;
-import org.team751.commands.Autonomous;
-import org.team751.jetson.JoystickInputUDP;
-import org.team751.jetson.StateSenderUDP;
-import org.team751.subsystems.Drivetrain;
-import org.team751.subsystems.Winch;
+import src.org.team751.arduino.ArduinoDataListener;
+import src.org.team751.commands.Autonomous;
+import src.org.team751.jetson.JoystickInputUDP;
+import src.org.team751.jetson.StateSenderUDP;
+import src.org.team751.subsystems.Drivetrain;
+import src.org.team751.subsystems.Winch;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -87,7 +87,12 @@ public class Robot extends IterativeRobot {
     }
 	
 	public void disabledPeriodic() {
-		printarduinoinfo();
+		try {
+			printarduinoinfo();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 //		Scheduler.getInstance().run();
 //        SmartDashboard.putNumber("leftEncoder", Robot.drivetrain.leftEncoder.getDistance());
@@ -107,7 +112,7 @@ public class Robot extends IterativeRobot {
 //		}
 	}
 
-	private void printarduinoinfo() {
+	private void printarduinoinfo() throws InterruptedException {
 		SmartDashboard.putNumber("Heading", ADL.getHeading());
 		
 		SmartDashboard.putNumber("Orientation", ADL.getOrientation());
@@ -131,7 +136,12 @@ public class Robot extends IterativeRobot {
     public void autonomousPeriodic() {
         Scheduler.getInstance().run();
         System.out.println("Total Current: " + Robot.drivetrain.pdp.getTotalCurrent());
-        printarduinoinfo();
+        try {
+			printarduinoinfo();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         //System.out.println("Heading: " + ADL.getHeading());
     }
 
@@ -157,7 +167,12 @@ public class Robot extends IterativeRobot {
     public void teleopPeriodic() {
     	System.out.println("the constructor");
         Scheduler.getInstance().run();
-        printarduinoinfo();
+			try {
+				printarduinoinfo();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 //        SmartDashboard.putNumber("leftEncoder", Robot.drivetrain.leftEncoder.getDistance());
 //        SmartDashboard.putNumber("rightEncoder", -Robot.drivetrain.rightEncoder.getDistance());
 //        System.out.println("leftEncoder" + Robot.drivetrain.leftEncoder.getDistance());

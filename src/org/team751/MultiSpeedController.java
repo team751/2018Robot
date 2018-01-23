@@ -1,4 +1,4 @@
-package org.team751;
+package src.org.team751;
 import edu.wpi.first.wpilibj.SpeedController;
 
 public class MultiSpeedController implements SpeedController{

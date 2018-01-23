@@ -1,7 +1,7 @@
-package org.team751.commands;
+package src.org.team751.commands;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import org.team751.Robot;
+import src.org.team751.Robot;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -75,7 +75,12 @@ public class Autonomous extends Command {
 		super.start();
 		timer.reset();
 //		initDistance = Robot.ADL.getY();
-		initOrientation = Robot.ADL.getHeading();
+		try {
+			initOrientation = Robot.ADL.getHeading();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		timeToDrive = 15;
 		
 		setUpSwitchPosition();

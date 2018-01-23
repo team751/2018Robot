@@ -1,4 +1,4 @@
-package org.team751;
+package src.org.team751;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;

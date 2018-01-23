@@ -1,6 +1,6 @@
-package org.team751.commands;
+package src.org.team751.commands;
 
-import org.team751.Robot;
+import src.org.team751.Robot;
 
 import edu.wpi.first.wpilibj.command.Command;
 

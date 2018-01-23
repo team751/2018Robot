@@ -1,89 +1,102 @@
-package org.team751.arduino;
-
-import java.util.Arrays;
+package src.org.team751.arduino;
 
 import edu.wpi.first.wpilibj.SerialPort;
 
 public class ArduinoDataListener implements Runnable {
 	private final float WHEELRADIUS = 6.0f;
-	
-	
+	private final int MAGNETS = 8;
+
 	private double distance, velocity, heading;
 	private double orientation;
 	private long requestNumber = 0;
 	private long leftPulses, rightPulses;
-	private boolean stopSent = false;
+	private SerialPort port;
 
 	public ArduinoDataListener() {
 		distance = 0.0;
 		velocity = 0.0;
 		heading = 0.0;
-		
+
 		orientation = 0.0;
 		leftPulses = 0;
 		rightPulses = 0;
+
+		port = new SerialPort(9600, SerialPort.Port.kUSB);
+		port.setReadBufferSize(1024);
+		port.setTimeout(0.001);
 	}
 
-	
-	
-	public double getOrientation(){
+	public double getOrientation() {
 		return orientation;
 	}
-	
-	public long getLeftPulses(){
+
+	public long getLeftPulses() throws InterruptedException {
 		return leftPulses;
 	}
-	
-	public long getRightPulses(){
+
+	public long getRightPulses() throws InterruptedException {
 		return rightPulses;
 	}
-	
-	public double getVelocity(){
+
+	public double getVelocity() {
 		return velocity;
 	}
-	
-	public double getDistance(){
-		return distance;
+
+	public double getDistance() throws InterruptedException {
+		//diveded by two to find the average
+		return (leftPulses + rightPulses) * Math.PI * WHEELRADIUS / MAGNETS;
 	}
-	
-	public double getHeading(){
+
+	public double getHeading() throws InterruptedException {
 		return heading;
 	}
-	
-	private void refreshDistance(){
+
+	private void refreshDistance() {
 		//
 	}
 
 	@Override
 	public void run() {
-		SerialPort port = new SerialPort(9600, SerialPort.Port.kUSB);
-		port.setReadBufferSize(1024);
-		port.setTimeout(0.001);
-		
-		
-		while (!stopSent) {
-			port.writeString("Q-" + requestNumber);
-			final String message = port.readString();
-			System.out.print(message);
-			String[] data = message.split("-");
-			long receivedNumber = Long.parseLong(data[0]);
-			if(requestNumber == receivedNumber){
-				/*this.velocity = Double.parseDouble(data[1]);
-				this.distance = Double.parseDouble(data[2]);*/
-				this.orientation = Double.parseDouble(data[1]);
-				this.leftPulses = Long.parseLong(data[2]);
-				this.rightPulses = Long.parseLong(data[3]);
-				port.writeString("OK-" + requestNumber);
-				requestNumber++;
-				
-				refreshDistance();
-			}
+		try {
+			fetchData();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		
-		stopSent = false;
 	}
 
 	public void stop() {
-		stopSent = true;
+	}
+
+	private void fetchData() throws InterruptedException {
+		boolean dataReceived = false;
+		String message;
+		String[]data = null;
+		long receivedNumber = 0;
+		while(!dataReceived){
+		port.writeString("Q-" + requestNumber);
+		short waitLoop = 3;
+		
+		do{
+			Thread.sleep((5 - waitLoop) * 5);
+			waitLoop--;
+			message = port.readString();
+			if(message != ""){
+			data = message.split("-");	
+			receivedNumber = Long.parseLong(data[0]);
+			}else{
+				requestNumber = -1;
+			}
+		}while(waitLoop >= 0 && receivedNumber != requestNumber);
+		
+		if(receivedNumber == requestNumber){
+			this.orientation = Double.parseDouble(data[1]);
+			this.leftPulses = Long.parseLong(data[2]);
+			this.rightPulses = Long.parseLong(data[3]);
+			port.writeString("OK-" + requestNumber);
+			dataReceived = true;
+		}
+		requestNumber++;
+	}
 	}
 }

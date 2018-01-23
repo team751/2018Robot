@@ -1,11 +1,11 @@
-package org.team751.jetson;
+package src.org.team751.jetson;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-import org.team751.Robot;
+import src.org.team751.Robot;
 
 //import com.kauailabs.nav6.frc.IMUAdvanced;
 
