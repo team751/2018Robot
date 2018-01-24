@@ -114,7 +114,6 @@ public class Robot extends IterativeRobot {
 
 	private void printarduinoinfo() throws InterruptedException {
 		SmartDashboard.putNumber("Heading", ADL.getHeading());
-		
 		SmartDashboard.putNumber("Orientation", ADL.getOrientation());
 		SmartDashboard.putNumber("LeftPulses", ADL.getLeftPulses());
 		SmartDashboard.putNumber("RightPulses", ADL.getRightPulses());
@@ -165,7 +164,6 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
-    	System.out.println("the constructor");
         Scheduler.getInstance().run();
 			try {
 				printarduinoinfo();

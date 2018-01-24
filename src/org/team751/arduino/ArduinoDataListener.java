@@ -43,7 +43,7 @@ public class ArduinoDataListener implements Runnable {
 	}
 
 	public double getDistance() throws InterruptedException {
-		//diveded by two to find the average
+		// diveded by two to find the average
 		return (leftPulses + rightPulses) * Math.PI * WHEELRADIUS / MAGNETS;
 	}
 
@@ -71,32 +71,30 @@ public class ArduinoDataListener implements Runnable {
 	private void fetchData() throws InterruptedException {
 		boolean dataReceived = false;
 		String message;
-		String[]data = null;
+		String[] data = null;
 		long receivedNumber = 0;
-		while(!dataReceived){
-		port.writeString("Q-" + requestNumber);
-		short waitLoop = 3;
-		
-		do{
-			Thread.sleep((5 - waitLoop) * 5);
-			waitLoop--;
-			message = port.readString();
-			if(message != ""){
-			data = message.split("-");	
-			receivedNumber = Long.parseLong(data[0]);
-			}else{
-				requestNumber = -1;
-			}
-		}while(waitLoop >= 0 && receivedNumber != requestNumber);
-		
-		if(receivedNumber == requestNumber){
-			this.orientation = Double.parseDouble(data[1]);
-			this.leftPulses = Long.parseLong(data[2]);
-			this.rightPulses = Long.parseLong(data[3]);
-			port.writeString("OK-" + requestNumber);
-			dataReceived = true;
+		int counter = 10;
+		while (!dataReceived && counter > 0) {
+			port.writeString("Q-" + requestNumber);
+			short waitLoop = 3;
+
+			do {
+				Thread.sleep((5 - waitLoop) * 5);
+				waitLoop--;
+				message = port.readString();
+				if (message.startsWith(Long.toString(requestNumber))) {
+					System.out.println("message:" + message);
+					data = message.split("-");
+					receivedNumber = Long.parseLong(data[0]);
+					this.orientation = Double.parseDouble(data[1]);
+					this.leftPulses = Long.parseLong(data[2]);
+					this.rightPulses = Long.parseLong(data[3]);
+					port.writeString("OK-" + requestNumber);
+					dataReceived = true;
+				}
+			} while (waitLoop >= 0 && !dataReceived);
+			requestNumber++;
+			counter--;
 		}
-		requestNumber++;
-	}
 	}
 }
