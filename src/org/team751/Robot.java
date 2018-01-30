@@ -87,12 +87,7 @@ public class Robot extends IterativeRobot {
     }
 	
 	public void disabledPeriodic() {
-		try {
-			printarduinoinfo();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		printarduinoinfo();
 		
 //		Scheduler.getInstance().run();
 //        SmartDashboard.putNumber("leftEncoder", Robot.drivetrain.leftEncoder.getDistance());
@@ -112,13 +107,14 @@ public class Robot extends IterativeRobot {
 //		}
 	}
 
-	private void printarduinoinfo() throws InterruptedException {
-		SmartDashboard.putNumber("Heading", ADL.getHeading());
-		SmartDashboard.putNumber("Orientation", ADL.getOrientation());
-		SmartDashboard.putNumber("LeftPulses", ADL.getLeftPulses());
-		SmartDashboard.putNumber("RightPulses", ADL.getRightPulses());
-//		SmartDashboard.putNumber("Distance(inches)", ADL.getDistanceInches());
-//		SmartDashboard.putNumber("Distance(feet)", ADL.getDistanceFeet());
+	private void printarduinoinfo() {
+		//SmartDashboard.putNumber("Heading", ADL.getHeading());
+		
+		//SmartDashboard.putNumber("Orientation", ADL.getOrientation());
+		//SmartDashboard.putNumber("LeftPulses", ADL.getLeftPulses());
+		//SmartDashboard.putNumber("RightPulses", ADL.getRightPulses());
+		//SmartDashboard.putNumber("Distance(inches)", ADL.getDistanceInches());
+		//SmartDashboard.putNumber("Distance(feet)", ADL.getDistanceFeet());
 		//SmartDashboard.putNumber("X", ADL.getX());
 		//SmartDashboard.putNumber("Y", ADL.getY());
 		//System.out.println("Heading: " + ADL.getHeading() + ", Velocity: " + ADL.getVelocity() + ", Distance: " + ADL.getDistance());
@@ -137,12 +133,7 @@ public class Robot extends IterativeRobot {
     public void autonomousPeriodic() {
         Scheduler.getInstance().run();
         System.out.println("Total Current: " + Robot.drivetrain.pdp.getTotalCurrent());
-        try {
-			printarduinoinfo();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        printarduinoinfo();
         //System.out.println("Heading: " + ADL.getHeading());
     }
 
@@ -166,14 +157,9 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
+    	System.out.println("the constructor");
         Scheduler.getInstance().run();
-        ADL.run();
-			try {
-				printarduinoinfo();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+        printarduinoinfo();
 //        SmartDashboard.putNumber("leftEncoder", Robot.drivetrain.leftEncoder.getDistance());
 //        SmartDashboard.putNumber("rightEncoder", -Robot.drivetrain.rightEncoder.getDistance());
 //        System.out.println("leftEncoder" + Robot.drivetrain.leftEncoder.getDistance());
