@@ -6,13 +6,36 @@ import java.util.Arrays;
 
 import edu.wpi.first.wpilibj.SerialPort;
 
-public class ArduinoDataListener implements Runnable {
 ==== BASE ====
-	private final float WHEELRADIUS = 6.0f;
-	
+import org.team751.arduino.ArduinoDataListener;
+import org.team751.commands.Autonomous;
+import org.team751.jetson.JoystickInputUDP;
+import org.team751.jetson.StateSenderUDP;
+import org.team751.subsystems.Drivetrain;
+import org.team751.subsystems.Winch;
+
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.VictorSP;
+import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.SpeedController;
+
+/**
+ * The VM is configured to automatically run this class, and to call the
+ * functions corresponding to each mode, as described in the IterativeRobot
+ * documentation. If you change the name of this class or the package after
+ * creating this project, you must also update the manifest file in the resource
+ * directory.
+ */
+public class Robot extends IterativeRobot {
+	public static final Drivetrain drivetrain = new Drivetrain();
 	
 	private double distance, velocity, heading;
-==== BASE ====
+
 	private double orientation;
 	private long requestNumber = 0;
 	private long leftPulses, rightPulses;
@@ -33,12 +56,8 @@ public class ArduinoDataListener implements Runnable {
 		port.setReadBufferSize(1024);
 		port.setTimeout(0.001);
 	}
-==== BASE ====
 
-	
-	
 	public double getOrientation(){
-==== BASE ====
 		return orientation;
 	}
 
@@ -53,21 +72,17 @@ public class ArduinoDataListener implements Runnable {
 	public double getVelocity() {
 		return velocity;
 	}
-==== BASE ====
 	
 	public double getDistance(){
 		return distance;
-==== BASE ====
 	}
 
 	public double getHeading() throws InterruptedException {
 		return heading;
 	}
-==== BASE ====
 	
 	private void refreshDistance(){
 		//
-==== BASE ====
 	}
 
 	@Override
@@ -78,38 +93,108 @@ public class ArduinoDataListener implements Runnable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+        Command autonomousCommand;
+    }
+	
+	public void disabledPeriodic() {
+		printarduinoinfo();
+		
+//		Scheduler.getInstance().run();
+//        SmartDashboard.putNumber("leftEncoder", Robot.drivetrain.leftEncoder.getDistance());
+//        SmartDashboard.putNumber("rightEncoder", Robot.drivetrain.rightEncoder.getDistance());
+//        SmartDashboard.putNumber("Right Encoder Rate", Robot.drivetrain.rightEncoder.getRate());
+//        SmartDashboard.putNumber("Left Encoder Rate", Robot.drivetrain.rightEncoder.getRate());
+//        
+		
+//        System.out.println("leftEncoder" + Robot.drivetrain.leftEncoder.getDistance());
+//        System.out.println("RightEncoder" + -Robot.drivetrain.rightEncoder.getDistance());
+//        
+//        try {
+//			stateSenderUDP.sendState(RobotState.DISABLED, 0);
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+
 	}
 
-	public void stop() {
+	private void printarduinoinfo() {
+		SmartDashboard.putNumber("Heading", ADL.getHeading());
+		
+		SmartDashboard.putNumber("Orientation", ADL.getOrientation());
+		SmartDashboard.putNumber("LeftPulses", ADL.getLeftPulses());
+		SmartDashboard.putNumber("RightPulses", ADL.getRightPulses());
+		SmartDashboard.putNumber("Distance(inches)", ADL.getDistanceInches());
+		SmartDashboard.putNumber("Distance(feet)", ADL.getDistanceFeet());
+		//SmartDashboard.putNumber("X", ADL.getX());
+		//SmartDashboard.putNumber("Y", ADL.getY());
+		//System.out.println("Heading: " + ADL.getHeading() + ", Velocity: " + ADL.getVelocity() + ", Distance: " + ADL.getDistance());
 	}
 
-	private void fetchData() throws InterruptedException {
-		boolean dataReceived = false;
-		String message;
-		String[] data = null;
-		long receivedNumber = 0;
-		int counter = 10;
-		while (!dataReceived && counter > 0) {
-			port.writeString("Q-" + requestNumber);
-			short waitLoop = 3;
+    public void autonomousInit() {
+        // schedule the autonomous command (example)
+    	
+        if (autonomousCommand != null) autonomousCommand.start();
+        crushed = false;
+    }
 
-			do {
-				Thread.sleep((5 - waitLoop) * 5);
-				waitLoop--;
-				message = port.readString();
-				if (message.startsWith(Long.toString(requestNumber))) {
-					System.out.println("message:" + message);
-					data = message.split("-");
-					receivedNumber = Long.parseLong(data[0]);
-					this.orientation = Double.parseDouble(data[1]);
-					this.leftPulses = Long.parseLong(data[2]);
-					this.rightPulses = Long.parseLong(data[3]);
-					port.writeString("OK-" + requestNumber);
-					dataReceived = true;
-				}
-			} while (waitLoop >= 0 && !dataReceived);
-			requestNumber++;
-			counter--;
-		}
-	}
+    /**
+     * This function is called periodically during autonomous
+     */
+    public void autonomousPeriodic() {
+        Scheduler.getInstance().run();
+        System.out.println("Total Current: " + Robot.drivetrain.pdp.getTotalCurrent());
+        printarduinoinfo();
+        //System.out.println("Heading: " + ADL.getHeading());
+    }
+
+    public void teleopInit() {
+		// This makes sure that the autonomous stops running when
+        // teleop starts running. If you want the autonomous to 
+        // continue until interrupted by another command, remove
+        // this line or comment it out.
+        if (autonomousCommand != null) autonomousCommand.cancel();
+        
+    }
+
+
+    /**
+     * This function is called when the disabled button is hit.
+     * You can use it to reset subsystems before shutting down.
+     */
+    public void disabledInit(){
+    }
+
+    /**
+     * This function is called periodically during operator control
+     */
+    public void teleopPeriodic() {
+    	System.out.println("the constructor");
+        Scheduler.getInstance().run();
+        printarduinoinfo();
+//        SmartDashboard.putNumber("leftEncoder", Robot.drivetrain.leftEncoder.getDistance());
+//        SmartDashboard.putNumber("rightEncoder", -Robot.drivetrain.rightEncoder.getDistance());
+//        System.out.println("leftEncoder" + Robot.drivetrain.leftEncoder.getDistance());
+//        System.out.println("RightEncoder" + Robot.drivetrain.rightEncoder.getDistance());
+        
+//        System.out.println("Left Speed: " + Robot.drivetrain.leftDriveController1.getSpeed());
+//        System.out.println("Right Speed: " + Robot.drivetrain.rightDriveController1.getSpeed());
+       
+//Current check        
+//        System.out.println("Total Current: " + Robot.drivetrain.pdp.getTotalCurrent());
+//        System.out.print("Left Motors: " + "Motor1: " + Robot.drivetrain.pdp.getCurrent(3) + ",");
+//        System.out.print("Motor3: " + Robot.drivetrain.pdp.getCurrent(2) + ",");
+//        System.out.print("Motor5: " + Robot.drivetrain.pdp.getCurrent(1) + ",");
+//        System.out.print("Right Motors: " + "Motor0: " + Robot.drivetrain.pdp.getCurrent(0) + ",");
+//        System.out.print("Motor2: " + Robot.drivetrain.pdp.getCurrent(13) + ",");
+//        System.out.print("Motor4: " + Robot.drivetrain.pdp.getCurrent(14) + ",");
+//        System.out.println();
+    }
+    
+    /**
+     * This function is called periodically during test mode
+     */
+    public void testPeriodic() {
+        LiveWindow.run();
+    }
 }
