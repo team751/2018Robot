@@ -1,12 +1,8 @@
-==== BASE ====
-package org.team751.arduino;
 
-import java.util.Arrays;
-==== BASE ====
+package org.team751;
 
-import edu.wpi.first.wpilibj.SerialPort;
+import java.net.UnknownHostException;
 
-==== BASE ====
 import org.team751.arduino.ArduinoDataListener;
 import org.team751.commands.Autonomous;
 import org.team751.jetson.JoystickInputUDP;
@@ -34,62 +30,56 @@ import edu.wpi.first.wpilibj.SpeedController;
 public class Robot extends IterativeRobot {
 	public static final Drivetrain drivetrain = new Drivetrain();
 	
-	private double distance, velocity, heading;
+	public static SpeedController leftSpeedController; 
+	public static SpeedController rightSpeedController; 
+	
+	public static DifferentialDrive robotDrive;
+	
+	
+	public static final Winch winch = new Winch();
+	public static OI oi;
+	
+	Command autonomousCommand;
+	public static JoystickInputUDP autonomousJoystickSimulator;
+	public static StateSenderUDP stateSenderUDP;
+	public static boolean crushed;
+	public static ArduinoDataListener ADL = new ArduinoDataListener();
 
-	private double orientation;
-	private long requestNumber = 0;
-	private long leftPulses, rightPulses;
-	private SerialPort port;
-
-	public ArduinoDataListener() {
-		distanceFeet = 0.0;
-		distanceInches = 0.0;
+	private void setUpSwitchPosition(){
+		System.out.println("Gamedata getting...");
 		
-		velocity = 0.0;
-		heading = 0.0;
-
-		orientation = 0.0;
-		leftPulses = 0;
-		rightPulses = 0;
-
-		port = new SerialPort(9600, SerialPort.Port.kUSB);
-		port.setReadBufferSize(1024);
-		port.setTimeout(0.001);
-	}
-
-	public double getOrientation(){
-		return orientation;
-	}
-
-	public long getLeftPulses() throws InterruptedException {
-		return leftPulses;
-	}
-
-	public long getRightPulses() throws InterruptedException {
-		return rightPulses;
-	}
-
-	public double getVelocity() {
-		return velocity;
+		String gameData;
+		
+		gameData = DriverStation.getInstance().getGameSpecificMessage();
+		
+		Autonomous.isNearSwitchLeft = (gameData.charAt(0) == 'L');
+		
+		System.out.println("gameData="+gameData);
 	}
 	
-	public double getDistance(){
-		return distance;
-	}
-
-	public double getHeading() throws InterruptedException {
-		return heading;
-	}
-	
-	private void refreshDistance(){
-		//
-	}
-
-	@Override
-	public void run() {
-		try {
-			fetchData();
-		} catch (InterruptedException e) {
+    /**
+     * This function is run when the robot is first started up and should be
+     * used for any initialization code.
+     */
+    public void robotInit() {
+		oi = new OI();
+		crushed = false;
+        // instantiate the command used for the autonomous period
+        autonomousCommand = new Autonomous(); 
+        Thread motorControlThread = new Thread(autonomousJoystickSimulator);
+        motorControlThread.start();
+        
+        System.out.println("creating ADL thread");
+        Thread listenerThread = new Thread(ADL);
+        listenerThread.start();
+        
+        leftSpeedController = new MultiSpeedController(drivetrain.leftDriveController1, drivetrain.leftDriveController2, drivetrain.leftDriveController3);
+        rightSpeedController = new MultiSpeedController(drivetrain.rightDriveController1, drivetrain.rightDriveController2, drivetrain.rightDriveController3);
+        robotDrive = new DifferentialDrive(leftSpeedController, rightSpeedController);
+        
+        try {
+			stateSenderUDP = new StateSenderUDP("10.7.51.76", 6000);
+		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -115,7 +105,6 @@ public class Robot extends IterativeRobot {
 //			// TODO Auto-generated catch block
 //			e.printStackTrace();
 //		}
-
 	}
 
 	private void printarduinoinfo() {
@@ -156,7 +145,6 @@ public class Robot extends IterativeRobot {
         if (autonomousCommand != null) autonomousCommand.cancel();
         
     }
-
 
     /**
      * This function is called when the disabled button is hit.
