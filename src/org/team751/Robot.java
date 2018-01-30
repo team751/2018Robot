@@ -1,4 +1,5 @@
 
+<<<<<<< HEAD
 package src.org.team751;
 
 import java.net.UnknownHostException;
@@ -9,6 +10,18 @@ import src.org.team751.jetson.JoystickInputUDP;
 import src.org.team751.jetson.StateSenderUDP;
 import src.org.team751.subsystems.Drivetrain;
 import src.org.team751.subsystems.Winch;
+=======
+package org.team751;
+
+import java.net.UnknownHostException;
+
+import org.team751.arduino.ArduinoDataListener;
+import org.team751.commands.Autonomous;
+import org.team751.jetson.JoystickInputUDP;
+import org.team751.jetson.StateSenderUDP;
+import org.team751.subsystems.Drivetrain;
+import org.team751.subsystems.Winch;
+>>>>>>> 865b88f5de9897fb9a89b3bb6ffb2e560d3b0590
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -108,6 +121,7 @@ public class Robot extends IterativeRobot {
 	}
 
 	private void printarduinoinfo() {
+<<<<<<< HEAD
 		//SmartDashboard.putNumber("Heading", ADL.getHeading());
 		
 		//SmartDashboard.putNumber("Orientation", ADL.getOrientation());
@@ -115,6 +129,15 @@ public class Robot extends IterativeRobot {
 		//SmartDashboard.putNumber("RightPulses", ADL.getRightPulses());
 		//SmartDashboard.putNumber("Distance(inches)", ADL.getDistanceInches());
 		//SmartDashboard.putNumber("Distance(feet)", ADL.getDistanceFeet());
+=======
+		SmartDashboard.putNumber("Heading", ADL.getHeading());
+		
+		SmartDashboard.putNumber("Orientation", ADL.getOrientation());
+		SmartDashboard.putNumber("LeftPulses", ADL.getLeftPulses());
+		SmartDashboard.putNumber("RightPulses", ADL.getRightPulses());
+		SmartDashboard.putNumber("Distance(inches)", ADL.getDistanceInches());
+		SmartDashboard.putNumber("Distance(feet)", ADL.getDistanceFeet());
+>>>>>>> 865b88f5de9897fb9a89b3bb6ffb2e560d3b0590
 		//SmartDashboard.putNumber("X", ADL.getX());
 		//SmartDashboard.putNumber("Y", ADL.getY());
 		//System.out.println("Heading: " + ADL.getHeading() + ", Velocity: " + ADL.getVelocity() + ", Distance: " + ADL.getDistance());
@@ -185,4 +208,8 @@ public class Robot extends IterativeRobot {
     public void testPeriodic() {
         LiveWindow.run();
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 865b88f5de9897fb9a89b3bb6ffb2e560d3b0590
