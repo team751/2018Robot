@@ -74,8 +74,8 @@ public class Autonomous extends Command {
 		// TODO Auto-generated method stub
 		super.start();
 		timer.reset();
-		// initDistance = Robot.ADL.getY();
-		/*try {
+		/*initDistance = Robot.ADL.getY();
+		try {
 			initOrientation = Robot.ADL.getHeading();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
