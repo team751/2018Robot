@@ -75,12 +75,12 @@ public class Autonomous extends Command {
 		super.start();
 		timer.reset();
 		// initDistance = Robot.ADL.getY();
-		try {
+		/*try {
 			initOrientation = Robot.ADL.getHeading();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 		timeToDrive = 15;
 
 		setUpSwitchPosition();
