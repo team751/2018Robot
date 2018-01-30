@@ -52,7 +52,7 @@ public class Robot extends IterativeRobot {
 		
 		gameData = DriverStation.getInstance().getGameSpecificMessage();
 		
-		//isNearSwitchLeft = (gameData.charAt(0) == 'L');
+		Autonomous.isNearSwitchLeft = (gameData.charAt(0) == 'L');
 		
 		System.out.println("gameData="+gameData);
 	}
@@ -69,7 +69,7 @@ public class Robot extends IterativeRobot {
         Thread motorControlThread = new Thread(autonomousJoystickSimulator);
         motorControlThread.start();
         
-        System.out.println("creating thread");
+        System.out.println("creating ADL thread");
         Thread listenerThread = new Thread(ADL);
         listenerThread.start();
         
@@ -117,6 +117,8 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putNumber("Orientation", ADL.getOrientation());
 		SmartDashboard.putNumber("LeftPulses", ADL.getLeftPulses());
 		SmartDashboard.putNumber("RightPulses", ADL.getRightPulses());
+//		SmartDashboard.putNumber("Distance(inches)", ADL.getDistanceInches());
+//		SmartDashboard.putNumber("Distance(feet)", ADL.getDistanceFeet());
 		//SmartDashboard.putNumber("X", ADL.getX());
 		//SmartDashboard.putNumber("Y", ADL.getY());
 		//System.out.println("Heading: " + ADL.getHeading() + ", Velocity: " + ADL.getVelocity() + ", Distance: " + ADL.getDistance());
@@ -165,6 +167,7 @@ public class Robot extends IterativeRobot {
      */
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
+        ADL.run();
 			try {
 				printarduinoinfo();
 			} catch (InterruptedException e) {

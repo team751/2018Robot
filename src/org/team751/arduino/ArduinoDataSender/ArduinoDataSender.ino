@@ -104,10 +104,10 @@ void sendData() {
     Serial.print("-");
     Serial.println(rightPulses);
     if (count == 0) {
-      delay(100);
+      delay(10);
     }
     else {
-      delay(2000);
+      delay(20);
     }
   }
   while (count++ < sendRepeat && !Serial.readString().equals(confirmationToken + separator + String(requestID))); // While the RoboRIO hasn't sent the right verification token.

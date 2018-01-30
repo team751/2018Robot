@@ -57,11 +57,13 @@ public class ArduinoDataListener implements Runnable {
 
 	@Override
 	public void run() {
-		try {
-			fetchData();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		while (true) {
+			try {
+				fetchData();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -72,29 +74,29 @@ public class ArduinoDataListener implements Runnable {
 		boolean dataReceived = false;
 		String message;
 		String[] data = null;
-		long receivedNumber = 0;
-		int counter = 10;
-		while (!dataReceived && counter > 0) {
-			port.writeString("Q-" + requestNumber);
-			short waitLoop = 3;
-
-			do {
-				Thread.sleep((5 - waitLoop) * 5);
-				waitLoop--;
+		// while (!dataReceived && counter > 0) {
+		port.writeString("Q-" + requestNumber);
+		short waitLoop = 1;
+		System.out.println("requestNumber: " + requestNumber);
+		do {
+			Thread.sleep(60);
+			waitLoop--;
+			message = port.readString();
+			if (!message.contains("*") || !message.startsWith(Long.toString(requestNumber))) {
 				message = port.readString();
-				if (message.startsWith(Long.toString(requestNumber))) {
-					System.out.println("message:" + message);
-					data = message.split("-");
-					receivedNumber = Long.parseLong(data[0]);
-					this.orientation = Double.parseDouble(data[1]);
-					this.leftPulses = Long.parseLong(data[2]);
-					this.rightPulses = Long.parseLong(data[3]);
-					port.writeString("OK-" + requestNumber);
-					dataReceived = true;
-				}
-			} while (waitLoop >= 0 && !dataReceived);
-			requestNumber++;
-			counter--;
-		}
+				System.out.println("At the " + waitLoop + "'s call, the message:" + message);
+			} else {
+				message = message.substring(0, message.indexOf("*") - 1);
+				System.out.println("At the " + waitLoop + "'s call, the message:" + message);
+				data = message.split("-");
+				this.orientation = Double.valueOf(data[1]);
+				this.leftPulses = Long.valueOf(data[2]);
+				this.rightPulses = Long.valueOf(data[3]);
+				port.writeString("OK-" + requestNumber);
+				dataReceived = true;
+			}
+		} while (waitLoop > 0 && !dataReceived);
+
+		requestNumber++;
 	}
 }
