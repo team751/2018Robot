@@ -108,13 +108,13 @@ public class Robot extends IterativeRobot {
 	}
 
 	private void printarduinoinfo() {
-		SmartDashboard.putNumber("Heading", ADL.getHeading());
+		//SmartDashboard.putNumber("Heading", ADL.getHeading());
 		
-		SmartDashboard.putNumber("Orientation", ADL.getOrientation());
-		SmartDashboard.putNumber("LeftPulses", ADL.getLeftPulses());
-		SmartDashboard.putNumber("RightPulses", ADL.getRightPulses());
-		SmartDashboard.putNumber("Distance(inches)", ADL.getDistanceInches());
-		SmartDashboard.putNumber("Distance(feet)", ADL.getDistanceFeet());
+		//SmartDashboard.putNumber("Orientation", ADL.getOrientation());
+		//SmartDashboard.putNumber("LeftPulses", ADL.getLeftPulses());
+		//SmartDashboard.putNumber("RightPulses", ADL.getRightPulses());
+		//SmartDashboard.putNumber("Distance(inches)", ADL.getDistanceInches());
+		//SmartDashboard.putNumber("Distance(feet)", ADL.getDistanceFeet());
 		//SmartDashboard.putNumber("X", ADL.getX());
 		//SmartDashboard.putNumber("Y", ADL.getY());
 		//System.out.println("Heading: " + ADL.getHeading() + ", Velocity: " + ADL.getVelocity() + ", Distance: " + ADL.getDistance());
