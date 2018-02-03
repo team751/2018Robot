@@ -1,5 +1,8 @@
 package src.org.team751.arduino;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import edu.wpi.first.wpilibj.SerialPort;
 
 public class ArduinoDataListener implements Runnable {
@@ -21,9 +24,13 @@ public class ArduinoDataListener implements Runnable {
 		leftPulses = 0;
 		rightPulses = 0;
 
-		port = new SerialPort(9600, SerialPort.Port.kUSB);
-		port.setReadBufferSize(1024);
-		port.setTimeout(0.001);
+		try{
+			port = new SerialPort(9600, SerialPort.Port.kUSB);
+			port.setReadBufferSize(1);
+			port.setTimeout(0.001);
+		}catch(RuntimeException e){
+			System.out.println("No arduino serial connection");
+		}
 	}
 
 	public double getOrientation() {
@@ -60,6 +67,7 @@ public class ArduinoDataListener implements Runnable {
 		while (true) {
 			try {
 				fetchData();
+				Thread.sleep(10);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -71,7 +79,7 @@ public class ArduinoDataListener implements Runnable {
 	}
 
 	private void fetchData() throws InterruptedException {
-		boolean dataReceived = false;
+		/*boolean dataReceived = false;
 		String message;
 		String[] data = null;
 		// while (!dataReceived && counter > 0) {
@@ -79,15 +87,16 @@ public class ArduinoDataListener implements Runnable {
 		short waitLoop = 1;
 		System.out.println("requestNumber: " + requestNumber);
 		do {
-			Thread.sleep(60);
+			Thread.sleep(300);
 			waitLoop--;
 			message = port.readString();
-			if (!message.contains("*") || !message.startsWith(Long.toString(requestNumber))) {
+			System.out.println("Message: " + message);
+			if (message.contains("*") || !message.startsWith(Long.toString(requestNumber))) {
 				message = port.readString();
-				System.out.println("At the " + waitLoop + "'s call, the message:" + message);
+				//System.out.println("At the " + waitLoop + "'s call, the message:" + message);
 			} else {
 				message = message.substring(0, message.indexOf("*") - 1);
-				System.out.println("At the " + waitLoop + "'s call, the message:" + message);
+				//System.out.println("At the " + waitLoop + "'s call, the message:" + message);
 				data = message.split("-");
 				this.orientation = Double.valueOf(data[1]);
 				this.leftPulses = Long.valueOf(data[2]);
@@ -99,4 +108,45 @@ public class ArduinoDataListener implements Runnable {
 
 		requestNumber++;
 	}
+	*/
+		//grab current data and set it to global
+		//flush the rest
+		try {
+			String message = port.readString();
+			
+			if (!message.contains("[")) {
+				System.out.println("Invalid string: " + message);
+				return;
+			}
+			
+			for(int i = 0; i < 3; i++){
+				System.out.println("Received String: " + message);
+				int endOfMessage = message.lastIndexOf(']');
+				int startOfMessage = message.lastIndexOf('[', endOfMessage);
+				
+				if(endOfMessage <= startOfMessage){
+					Thread.sleep(5);
+					message += port.readString();
+				}else{
+				message = message.substring(startOfMessage + 1, endOfMessage);
+				System.out.println("Processed message: " + message);
+				break;
+				}
+			}
+			
+			String[] data = message.split("-");
+			this.orientation = Double.valueOf(data[0]);
+			this.leftPulses = Long.valueOf(data[1]);
+			//data[3].replaceAll("\n", "").replaceAll("\r", "").trim();
+			this.rightPulses = Long.valueOf(data[2]);
+		}
+		catch (ArrayIndexOutOfBoundsException e) {
+			System.out.println(e.getMessage());
+		}
+		catch(NumberFormatException e){
+			System.out.println(e.getMessage());
+		}
+		
+	}
+	
 }

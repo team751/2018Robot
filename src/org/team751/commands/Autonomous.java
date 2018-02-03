@@ -41,7 +41,7 @@ public class Autonomous extends Command {
 	private static final int leftSecondDist = 68;
 	private static final int rightFirstDist = 72;
 	private static final int rightSecondDist = 63;
-
+	
 	// Currentlimit when driving forward is 40 at Bellarmine
 	private static double currentLimit = 20;
 
@@ -63,6 +63,11 @@ public class Autonomous extends Command {
 		String gameData;
 
 		gameData = DriverStation.getInstance().getGameSpecificMessage();
+		
+		if(gameData.isEmpty()){
+			System.out.println("We are not running this in a competition");
+			return;
+		}
 
 		isNearSwitchLeft = (gameData.charAt(0) == 'L');
 
@@ -70,20 +75,27 @@ public class Autonomous extends Command {
 	}
 
 	@Override
-	public synchronized void start() {
+	public synchronized void start(){
 		// TODO Auto-generated method stub
 		super.start();
 		timer.reset();
-		/*initDistance = Robot.ADL.getY();
+	    //initDistance = Robot.ADL.getY();
 		try {
 			initOrientation = Robot.ADL.getHeading();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}*/
+		}
 		timeToDrive = 15;
 
 		setUpSwitchPosition();
+		
+		try {
+			driveForTenFeet();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	// Called just before this Command runs the first time
@@ -91,15 +103,16 @@ public class Autonomous extends Command {
 		timer.start();
 	}
 
-	private void driveForTenFeet() {
-		Robot.drivetrain.setLeftSpeed(0.75);
-		Robot.drivetrain.setRightSpeed(0.75);
+	private void driveForTenFeet() throws InterruptedException{
+		Robot.drivetrain.setLeftSpeed(leftSpeed * 0.75);
+		Robot.drivetrain.setRightSpeed(rightSpeed * 0.75);
 		
 		// Wait until Distance reaches ten feet
-//		while(Robot.ADL.getDistanceFeet() < 10.0) {}
+		while(Robot.ADL.getDistance() < 10.0) {}
+		
 //		
-//		Robot.drivetrain.setLeftSpeed(0);
-//		Robot.drivetrain.setRightSpeed(0);
+		Robot.drivetrain.setLeftSpeed(0);
+		Robot.drivetrain.setRightSpeed(0);
 	}
 	
 	// Called repeatedly when this Command is scheduled to run
@@ -123,8 +136,6 @@ public class Autonomous extends Command {
 		// }
 		//
 		// leftGoLeftDistance(60,60,30);
-
-		driveForTenFeet();
 	}
 
 	// Make this return true when this Command no longer needs to run execute()
