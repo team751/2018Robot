@@ -119,13 +119,15 @@ public class ArduinoDataListener implements Runnable {
 				return;
 			}
 			
+			
 			for(int i = 0; i < 3; i++){
+				message.substring(message.indexOf("["));
 				System.out.println("Received String: " + message);
 				int endOfMessage = message.lastIndexOf(']');
 				int startOfMessage = message.lastIndexOf('[', endOfMessage);
 				
 				if(endOfMessage <= startOfMessage){
-					Thread.sleep(5);
+					Thread.sleep(3);
 					message += port.readString();
 				}else{
 				message = message.substring(startOfMessage + 1, endOfMessage);

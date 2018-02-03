@@ -41,7 +41,9 @@ public class Autonomous extends Command {
 	private static final int leftSecondDist = 68;
 	private static final int rightFirstDist = 72;
 	private static final int rightSecondDist = 63;
-	
+	private static final int numberOfMagnets = 6;
+	private static final double wheelDiameter = 6.0;
+
 	// Currentlimit when driving forward is 40 at Bellarmine
 	private static double currentLimit = 20;
 
@@ -53,8 +55,12 @@ public class Autonomous extends Command {
 	public static boolean isNearSwitchLeft;
 
 	public Autonomous() {
-		// Use requires() here to declare subsystem dependencies
-		// eg. requires(chassis);
+//		try {
+//			driveForDistance(10);
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 	}
 
 	private void setUpSwitchPosition() {
@@ -63,8 +69,8 @@ public class Autonomous extends Command {
 		String gameData;
 
 		gameData = DriverStation.getInstance().getGameSpecificMessage();
-		
-		if(gameData.isEmpty()){
+
+		if (gameData.isEmpty()) {
 			System.out.println("We are not running this in a competition");
 			return;
 		}
@@ -75,11 +81,11 @@ public class Autonomous extends Command {
 	}
 
 	@Override
-	public synchronized void start(){
+	public synchronized void start() {
 		// TODO Auto-generated method stub
 		super.start();
 		timer.reset();
-	    //initDistance = Robot.ADL.getY();
+		// initDistance = Robot.ADL.getY();
 		try {
 			initOrientation = Robot.ADL.getHeading();
 		} catch (InterruptedException e) {
@@ -89,9 +95,9 @@ public class Autonomous extends Command {
 		timeToDrive = 15;
 
 		setUpSwitchPosition();
-		
+
 		try {
-			driveForTenFeet();
+			driveForDistance(10.0);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -103,18 +109,62 @@ public class Autonomous extends Command {
 		timer.start();
 	}
 
-	private void driveForTenFeet() throws InterruptedException{
+	private void driveForDistance(double feet) throws InterruptedException{
+		
+		final boolean usingRight;
+		final boolean usingLeft;
+		
+		final long leftPulseCount = Robot.ADL.getLeftPulses();
+		final long rightPulseCount = Robot.ADL.getRightPulses();
+		
+		final long startCount;
+		
+		// If one of the pulses is 0, use the other one
+		// Otherwise, use the avg.
+		
+		if (leftPulseCount == 0) {
+			startCount = rightPulseCount; // Use the right side
+			usingRight = true;
+			usingLeft = false;
+		}
+		else if (rightPulseCount == 0) {
+			startCount = leftPulseCount; // Use the left side
+			usingRight = false;
+			usingLeft = true;
+		}
+		else {
+			// Both left and right sides are not 0 --> use avg of the two.
+			startCount = (leftPulseCount + rightPulseCount) / 2;
+			usingRight = false;
+			usingLeft = false;
+		}
+		final double inchesPerPulse = (Math.PI * wheelDiameter) / numberOfMagnets;
+		final long requiredPulses = startCount + (long)((feet * 12.0) / inchesPerPulse);
+		long currentPulseCount = startCount;
+		
+		// Start going...
 		Robot.drivetrain.setLeftSpeed(leftSpeed * 0.75);
 		Robot.drivetrain.setRightSpeed(rightSpeed * 0.75);
 		
 		// Wait until Distance reaches ten feet
-		while(Robot.ADL.getDistance() < 10.0) {}
+		while(currentPulseCount < requiredPulses) {
+			// Update the count
+			if (usingRight) {
+				currentPulseCount = Robot.ADL.getRightPulses();
+			}
+			else if (usingLeft) {
+				currentPulseCount = Robot.ADL.getLeftPulses();
+			}
+			else {
+				currentPulseCount = (Robot.ADL.getLeftPulses() + Robot.ADL.getRightPulses()) / 2;
+			}
+		}
 		
-//		
+		// Stop
 		Robot.drivetrain.setLeftSpeed(0);
 		Robot.drivetrain.setRightSpeed(0);
 	}
-	
+
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
 		// totalCurrent = Robot.drivetrain.pdp.getTotalCurrent();
