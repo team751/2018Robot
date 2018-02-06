@@ -64,11 +64,11 @@ public class Robot extends IterativeRobot {
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
      */
-    public void robotInit() {
+    public void robotInit(){
 		oi = new OI();
 		crushed = false;
         // instantiate the command used for the autonomous period
-        autonomousCommand = new Autonomous(); 
+			autonomousCommand = new Autonomous();
         Thread motorControlThread = new Thread(autonomousJoystickSimulator);
         motorControlThread.start();
         

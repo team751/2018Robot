@@ -53,14 +53,10 @@ public class Autonomous extends Command {
 	// right).
 
 	public static boolean isNearSwitchLeft;
+	
+	private static boolean driving = false;
 
 	public Autonomous() {
-//		try {
-//			driveForDistance(10);
-//		} catch (InterruptedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
 	}
 
 	private void setUpSwitchPosition() {
@@ -85,23 +81,15 @@ public class Autonomous extends Command {
 		// TODO Auto-generated method stub
 		super.start();
 		timer.reset();
-		// initDistance = Robot.ADL.getY();
-		try {
-			initOrientation = Robot.ADL.getHeading();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		initDistance = Robot.ADL.getDistance();
+		initOrientation = Robot.ADL.getOrientation();
 		timeToDrive = 15;
 
 		setUpSwitchPosition();
-
-		try {
-			driveForDistance(10.0);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
+		do{
+		driveForDistance(5);
+		}while(driving);
 	}
 
 	// Called just before this Command runs the first time
@@ -109,60 +97,82 @@ public class Autonomous extends Command {
 		timer.start();
 	}
 
-	private void driveForDistance(double feet) throws InterruptedException{
+	private void driveForDistance(double feet) {
 		
-		final boolean usingRight;
-		final boolean usingLeft;
+		final double SPEED = 0.3;
+//		final boolean usingRight;
+//		final boolean usingLeft;
 		
-		final long leftPulseCount = Robot.ADL.getLeftPulses();
-		final long rightPulseCount = Robot.ADL.getRightPulses();
-		
-		final long startCount;
+//		final long leftPulseCount = Robot.ADL.getLeftPulses();
+//		final long rightPulseCount = Robot.ADL.getRightPulses();
+		if (!driving){
+		initDistance = Robot.ADL.getDistance();
+		driving = true;
+		}
 		
 		// If one of the pulses is 0, use the other one
 		// Otherwise, use the avg.
+//		
+//		if (leftPulseCount == 0) {
+//			startCount = rightPulseCount; // Use the right side
+//			usingRight = true;
+//			usingLeft = false;
+//		}
+//		else if (rightPulseCount == 0) {
+//			startCount = leftPulseCount; // Use the left side
+//			usingRight = false;
+//			usingLeft = true;
+//		}
+//		else {
+//			// Both left and right sides are not 0 --> use avg of the two.
+//			startCount = (leftPulseCount + rightPulseCount) / 2;
+//			usingRight = false;
+//			usingLeft = false;
+//		}
+//		final double inchesPerPulse = (Math.PI * wheelDiameter) / numberOfMagnets;
+				
+//		System.out.println("Required number of pulses: " + requiredPulses);
+//		System.out.println("Starting number of pulses: " + startCount);
+//		System.out.println("Pulses to travel: " + (requiredPulses - startCount));
+		double currentDistance = Robot.ADL.getDistance();
 		
-		if (leftPulseCount == 0) {
-			startCount = rightPulseCount; // Use the right side
-			usingRight = true;
-			usingLeft = false;
-		}
-		else if (rightPulseCount == 0) {
-			startCount = leftPulseCount; // Use the left side
-			usingRight = false;
-			usingLeft = true;
-		}
-		else {
-			// Both left and right sides are not 0 --> use avg of the two.
-			startCount = (leftPulseCount + rightPulseCount) / 2;
-			usingRight = false;
-			usingLeft = false;
-		}
-		final double inchesPerPulse = (Math.PI * wheelDiameter) / numberOfMagnets;
-		final long requiredPulses = startCount + (long)((feet * 12.0) / inchesPerPulse);
-		long currentPulseCount = startCount;
+		//test prints
+		System.out.println("InitialDistance:" + initDistance);
+		System.out.println("target:" + (initDistance + feet));
+		System.out.println("Distance travel:" + (Robot.ADL.getDistance() - initDistance));
+		
+		double distanceTravel = Robot.ADL.getDistance() - initDistance;
+		double distanceToTargetRatio = distanceTravel / feet;
+		double controlRatio = 1 - distanceToTargetRatio * distanceToTargetRatio;
 		
 		// Start going...
-		Robot.drivetrain.setLeftSpeed(leftSpeed * 0.75);
-		Robot.drivetrain.setRightSpeed(rightSpeed * 0.75);
-		
-		// Wait until Distance reaches ten feet
-		while(currentPulseCount < requiredPulses) {
-			// Update the count
-			if (usingRight) {
-				currentPulseCount = Robot.ADL.getRightPulses();
-			}
-			else if (usingLeft) {
-				currentPulseCount = Robot.ADL.getLeftPulses();
-			}
-			else {
-				currentPulseCount = (Robot.ADL.getLeftPulses() + Robot.ADL.getRightPulses()) / 2;
-			}
+		if(Math.abs(Robot.ADL.getDistance() - initDistance) < feet){
+			Robot.drivetrain.setLeftSpeed(SPEED * controlRatio);
+			Robot.drivetrain.setRightSpeed(-SPEED * controlRatio);
+		}else{
+			Robot.drivetrain.setLeftSpeed(0);
+			Robot.drivetrain.setRightSpeed(0);
+			driving = false;
+			return;
 		}
 		
-		// Stop
-		Robot.drivetrain.setLeftSpeed(0);
-		Robot.drivetrain.setRightSpeed(0);
+//		Robot.drivetrain.setLeftSpeed(0.25);
+//		Robot.drivetrain.setRightSpeed(-0.25);
+//		
+//		 Wait until Distance reaches ten feet
+//		while(currentPulseCount < requiredPulses) {
+//			// Update the count
+//			if (usingRight) {
+//				currentPulseCount = Robot.ADL.getRightPulses();
+//			}
+//			else if (usingLeft) {
+//				currentPulseCount = Robot.ADL.getLeftPulses();
+//			}
+//			else {
+//				currentPulseCount = (Robot.ADL.getLeftPulses() + Robot.ADL.getRightPulses()) / 2;
+//			}
+//			System.out.println("Current number of pulses: " + currentPulseCount);
+//		}
 	}
 
 	// Called repeatedly when this Command is scheduled to run

@@ -30,15 +30,16 @@ unsigned long requestID; // Variable to hold the query ID of the incoming reques
 String separator = "-"; // Character used to separate command from ID number.
 String queryToken = "Q"; // Token used by the RoboRIO to initiate a request.
 String confirmationToken = "OK"; // Token used by the RoboRIO signal that it successfully received the correct response to the query (i.e. both request and response IDs match).
-const int switchTime = 100; // Debounce time in microseconds.
+const int switchTime = 500; // Debounce time in microseconds.
 
 volatile long leftPulses = 0;
 volatile long rightPulses = 0;
+volatile double orientation = 0.0;
 
 volatile unsigned long leftLastMicros = 0;
 volatile unsigned long rightLastMicros = 0;
 
-const boolean debug = true; // Debug flag.
+const boolean debug = false; // Debug flag.
 
 void setup() {
   Serial.begin(9600);
@@ -49,23 +50,13 @@ void setup() {
 }
 
 void loop() {
-  if (Serial.available() > 0) { // If the RoboRIO has sent a query command...
-    String request = Serial.readString();
-    //Serial.println(request);
-    if (request.startsWith(queryToken + separator)) {
-      request = request.substring(request.indexOf(separator) + 1);
-      requestID = request.toInt();
-      //Serial.println(requestID);
-      sendData();
-    }
-    else if (Serial.read() == 'c') {
-      recalibrate();
-    }
-    else if (debug) {
-      Serial.println("Unexpected query: " + request);
-    }
+  orientation = getOrientation();
+  sendData();
+  if (Serial.read() == 'c') {
+    recalibrate();
   }
 }
+
 
 void leftInterrupt() {
   long currentMicros = micros();
@@ -92,25 +83,8 @@ void rightInterrupt() {
 }
 
 void sendData() {
-  int count = 0; // Counter so the sensor data is only sent a maximum of 3 times.
-  const int sendRepeat = 3; // Denotes how many times the Arduino will send the queried information if it does not receive the confirmation token.
-
-  do {
-    Serial.print(requestID);
-    Serial.print("-");
-    Serial.print(getOrientation());
-    Serial.print("-");
-    Serial.print(leftPulses);
-    Serial.print("-");
-    Serial.println(rightPulses);
-    if (count == 0) {
-      delay(10);
-    }
-    else {
-      delay(20);
-    }
-  }
-  while (count++ < sendRepeat && !Serial.readString().equals(confirmationToken + separator + String(requestID))); // While the RoboRIO hasn't sent the right verification token.
+  String returnable = "[" + String(orientation) + "-" + leftPulses + "-" + rightPulses + "]";
+  Serial.println(returnable);
 }
 
 void recalibrate() {
