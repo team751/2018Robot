@@ -21,11 +21,10 @@ public class Autonomous extends Command {
 	private static double totalCurrent;
 	private double initDistance, initOrientation;
 	private static final int maxError = 5;
-
+	private static final double maxDistanceError = 0.1;
 	// The line is 188 inches away from the wall
 	// Robot's length with bumper = 38.5 inches
 	// Robot's width with bumper = 34.5 inches
-	private static final int passLineDist = 168;
 
 	// The central goal is 110 inches away from the wall
 	private static final int centralDist = 90;
@@ -53,7 +52,7 @@ public class Autonomous extends Command {
 	// right).
 
 	public static boolean isNearSwitchLeft;
-	
+
 	private static boolean driving = false;
 
 	public Autonomous() {
@@ -86,164 +85,111 @@ public class Autonomous extends Command {
 		timeToDrive = 15;
 
 		setUpSwitchPosition();
-		
-		do{
-		driveForDistance(5);
-		}while(driving);
+
+		// do{
+		// driveForDistance(5);
+		// }while(driving);
+
 	}
 
 	// Called just before this Command runs the first time
 	protected void initialize() {
 		timer.start();
 	}
-	
-	private void turnDegreesRight(double degrees) throws InterruptedException{
-		double currentPosition = Robot.ADL.getHeading();
+
+	private void turnDegreesRight(double degrees) {
+		double currentPosition = Robot.ADL.getOrientation();
 		double finalPosition;
-		
+		driving = true;
 		// Gets final position (accounts for negative values)
-		if(currentPosition-degrees < 0){
-			finalPosition = (currentPosition-degrees)+360;
-		}else{
-			finalPosition = currentPosition-degrees;
+		if (currentPosition - degrees < 0) {
+			finalPosition = (currentPosition - degrees) + 360;
+		} else {
+			finalPosition = currentPosition - degrees;
 		}
 
-		Robot.drivetrain.setRightSpeed(rightSpeed);
-		Robot.drivetrain.setLeftSpeed(-leftSpeed);
+		System.out
+				.println("driving:" + driving + "current degree" + currentPosition + ", final degree:" + finalPosition);
 
-		// Waits until the Robot's heading is within the error margin 
-		// of the final heading position.
-		while(maxError+finalPosition < currentPosition && 
-			  finalPosition-maxError > currentPosition){}
-		
+		while (!(maxError + finalPosition > currentPosition && finalPosition - maxError < currentPosition)) {
+			currentPosition = Robot.ADL.getOrientation();
+			Robot.drivetrain.setRightSpeed(rightSpeed / 3);
+			Robot.drivetrain.setLeftSpeed(-leftSpeed / 3);
+			System.out.println(finalPosition - currentPosition + "degree left");
+		}
+
 		Robot.drivetrain.setRightSpeed(0);
 		Robot.drivetrain.setLeftSpeed(0);
+		driving = false;
 	}
-	
-	private void turnDegreesLeft(double degrees) throws InterruptedException{
-		double currentPosition = Robot.ADL.getHeading();
+
+	private void turnDegreesLeft(double degrees) {
+		double currentPosition = Robot.ADL.getOrientation();
 		double finalPosition;
-		
+
 		// Gets final position (accounts for negative values)
-		if(currentPosition+degrees > 360){
-			finalPosition = (currentPosition+degrees)-360;
-		}else{
-			finalPosition = currentPosition+degrees;
+		if (currentPosition + degrees > 360) {
+			finalPosition = (currentPosition + degrees) - 360;
+		} else {
+			finalPosition = currentPosition + degrees;
 		}
 
-		Robot.drivetrain.setRightSpeed(-rightSpeed);
-		Robot.drivetrain.setLeftSpeed(leftSpeed);
-		
-		// Waits until the Robot's heading is within the error margin 
+		// Waits until the Robot's heading is within the error margin
 		// of the final heading position.
-		while(maxError+finalPosition < currentPosition && 
-			  finalPosition-maxError > currentPosition){}
-		
+		while (!(maxError + finalPosition > currentPosition && finalPosition - maxError < currentPosition)) {
+			currentPosition = Robot.ADL.getOrientation();
+			Robot.drivetrain.setRightSpeed(-rightSpeed / 3);
+			Robot.drivetrain.setLeftSpeed(leftSpeed / 3);
+		}
+
 		Robot.drivetrain.setRightSpeed(0);
 		Robot.drivetrain.setLeftSpeed(0);
 	}
 
 	private void driveForDistance(double feet) {
-		
-		final double SPEED = 0.3;
-//		final boolean usingRight;
-//		final boolean usingLeft;
-		
-//		final long leftPulseCount = Robot.ADL.getLeftPulses();
-//		final long rightPulseCount = Robot.ADL.getRightPulses();
-		if (!driving){
-		initDistance = Robot.ADL.getDistance();
-		driving = true;
+
+		final double SPEED = 0.25;
+		// final boolean usingRight;
+		// final boolean usingLeft;
+
+		// final long leftPulseCount = Robot.ADL.getLeftPulses();
+		// final long rightPulseCount = Robot.ADL.getRightPulses();
+		if (!driving) {
+			initDistance = Robot.ADL.getDistance();
+			driving = true;
 		}
-		
-		// If one of the pulses is 0, use the other one
-		// Otherwise, use the avg.
-//		
-//		if (leftPulseCount == 0) {
-//			startCount = rightPulseCount; // Use the right side
-//			usingRight = true;
-//			usingLeft = false;
-//		}
-//		else if (rightPulseCount == 0) {
-//			startCount = leftPulseCount; // Use the left side
-//			usingRight = false;
-//			usingLeft = true;
-//		}
-//		else {
-//			// Both left and right sides are not 0 --> use avg of the two.
-//			startCount = (leftPulseCount + rightPulseCount) / 2;
-//			usingRight = false;
-//			usingLeft = false;
-//		}
-//		final double inchesPerPulse = (Math.PI * wheelDiameter) / numberOfMagnets;
-				
-//		System.out.println("Required number of pulses: " + requiredPulses);
-//		System.out.println("Starting number of pulses: " + startCount);
-//		System.out.println("Pulses to travel: " + (requiredPulses - startCount));
 		double currentDistance = Robot.ADL.getDistance();
-		
-		//test prints
+
+		// test prints
 		System.out.println("InitialDistance:" + initDistance);
 		System.out.println("target:" + (initDistance + feet));
 		System.out.println("Distance travel:" + (Robot.ADL.getDistance() - initDistance));
-		
+
 		double distanceTravel = Robot.ADL.getDistance() - initDistance;
 		double distanceToTargetRatio = distanceTravel / feet;
 		double controlRatio = 1 - distanceToTargetRatio * distanceToTargetRatio;
-		
+
 		// Start going...
-		if(Math.abs(Robot.ADL.getDistance() - initDistance) < feet){
+		//if the dis travel is not within the range, then keep going with control ratio, else stop
+		if (!(Math.abs(Robot.ADL.getDistance() - initDistance) < feet + maxDistanceError
+				&& Math.abs(Robot.ADL.getDistance() - initDistance) > feet - maxDistanceError)) {
 			Robot.drivetrain.setLeftSpeed(SPEED * controlRatio);
 			Robot.drivetrain.setRightSpeed(-SPEED * controlRatio);
-		}else{
+		} else {
 			Robot.drivetrain.setLeftSpeed(0);
 			Robot.drivetrain.setRightSpeed(0);
 			driving = false;
 			return;
 		}
-		
-//		Robot.drivetrain.setLeftSpeed(0.25);
-//		Robot.drivetrain.setRightSpeed(-0.25);
-//		
-//		 Wait until Distance reaches ten feet
-//		while(currentPulseCount < requiredPulses) {
-//			// Update the count
-//			if (usingRight) {
-//				currentPulseCount = Robot.ADL.getRightPulses();
-//			}
-//			else if (usingLeft) {
-//				currentPulseCount = Robot.ADL.getLeftPulses();
-//			}
-//			else {
-//				currentPulseCount = (Robot.ADL.getLeftPulses() + Robot.ADL.getRightPulses()) / 2;
-//			}
-//			System.out.println("Current number of pulses: " + currentPulseCount);
-//		}
 	}
-	
-	
 
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
-		// totalCurrent = Robot.drivetrain.pdp.getTotalCurrent();
-		// //double time = timer.get();
-		// //drive(time);
-		//
-		// if (Robot.crushed) {
-		// end();
-		// } else if (Robot.drivetrain.switch4.get()) {
-		// driveForDistance(passLineDist);
-		// } else if (Robot.drivetrain.switch5.get()) {
-		// driveForDistance(centralDist);
-		// } else if (Robot.drivetrain.switch6.get()) {
-		// leftGoLeftDistance(leftFirstDist, angle, leftSecondDist);
-		// } else if (Robot.drivetrain.switch7.get()) {
-		// rightGoRightDistance(rightFirstDist, angle, rightSecondDist);
-		// } else {
-		// end(); //no auto when all switches are turned off
-		// }
-		//
-		// leftGoLeftDistance(60,60,30);
+		// 2018 crew: we might want to put the autos under execute rather than
+		// start
+		do {
+			this.driveForDistance(5);
+		} while (driving);
 	}
 
 	// Make this return true when this Command no longer needs to run execute()
@@ -260,152 +206,6 @@ public class Autonomous extends Command {
 	// Called when another command which requires one or more of the same
 	// subsystems is scheduled to run
 	protected void interrupted() {
-	}
-	//
-	// protected void driveForDistance(int goal) {
-	// System.out.println("Init Distance"+ initDistance);
-	// System.out.println("Distance" + Robot.ADL.getY());
-	// double controlRatio = 1 - (Robot.ADL.getY() - initDistance) / goal;
-	//
-	// if(Math.abs(Robot.ADL.getY() - initDistance) < goal){
-	// Robot.drivetrain.setLeftSpeed(0.25 * controlRatio);
-	// Robot.drivetrain.setRightSpeed(-0.25 * controlRatio);
-	// }
-	// }
-	//
-	// protected void leftGoLeftDistance(int firstDist, int angle, int
-	// secondDist){
-	// if(Math.abs(Robot.ADL.getY() - initDistance) < firstDist){
-	// driveForDistance(firstDist);
-	// }
-	// else{
-	// double finalPosition = initOrientation - angle + 360;
-	// double controlRatio = 1 - Math.abs(Robot.ADL.getHeading() -
-	// initOrientation)/Math.abs(Robot.ADL.getHeading() - finalPosition%360);
-	//
-	// System.out.println("Heading" + Robot.ADL.getHeading());
-	// System.out.println("Init"+ initOrientation);
-	// System.out.println("Difference" + Math.abs((Robot.ADL.getHeading() -
-	// finalPosition%360)));
-	//
-	// if(Math.abs((Robot.ADL.getHeading() - finalPosition%360)) > maxError){
-	// Robot.drivetrain.setLeftSpeed(leftSpeed * controlRatio);
-	// Robot.drivetrain.setRightSpeed(-rightSpeed * controlRatio);
-	// }
-	// else{
-	// initDistance = Robot.ADL.getY();
-	// System.out.println("last init" + initDistance);
-	// driveForDistance(secondDist);
-	// end();
-	// timeToDrive = 0;
-	// }
-	// }
-	// }
-	//
-	// protected void rightGoRightDistance(int firstDist, int angle, int
-	// secondDist){
-	// if(Math.abs(Robot.ADL.getY() - initDistance) < firstDist){
-	// driveForDistance(firstDist);
-	// }
-	// else{
-	// double finalPosition = initOrientation - angle + 360;
-	// double controlRatio = 1 - Math.abs(Robot.ADL.getHeading() -
-	// initOrientation)/Math.abs(Robot.ADL.getHeading() - finalPosition%360);
-	//
-	// System.out.println("Heading" + Robot.ADL.getHeading());
-	// System.out.println("Init"+ initOrientation);
-	// System.out.println("Difference" + Math.abs((Robot.ADL.getHeading() -
-	// finalPosition%360)));
-	//
-	// if(Math.abs((Robot.ADL.getHeading() - finalPosition%360)) > maxError){
-	// Robot.drivetrain.setLeftSpeed(-leftSpeed * controlRatio);
-	// Robot.drivetrain.setRightSpeed(rightSpeed * controlRatio);
-	// }
-	// else{
-	// initDistance = Robot.ADL.getY();
-	// System.out.println("last init" + initDistance);
-	// driveForDistance(secondDist);
-	// end();
-	// timeToDrive = 0;
-	// }
-	// }
-	// }
-
-	protected void drive(double time) {
-		System.out.println("drive" + time);
-		if (time <= 2) {
-			Robot.drivetrain.setLeftSpeed(leftSpeed);
-			Robot.drivetrain.setRightSpeed(rightSpeed);
-		} else
-			end();
-	}
-
-	// methods for autonomous depending on the starting position
-	protected void driveForward(double time) {
-		if (time <= 5) { // to be adjusted in the field
-			if (time > 1 && totalCurrent > currentLimit) {
-				Robot.crushed = true;
-			}
-			Robot.drivetrain.setLeftSpeed(leftSpeed * 0.75);
-			Robot.drivetrain.setRightSpeed(rightSpeed * 0.75);
-		}
-	}
-
-	protected void centerForward(double time) {
-		if (time <= 5) {
-			if (time > 1 && totalCurrent > currentLimit) {
-				Robot.crushed = true;
-			}
-			Robot.drivetrain.setLeftSpeed(leftSpeed * 0.5);
-			Robot.drivetrain.setRightSpeed(rightSpeed * 0.5);
-		}
-	}
-
-	protected void leftGoLeft(double time) {
-		// forward
-		if (time <= 1.05) {
-			Robot.drivetrain.setLeftSpeed(leftSpeed);
-			Robot.drivetrain.setRightSpeed(rightSpeed);
-		} else if (time <= 1.33) {
-			turnCW();
-		} else if (time < 10) { // turn left
-			if (time > 2.4 && totalCurrent > currentLimit) {
-				Robot.crushed = true;
-			}
-			Robot.drivetrain.setLeftSpeed(leftSpeed * 0.75);
-			Robot.drivetrain.setRightSpeed(rightSpeed * 0.75);
-		}
-	}
-
-	// Have not calibrated
-	protected void rightGoRight(double time) {
-		// forward
-		if (time <= 1.05) {
-			Robot.drivetrain.setLeftSpeed(leftSpeed);
-			Robot.drivetrain.setRightSpeed(rightSpeed);
-		} else if (time <= 1.33) {
-			turnCCW();
-		} else if (time < 10) { // turn left
-			if (time > 2.4 && totalCurrent > currentLimit) {
-				Robot.crushed = true;
-			}
-			Robot.drivetrain.setLeftSpeed(leftSpeed * 0.75);
-			Robot.drivetrain.setRightSpeed(rightSpeed * 0.75);
-		}
-	}
-
-	// turn clockwise
-	protected void turnCW() {
-		Robot.drivetrain.setLeftSpeed(0.65);
-		Robot.drivetrain.setRightSpeed(0.65);
-	}
-
-	// turn counterclockwise
-	protected void turnCCW() {
-		// if turnCW speed and turn CCW speed are equal they don't really turn
-		// the same
-		Robot.drivetrain.setLeftSpeed(-0.90);
-		Robot.drivetrain.setRightSpeed(-0.95);
 	}
 
 }

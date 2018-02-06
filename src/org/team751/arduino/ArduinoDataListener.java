@@ -9,8 +9,7 @@ public class ArduinoDataListener implements Runnable {
 	private final double WHEELDIAMETER = 6.0;
 	private final int MAGNETS = 6;
 
-	private double distance, velocity, heading;
-	private double orientation;
+	private double distance, velocity, orientation;
 	private long requestNumber = 0;
 	private long leftPulses, rightPulses;
 	private SerialPort port;
@@ -20,8 +19,6 @@ public class ArduinoDataListener implements Runnable {
 	public ArduinoDataListener() {
 		distance = 0.0;
 		velocity = 0.0;
-		heading = 0.0;
-
 		orientation = 0.0;
 		leftPulses = 0;
 		rightPulses = 0;
@@ -59,10 +56,6 @@ public class ArduinoDataListener implements Runnable {
 		//wheel circumference / number of magnets = distance travelled for each magnet
 		//inches convert to feet / 12
 		return (leftPulses + rightPulses) / 2.0 * Math.PI * WHEELDIAMETER / MAGNETS / 12.0;
-	}
-
-	public double getHeading() {
-		return heading;
 	}
 
 	private void refreshDistance() {
