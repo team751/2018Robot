@@ -108,6 +108,52 @@ public class Autonomous extends Command {
 	protected void initialize() {
 		timer.start();
 	}
+	
+	private void turnDegreesRight(double degrees) throws InterruptedException{
+		double currentPosition = Robot.ADL.getHeading();
+		double finalPosition;
+		
+		// Gets final position (accounts for negative values)
+		if(currentPosition-degrees < 0){
+			finalPosition = (currentPosition-degrees)+360;
+		}else{
+			finalPosition = currentPosition-degrees;
+		}
+
+		Robot.drivetrain.setRightSpeed(rightSpeed);
+		Robot.drivetrain.setLeftSpeed(-leftSpeed);
+
+		// Waits until the Robot's heading is within the error margin 
+		// of the final heading position.
+		while(maxError+finalPosition < currentPosition && 
+			  finalPosition-maxError > currentPosition){}
+		
+		Robot.drivetrain.setRightSpeed(0);
+		Robot.drivetrain.setLeftSpeed(0);
+	}
+	
+	private void turnDegreesLeft(double degrees) throws InterruptedException{
+		double currentPosition = Robot.ADL.getHeading();
+		double finalPosition;
+		
+		// Gets final position (accounts for negative values)
+		if(currentPosition+degrees > 360){
+			finalPosition = (currentPosition+degrees)-360;
+		}else{
+			finalPosition = currentPosition+degrees;
+		}
+
+		Robot.drivetrain.setRightSpeed(-rightSpeed);
+		Robot.drivetrain.setLeftSpeed(leftSpeed);
+		
+		// Waits until the Robot's heading is within the error margin 
+		// of the final heading position.
+		while(maxError+finalPosition < currentPosition && 
+			  finalPosition-maxError > currentPosition){}
+		
+		Robot.drivetrain.setRightSpeed(0);
+		Robot.drivetrain.setLeftSpeed(0);
+	}
 
 	private void driveForDistance(double feet) throws InterruptedException{
 		
@@ -164,6 +210,8 @@ public class Autonomous extends Command {
 		Robot.drivetrain.setLeftSpeed(0);
 		Robot.drivetrain.setRightSpeed(0);
 	}
+	
+	
 
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
