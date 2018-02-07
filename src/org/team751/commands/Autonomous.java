@@ -1,10 +1,11 @@
 package src.org.team751.commands;
 
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import src.org.team751.Robot;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -55,7 +56,15 @@ public class Autonomous extends Command {
 
 	private static boolean driving = false;
 
+	private static PIDController leftPID;
+	private static PIDController rightPID;
+	private static final double kP = 1.0;
+	private static final double kI = 0.0;
+	private static final double kD = 0.0;
+
 	public Autonomous() {
+		leftPID = new PIDController(kP, kI, kD, Robot.ADL, Robot.leftSpeedController);
+		rightPID = new PIDController(kP, kI, kD, Robot.ADL, Robot.rightSpeedController);
 	}
 
 	private void setUpSwitchPosition() {
@@ -84,6 +93,9 @@ public class Autonomous extends Command {
 		initOrientation = Robot.ADL.getOrientation();
 		timeToDrive = 15;
 
+		leftPID.enable();
+		rightPID.enable();
+
 		setUpSwitchPosition();
 
 		// do{
@@ -107,9 +119,11 @@ public class Autonomous extends Command {
 		} else {
 			finalPosition = currentPosition - degrees;
 		}
+		
+		leftPID.setSetpoint(degrees);
+		rightPID.setSetpoint(degrees);
 
-		System.out
-				.println("driving:" + driving + "current degree" + currentPosition + ", final degree:" + finalPosition);
+		System.out.println("driving:" + driving + "current degree" + currentPosition + ", final degree:" + finalPosition);
 
 		while (!(maxError + finalPosition > currentPosition && finalPosition - maxError < currentPosition)) {
 			currentPosition = Robot.ADL.getOrientation();
@@ -158,6 +172,10 @@ public class Autonomous extends Command {
 			initDistance = Robot.ADL.getDistance();
 			driving = true;
 		}
+
+		leftPID.setSetpoint(feet);
+		rightPID.setSetpoint(feet);
+
 		double currentDistance = Robot.ADL.getDistance();
 
 		// test prints
@@ -170,7 +188,8 @@ public class Autonomous extends Command {
 		double controlRatio = 1 - distanceToTargetRatio * distanceToTargetRatio;
 
 		// Start going...
-		//if the dis travel is not within the range, then keep going with control ratio, else stop
+		// if the dis travel is not within the range, then keep going with control
+		// ratio, else stop
 		if (!(Math.abs(Robot.ADL.getDistance() - initDistance) < feet + maxDistanceError
 				&& Math.abs(Robot.ADL.getDistance() - initDistance) > feet - maxDistanceError)) {
 			Robot.drivetrain.setLeftSpeed(SPEED * controlRatio);

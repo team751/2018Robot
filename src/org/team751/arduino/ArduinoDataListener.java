@@ -4,27 +4,30 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import edu.wpi.first.wpilibj.SerialPort;
+import edu.wpi.first.wpilibj.PIDSource;
+import edu.wpi.first.wpilibj.PIDSourceType;
 
-public class ArduinoDataListener implements Runnable {
+public class ArduinoDataListener implements Runnable, PIDSource {
 	private final double WHEELDIAMETER = 6.0;
 	private final int MAGNETS = 6;
 
-	private double distance, velocity, orientation;
-	private long requestNumber = 0;
+	private double orientation;
 	private long leftPulses, rightPulses;
 	private SerialPort port;
 	private String message;
 	private boolean overwrite;
+	
+	private PIDSourceType sourceType;
 
 	public ArduinoDataListener() {
-		distance = 0.0;
-		velocity = 0.0;
 		orientation = 0.0;
 		leftPulses = 0;
 		rightPulses = 0;
-		
+
 		message = "";
 		overwrite = true;
+		
+		sourceType = PIDSourceType.kDisplacement;
 
 		try {
 			port = new SerialPort(9600, SerialPort.Port.kUSB);
@@ -39,22 +42,18 @@ public class ArduinoDataListener implements Runnable {
 		return orientation;
 	}
 
-	public long getLeftPulses(){
+	public long getLeftPulses() {
 		return leftPulses;
 	}
 
-	public long getRightPulses(){
+	public long getRightPulses() {
 		return rightPulses;
 	}
 
-	public double getVelocity() {
-		return velocity;
-	}
-
-	public double getDistance()  {
-		//total pulses / 2 to find the average pulses
-		//wheel circumference / number of magnets = distance travelled for each magnet
-		//inches convert to feet / 12
+	public double getDistance() {
+		// total pulses / 2 to find the average pulses
+		// wheel circumference / number of magnets = distance travelled for each magnet
+		// inches convert to feet / 12
 		return (leftPulses + rightPulses) / 2.0 * Math.PI * WHEELDIAMETER / MAGNETS / 12.0;
 	}
 
@@ -73,12 +72,12 @@ public class ArduinoDataListener implements Runnable {
 	}
 
 	private void fetchData() {
-		if(overwrite){
-		message = port.readString();
+		if (overwrite) {
+			message = port.readString();
 		}
-		
+
 		int bracketIndex = message.indexOf("[");
-		if (bracketIndex == -1){
+		if (bracketIndex == -1) {
 			return;
 		}
 		message = message.substring(bracketIndex);
@@ -90,7 +89,7 @@ public class ArduinoDataListener implements Runnable {
 			overwrite = false;
 		} else {
 			message = message.substring(startOfMessage + 1, endOfMessage);
-//			System.out.println("Received String: " + message);
+			// System.out.println("Received String: " + message);
 			String[] data = message.split("-");
 			this.orientation = Double.valueOf(data[0]);
 			this.leftPulses = Long.valueOf(data[1]);
@@ -98,7 +97,28 @@ public class ArduinoDataListener implements Runnable {
 			overwrite = true;
 		}
 
+	}
 
+	@Override
+	public void setPIDSourceType(PIDSourceType pidSource) {
+		sourceType = pidSource;
+	}
+
+	@Override
+	public PIDSourceType getPIDSourceType() {
+		return sourceType;
+	}
+
+	@Override
+	public double pidGet() {
+		switch (sourceType) {
+	      case kDisplacement:
+	        return getDistance();
+	      case kRate:
+	        return getOrientation();
+	      default:
+	        return 0.0;
+	    }
 	}
 
 }
