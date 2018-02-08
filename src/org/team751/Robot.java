@@ -8,6 +8,7 @@ import src.org.team751.commands.Autonomous;
 import src.org.team751.jetson.JoystickInputUDP;
 import src.org.team751.jetson.StateSenderUDP;
 import src.org.team751.subsystems.Drivetrain;
+import src.org.team751.subsystems.Intake;
 import src.org.team751.subsystems.Winch;
 
 import java.net.UnknownHostException;
@@ -40,6 +41,7 @@ public class Robot extends IterativeRobot {
 	
 	
 	public static final Winch winch = new Winch();
+	public static final Intake intake = new Intake();
 	public static OI oi;
 	
 	Command autonomousCommand;

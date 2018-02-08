@@ -1,16 +1,17 @@
 package src.org.team751.subsystems;
 
 import edu.wpi.first.wpilibj.PWMVictorSPX;
+import edu.wpi.first.wpilibj.command.Subsystem;
+import src.org.team751.commands.IntakeController;
 
-public class Intake {
-	private PWMVictorSPX[] intakeMotorControllers; 
+public class Intake extends Subsystem{
+	private PWMVictorSPX[] intakeMotorControllers = {new PWMVictorSPX(9), 
+													 new PWMVictorSPX(8)}; 
 	
-	public Intake() {
-		intakeMotorControllers = new PWMVictorSPX[2];
-		
-		intakeMotorControllers[0] = new PWMVictorSPX(6);
-		intakeMotorControllers[1] = new PWMVictorSPX(8);
-	}
+    public void initDefaultCommand() {
+        // Set the default command for a subsystem here.
+        setDefaultCommand(new IntakeController());
+    }
 	
 	public void openMotion() {
 		for(PWMVictorSPX p : intakeMotorControllers) {
