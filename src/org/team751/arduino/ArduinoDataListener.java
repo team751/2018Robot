@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 
-public class ArduinoDataListener implements Runnable, PIDSource {
+public class ArduinoDataListener implements Runnable/*, PIDSource */{
 	private final double WHEELDIAMETER = 6.0;
 	private final int MAGNETS = 6;
 
@@ -27,7 +27,7 @@ public class ArduinoDataListener implements Runnable, PIDSource {
 		message = "";
 		overwrite = true;
 		
-		sourceType = PIDSourceType.kDisplacement;
+		//sourceType = PIDSourceType.kDisplacement;
 
 		try {
 			port = new SerialPort(9600, SerialPort.Port.kUSB);
@@ -99,7 +99,7 @@ public class ArduinoDataListener implements Runnable, PIDSource {
 
 	}
 
-	@Override
+	/*@Override
 	public void setPIDSourceType(PIDSourceType pidSource) {
 		sourceType = pidSource;
 	}
@@ -119,6 +119,6 @@ public class ArduinoDataListener implements Runnable, PIDSource {
 	      default:
 	        return 0.0;
 	    }
-	}
+	}*/
 
 }

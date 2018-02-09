@@ -56,16 +56,16 @@ public class Autonomous extends Command {
 
 	private static boolean driving = false;
 
-	private static PIDController leftPID;
-	private static PIDController rightPID;
+	//private static PIDController leftPID;
+	//private static PIDController rightPID;
 	private static final double kP = 1.0;
 	private static final double kI = 0.0;
 	private static final double kD = 0.0;
 
-	public Autonomous() {
+	/*public Autonomous() {
 		leftPID = new PIDController(kP, kI, kD, Robot.ADL, Robot.leftSpeedController);
 		rightPID = new PIDController(kP, kI, kD, Robot.ADL, Robot.rightSpeedController);
-	}
+	}*/
 
 	private void setUpSwitchPosition() {
 		System.out.println("Gamedata getting...");
@@ -93,8 +93,8 @@ public class Autonomous extends Command {
 		initOrientation = Robot.ADL.getOrientation();
 		timeToDrive = 15;
 
-		leftPID.enable();
-		rightPID.enable();
+		/*leftPID.enable();
+		rightPID.enable();*/
 
 		setUpSwitchPosition();
 
@@ -120,8 +120,8 @@ public class Autonomous extends Command {
 			finalPosition = currentPosition - degrees;
 		}
 		
-		leftPID.setSetpoint(degrees);
-		rightPID.setSetpoint(degrees);
+		/*leftPID.setSetpoint(degrees);
+		rightPID.setSetpoint(degrees);*/
 
 		System.out.println("driving:" + driving + "current degree" + currentPosition + ", final degree:" + finalPosition);
 
@@ -173,8 +173,8 @@ public class Autonomous extends Command {
 			driving = true;
 		}
 
-		leftPID.setSetpoint(feet);
-		rightPID.setSetpoint(feet);
+		/*leftPID.setSetpoint(feet);
+		rightPID.setSetpoint(feet);*/
 
 		double currentDistance = Robot.ADL.getDistance();
 
