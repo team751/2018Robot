@@ -10,7 +10,8 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  *
  */
 public class Winch extends Subsystem {
-	public VictorSP winchMotorController = new VictorSP(6);
+	public VictorSP winchMotorController1 = new VictorSP(6);
+	public VictorSP winchMotorController2 = new VictorSP(7);
 		
     // Put methods for controlling this subsystem
     // here. Call these from Commands.
@@ -20,17 +21,9 @@ public class Winch extends Subsystem {
         setDefaultCommand(new WinchController());
     }
     
-    public void forward() {
-    	System.out.println("intake");
-    	winchMotorController.set(1.0);
-    }
-    
-    public void disable() {
-    	winchMotorController.set(0.0);
-    }
-    
-    public void reverse() {
-    	winchMotorController.set(-1.0);
+    public void setSpeed(double speed) {
+    	winchMotorController1.set(speed);
+    	winchMotorController2.set(speed);
     }
 }
 
