@@ -28,9 +28,9 @@ Adafruit_BNO055 bno = Adafruit_BNO055();
 
 unsigned long requestID; // Variable to hold the query ID of the incoming request.
 String separator = "-"; // Character used to separate command from ID number.
-String queryToken = "Q"; // Token used by the RoboRIO to initiate a request.
+String queryToken = "Q"; // Token used1by the RoboRIO to initiate a request.
 String confirmationToken = "OK"; // Token used by the RoboRIO signal that it successfully received the correct response to the query (i.e. both request and response IDs match).
-const int switchTime = 500; // Debounce time in microseconds.
+const int switchTime = 200; // Debounce time in microseconds.
 
 volatile long leftPulses = 0;
 volatile long rightPulses = 0;
@@ -44,8 +44,8 @@ const boolean debug = false; // Debug flag.
 void setup() {
   Serial.begin(9600);
   Serial.setTimeout(10);
-  attachInterrupt(digitalPinToInterrupt(2), leftInterrupt, RISING);  //Left wheel interrupt on a lo to hi
-  attachInterrupt(digitalPinToInterrupt(3), rightInterrupt, RISING); //Right wheel interrupt on a lo to hi
+  attachInterrupt(digitalPinToInterrupt(3), leftInterrupt, RISING);  //Left wheel interrupt on a lo to hi
+  attachInterrupt(digitalPinToInterrupt(2), rightInterrupt, RISING); //Right wheel interrupt on a lo to hi
   initializeIMU();
 }
 

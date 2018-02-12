@@ -16,7 +16,7 @@ public class ArduinoDataListener implements Runnable, PIDSource {
 	private SerialPort port;
 	private String message;
 	private boolean overwrite;
-	
+
 	private PIDSourceType sourceType;
 
 	public ArduinoDataListener() {
@@ -26,7 +26,7 @@ public class ArduinoDataListener implements Runnable, PIDSource {
 
 		message = "";
 		overwrite = true;
-		
+
 		sourceType = PIDSourceType.kDisplacement;
 
 		try {
@@ -52,9 +52,12 @@ public class ArduinoDataListener implements Runnable, PIDSource {
 
 	public double getDistance() {
 		// total pulses / 2 to find the average pulses
-		// wheel circumference / number of magnets = distance travelled for each magnet
+		// wheel circumference / number of magnets = distance travelled for each
+		// magnet
 		// inches convert to feet / 12
-		return (leftPulses + rightPulses) / 2.0 * Math.PI * WHEELDIAMETER / MAGNETS / 12.0;
+		// ***since we only have one reedswitch now, we won't / 2, but we will
+		// ***
+		return (leftPulses + rightPulses) * Math.PI * WHEELDIAMETER / MAGNETS / 12.0;
 	}
 
 	private void refreshDistance() {
@@ -72,6 +75,7 @@ public class ArduinoDataListener implements Runnable, PIDSource {
 	}
 
 	private void fetchData() {
+
 		if (overwrite) {
 			message = port.readString();
 		}
@@ -89,7 +93,6 @@ public class ArduinoDataListener implements Runnable, PIDSource {
 			overwrite = false;
 		} else {
 			message = message.substring(startOfMessage + 1, endOfMessage);
-			// System.out.println("Received String: " + message);
 			String[] data = message.split("-");
 			this.orientation = Double.valueOf(data[0]);
 			this.leftPulses = Long.valueOf(data[1]);
@@ -112,13 +115,13 @@ public class ArduinoDataListener implements Runnable, PIDSource {
 	@Override
 	public double pidGet() {
 		switch (sourceType) {
-	      case kDisplacement:
-	        return getDistance();
-	      case kRate:
-	        return getOrientation();
-	      default:
-	        return 0.0;
-	    }
+		case kDisplacement:
+			return getDistance();
+		case kRate:
+			return getOrientation();
+		default:
+			return 0.0;
+		}
 	}
 
 }
