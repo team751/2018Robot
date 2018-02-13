@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Autonomous extends Command {
 	private static double timeToDrive = 15;
-	private static double leftSpeed = 0.3;
+	private static double leftSpeed = 0.5;
 	private static double rightSpeed = -leftSpeed;
 	// 1.216 (0.225/0.185) in C7
 	// 0.925 in Bellarmine
@@ -161,7 +161,9 @@ public class Autonomous extends Command {
 	private void turnDegrees(double degrees) {
 		double currentPosition = Robot.ADL.getOrientation();
 		double finalPosition;
-		double speedRatio;
+		double controlRatio;
+		double degreesTravelled;
+		final double slowingPosition;
 
 		driving = true;
 		while (driving) {
@@ -173,21 +175,59 @@ public class Autonomous extends Command {
 			}
 
 			// Determines whether to turn left or right.
+			// if it turns right, the degree goes up
+			// turn left -> go down
 			boolean turnRight = degrees < 180 ? true : false;
+			
+			//Gets stopping position
+			if(turnRight){
+			if (currentPosition + (degrees-30) > 360) {
+				slowingPosition = (currentPosition + (degrees-30)) - 360;
+			} else {
+				slowingPosition = currentPosition + degrees - 30;
+			}
+			}else{
+				if (currentPosition + (degrees + 30) > 360){
+					slowingPosition = (currentPosition + (degrees-30)) - 360;
+				}else{
+					slowingPosition = currentPosition + degrees + 30;
+				}
+			}
 
 			// Waits until the Robot's heading is within the error margin
 			// of the final heading position.
-			while (currentPosition != finalPosition) {
-				currentPosition = Robot.ADL.getOrientation();
-				speedRatio = Math.abs(finalPosition - currentPosition) / degrees;
-				if (turnRight) {
-					Robot.drivetrain.setRightSpeed(-rightSpeed / 4 + 0.25 * -rightSpeed * speedRatio);
-					Robot.drivetrain.setLeftSpeed(leftSpeed / 4 + 0.25 * leftSpeed * speedRatio);
-				} else {
-					Robot.drivetrain.setRightSpeed(rightSpeed / 4 + 0.25 * rightSpeed * speedRatio);
-					Robot.drivetrain.setLeftSpeed(-leftSpeed / 4 + 0.25 * -leftSpeed * speedRatio);
+			// 90 - 5 > 50 && 95 > 50 || 85 < x < 95
+			// TODO
+			while (finalPosition-maxError > currentPosition ||
+				   finalPosition+maxError < currentPosition) {
+				
+				if (turnRight){
+					if (currentPosition <  + 360 % 360) {
+						controlRatio = 1.0; // Full speed
+					}
+				}else{
+					//when turning left, it goes from 
+					if (currentPosition > slowingPosition){
+						
+					}
+				}
+				// Reached the stopping distance threshold, but not at goal.
+				else if (degreesTravelled < degrees) {
+					final double stoppingZoneProgress = (degreesTravelled - (feet - stoppingDistance)) / stoppingDistance;
+
+					controlRatio = 1 - stoppingZoneProgress;
+					if (controlRatio < 0.2) {
+						controlRatio = 0.2;
+					}
+				}
+				// Reached the goal.
+				else {
+					controlRatio = 0.0;
+					driving = false;
 				}
 
+				Robot.drivetrain.setLeftSpeed(leftSpeed * controlRatio);
+				Robot.drivetrain.setRightSpeed(-rightSpeed * controlRatio);
 			}
 
 			Robot.drivetrain.setRightSpeed(0);
@@ -242,40 +282,42 @@ public class Autonomous extends Command {
 			boolean turningRight = false;
 			boolean turningLeft = false;
 			// set boundary to 90
-//			if (Math.abs(turnRightDegree) < 180 && Math.abs(turnLeftDegree) < 180) {
-//				if (turnRightDegree > turnDuringStraightError) {
-////					if (rightSpeed < 0.35)
-////						rightSpeed += 0.001;
-////					else
-//						leftSpeed -= 0.001;
-//				} else if (turnLeftDegree > turnDuringStraightError) {
-////					if (leftSpeed < 0.35)
-////						leftSpeed += 0.001;
-////					else
-//						rightSpeed -= 0.001;
-//				}
-//			} else {
-//				if (turnRightDegree < 0) {
-//					if ((turnRightDegree + 360) > turnDuringStraightError) {
-////						if (rightSpeed < 0.35)
-////							rightSpeed += 0.001;
-////						else
-//							leftSpeed -= 0.001;
-//					}
-//				} else {
-//					if ((turnLeftDegree + 360) > turnDuringStraightError) {
-////						if (leftSpeed < 0.35)
-////							leftSpeed += 0.001;
-////						else
-//							rightSpeed -= 0.001;
-//					}
-//				}
-//			}
+			if (Math.abs(turnRightDegree) < 180 && Math.abs(turnLeftDegree) < 180) {
+				if (turnRightDegree > turnDuringStraightError) {
+					// if (rightSpeed < 0.35)
+					// rightSpeed += 0.001;
+					// else
+					leftSpeed -= 0.001;
+				} else if (turnLeftDegree > turnDuringStraightError) {
+					// if (leftSpeed < 0.35)
+					// leftSpeed += 0.001;
+					// else
+					rightSpeed -= 0.001;
+				}
+			} else {
+				if (turnRightDegree < 0) {
+					if ((turnRightDegree + 360) > turnDuringStraightError) {
+						// if (rightSpeed < 0.35)
+						// rightSpeed += 0.001;
+						// else
+						leftSpeed -= 0.001;
+					}
+				} else {
+					if ((turnLeftDegree + 360) > turnDuringStraightError) {
+						// if (leftSpeed < 0.35)
+						// leftSpeed += 0.001;
+						// else
+						rightSpeed -= 0.001;
+					}
+				}
+			}
+			System.out.println("leftSpeed:" + leftSpeed);
+			System.out.println("rightSpeed:" + rightSpeed);
 			// If we haven't reached the stopping distance threshold.
+
 			if (distanceTraveled < feet - stoppingDistance) {
 				controlRatio = 1.0; // Full speed
 			}
-
 			// Reached the stopping distance threshold, but not at goal.
 			else if (distanceTraveled < feet) {
 				final double stoppingZoneProgress = (distanceTraveled - (feet - stoppingDistance)) / stoppingDistance;
@@ -304,8 +346,8 @@ public class Autonomous extends Command {
 		// this.turnDegreesRight(90);
 		// this.turnDegreesRight(90);
 		if (count == 0) {
-			this.driveForDistance(3);
-			// this.turnDegrees(90);
+			// this.driveForDistance(3);
+			this.turnDegrees(90);
 			count++;
 		}
 
