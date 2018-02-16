@@ -11,8 +11,8 @@ public class IntakeController extends Command{
 	protected void initalize() {}
 
 	protected void execute(){
-		final boolean out = Robot.oi.driverStick.getRawButton(11);
-		final boolean in = Robot.oi.driverStick.getRawButton(12);
+		final boolean out = Robot.oi.driverStick.getRawButton(6);
+		final boolean in = Robot.oi.driverStick.getRawButton(5);
 		
 		if(out && in){
 			Robot.intake.stopMotion();

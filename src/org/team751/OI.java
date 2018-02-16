@@ -1,5 +1,7 @@
 package src.org.team751;
 
+import edu.wpi.first.wpilibj.AnalogTrigger;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
@@ -12,6 +14,17 @@ public class OI {
 	public Joystick driverStick = new Joystick(0);
 	public Button autoButton = new JoystickButton(driverStick, 1); // x button, 
 	public Joystick operatorStick = new Joystick(1);
+	
+	public DigitalInput[] autoSwitchs = {
+			new DigitalInput(12),
+			new DigitalInput(13),
+			new DigitalInput(14),
+			new DigitalInput(15),
+			new DigitalInput(16),
+			new DigitalInput(17),
+			new DigitalInput(18),
+			new DigitalInput(19),
+	};
 	
 	// XBOX controller button mappings found here: https://gist.github.com/calebreister/8018231
 	

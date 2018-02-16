@@ -43,8 +43,6 @@ public class Drivetrain extends Subsystem {
     
     public PowerDistributionPanel pdp = new PowerDistributionPanel();
     
-//    public Encoder leftEncoder = new Encoder(2, 3, true, EncodingType.k4X);
-//    public Encoder rightEncoder = new Encoder(0, 1, true, EncodingType.k4X);
     public boolean isDrivingAutonomously;
     
     public Drivetrain(){
