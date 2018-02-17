@@ -5,7 +5,7 @@ import src.org.team751.commands.JoystickDrive;
 
 
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.VictorSP;
+import edu.wpi.first.wpilibj.PWMVictorSPX;
 import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
@@ -15,13 +15,13 @@ import edu.wpi.first.wpilibj.DigitalInput;
  *
  */
 public class Drivetrain extends Subsystem {
-    public VictorSP leftDriveController1;
-    public VictorSP leftDriveController2;
-    public VictorSP leftDriveController3;
+    public PWMVictorSPX leftDriveController1;
+    public PWMVictorSPX leftDriveController2;
+    public PWMVictorSPX leftDriveController3;
     
-    public VictorSP rightDriveController1;
-    public VictorSP rightDriveController2;
-    public VictorSP rightDriveController3;
+    public PWMVictorSPX rightDriveController1;
+    public PWMVictorSPX rightDriveController2;
+    public PWMVictorSPX rightDriveController3;
     
    // public MultiSpeedController leftSpeedController;
    // public MultiSpeedController rightSpeedController;
@@ -41,7 +41,7 @@ public class Drivetrain extends Subsystem {
 //    public static final double GEAR_RATIO = 1.0; //unsure
 //    public static final double FUDGE_FACTOR = 1.0;
     
-    public PowerDistributionPanel pdp = new PowerDistributionPanel();
+    //public PowerDistributionPanel pdp = new PowerDistributionPanel();
     
 //    public Encoder leftEncoder = new Encoder(2, 3, true, EncodingType.k4X);
 //    public Encoder rightEncoder = new Encoder(0, 1, true, EncodingType.k4X);
@@ -53,13 +53,13 @@ public class Drivetrain extends Subsystem {
 //    	leftSpeedController = new MultiSpeedController(leftDriveController1,leftDriveController2,leftDriveController3);
 //        rightSpeedController = new MultiSpeedController(rightDriveController1,rightDriveController2,rightDriveController3);
     	//2016bot 345,012 | 2017bot, 135, 024
-    	leftDriveController1 = new VictorSP(1);
-    	leftDriveController2 = new VictorSP(3);
-    	leftDriveController3 = new VictorSP(5);
+    	leftDriveController1 = new PWMVictorSPX(3);
+    	leftDriveController2 = new PWMVictorSPX(4);
+    	leftDriveController3 = new PWMVictorSPX(5);
         
-    	rightDriveController1 = new VictorSP(0);
-    	rightDriveController2 = new VictorSP(2);
-    	rightDriveController3 = new VictorSP(4);
+    	rightDriveController1 = new PWMVictorSPX(0);
+    	rightDriveController2 = new PWMVictorSPX(1);
+    	rightDriveController3 = new PWMVictorSPX(2);
     }
     
     

@@ -3,6 +3,9 @@ package src.org.team751.commands;
 import src.org.team751.Robot;
 
 import edu.wpi.first.wpilibj.Timer;
+
+import java.util.concurrent.TimeUnit;
+
 import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PIDController;
@@ -55,6 +58,7 @@ public class Autonomous extends Command {
 	// right).
 
 	public static boolean isNearSwitchLeft;
+	public static boolean isScaleLeft;
 
 	private static boolean driving = false;
 
@@ -85,7 +89,155 @@ public class Autonomous extends Command {
 
 		isNearSwitchLeft = (gameData.charAt(0) == 'L');
 
+		isScaleLeft = (gameData.charAt(1) == 'L');
+
 		System.out.println("gameData=" + gameData);
+	}
+
+	private double[] chooseLeftPath(final boolean posSpecificSwitch1, final boolean posSpecificSwitch2,
+			final boolean posSpecificSwitch3) {
+		double[] returnValue;
+
+		// If switch 7 is on, both the switch and the scale are on the right,
+		// or the switch is on the right and the scale is not allowed,
+		// just cross the auto line.
+		if ((posSpecificSwitch3) || (!isNearSwitchLeft && !isScaleLeft) || (!isNearSwitchLeft && posSpecificSwitch2)) {
+			// Path = Left to auto line
+			// Go 140 in.
+			returnValue = new double[] { 140 };
+		} else if (isScaleLeft && isNearSwitchLeft) {
+			// If scale preferred, travel to scale.
+			// If not, travel to switch.
+			if (posSpecificSwitch1) {
+				// Path = Left to Left scale
+				// Go 249.65 in., turn right, go 24 in., turn left, Go 10 in.
+				returnValue = new double[] { 249.65, -2, 24, -1, 10 };
+			} else {
+				// Path = Left to Left switch
+				// Go 128 in., turn right, go 19.75 in.
+				returnValue = new double[] { 128, -2, 19.75 };
+			}
+		} else if (isNearSwitchLeft && !isScaleLeft) {
+			// Path = Left to Left switch
+			// Go 128 in., turn right, go 19.75 in.
+			returnValue = new double[] { 128, -2, 19.75 };
+		} else if (isScaleLeft && !posSpecificSwitch2) {
+			// Path = Left to Left scale
+			// Go 249.65 in., turn right, go 24 in., turn left, Go 10 in.
+			returnValue = new double[] { 249.65, -2, 24, -1, 10 };
+		} else {
+			// Path = lol wut something went wrong
+			returnValue = new double[] {};
+		}
+
+		return returnValue;
+	}
+
+	private double[] chooseMiddlePath(final boolean posSpecificSwitch1, final boolean posSpecificSwitch2,
+			final boolean posSpecificSwitch3) {
+		double[] returnValue;
+
+		// If our switch side is not allowed, or switch 7
+		// is on, then just cross auto line.
+		if ((isNearSwitchLeft && posSpecificSwitch1) || (!isNearSwitchLeft && posSpecificSwitch2)
+				|| posSpecificSwitch3) {
+			// Path = Middle to auto line
+			// Go 48 in., turn right, go 71.25 in., turn left, go 92 in.
+			returnValue = new double[] { 48, -2, 71.25, -1, 92 };
+		} else if (isNearSwitchLeft) {
+			// Path = Middle to Left Switch
+			// Go 68 in., turn left, go 102.25 in., turn right, go 22 in.
+			returnValue = new double[] { 68, -1, 102.25, -2, 22 };
+		} else if (!isNearSwitchLeft) {
+			// Path = Middle to Right Switch
+			// Go 68 in., turn right, go 91.25 in, turn left, go 22 in.
+			returnValue = new double[] { 68, -2, 91.25, -1, 22 };
+		} else {
+			// Path = lol wut something went wrong
+			returnValue = new double[] {};
+		}
+
+		return returnValue;
+	}
+
+	private double[] chooseRightPath(final boolean posSpecificSwitch1, 
+									final boolean posSpecificSwitch2,
+									final boolean posSpecificSwitch3) {
+		double[] returnValue;
+
+		// If switch 7 is on, both the switch and the scale are on the right,
+		// or the switch is on the right and the scale is not allowed,
+		// just cross the auto line.
+		if ((posSpecificSwitch3) || (isNearSwitchLeft && isScaleLeft) || 
+			(isNearSwitchLeft && posSpecificSwitch2)) {
+			// Path = Right to auto line
+			// Go 140 in.
+			returnValue = new double[] { 140 };
+		} else if (!isScaleLeft && !isNearSwitchLeft) {
+			// If scale preferred, travel to scale.
+			// If not, travel to switch.
+			if (posSpecificSwitch1) {
+				// Path = Right to Right scale
+				// Go 249.65 in., turn left, go 24 in., turn right, Go 10 in.
+				returnValue = new double[] { 249.65, -1, 24, -2, 10 };
+			} else {
+				// Path = Right to Right switch
+				// Go 128 in., turn left, go 19.75 in.
+				returnValue = new double[] { 128, -1, 19.75 };
+			}
+		} else if (!isNearSwitchLeft && isScaleLeft) {
+			// Path = Right to Right switch
+			// Go 128 in., turn left, go 19.75 in.
+			returnValue = new double[] { 128, -1, 19.75 };
+		} else if (isScaleLeft && !posSpecificSwitch2) {
+			// Path = Right to Right scale
+			// Go 249.65 in., turn left, go 24 in., turn right, Go 10 in.
+			returnValue = new double[] { 249.65, -1, 24, -2, 10 };
+		} else {
+			// Path = lol wut something went wrong
+			returnValue = new double[] {};
+		}
+
+		return returnValue;
+	}
+
+	private double[] decidePath() throws InterruptedException {
+		final boolean leftPos = Robot.oi.autoSwitches[0].get();
+		final boolean middlePos = Robot.oi.autoSwitches[1].get();
+		final boolean rightPos = Robot.oi.autoSwitches[2].get();
+
+		final boolean delay = Robot.oi.autoSwitches[3].get();
+
+		final boolean posSpecificSwitch1 = Robot.oi.autoSwitches[4].get();
+		final boolean posSpecificSwitch2 = Robot.oi.autoSwitches[5].get();
+		final boolean posSpecificSwitch3 = Robot.oi.autoSwitches[7].get();
+
+		int switchPosNum = (leftPos) ? 1 : 0;
+		switchPosNum += (middlePos) ? 1 : 0;
+		switchPosNum += (rightPos) ? 1 : 0;
+
+		setUpSwitchPosition();
+
+		// If zero or more than one position switch is enabled,
+		// then stand still.
+		if (switchPosNum == 0 || switchPosNum > 1) {
+			return new double[0];
+		}
+
+		if (delay) {
+			TimeUnit.SECONDS.sleep(Robot.delayTimeSeconds);
+		}
+
+		if (leftPos) {
+			return chooseLeftPath(posSpecificSwitch1, posSpecificSwitch2, 
+					             posSpecificSwitch3);
+		} else if (middlePos) {
+			return chooseMiddlePath(posSpecificSwitch1, posSpecificSwitch2, 
+					                posSpecificSwitch3);
+		} else {
+			return chooseRightPath(posSpecificSwitch1, posSpecificSwitch2, 
+					              posSpecificSwitch3);
+		}
 	}
 
 	@Override
@@ -119,7 +271,7 @@ public class Autonomous extends Command {
 				if (currentPath != -1) {
 					turnDegrees(90);
 				} else {
-					turnDegrees(90);
+					turnDegrees(270);
 				}
 			} else {
 				driveForDistance(currentPath);
@@ -225,17 +377,17 @@ public class Autonomous extends Command {
 	private double newHeading(double angle1, double angle2) {
 		return (this.angularDistance(angle1, angle2) + angle1) % 360.0;
 	}
-	
+
 	private double skew(double initial, double current) {
 		double result = (current + 360.0 - initial) % 360.0;
 		if (result > 180.0) { // Skewing to the left, need to boost left side.
 			return -(result - 180.0);
-		}
-		else if (result < 180.0) { // Skewing to the right, need to boost right side.
+		} else if (result < 180.0) { // Skewing to the right, need to boost
+										// right side.
 			return result;
-		}
-		else {
-			// If result is 180, we're going in the exact opposite direction --> severe error.
+		} else {
+			// If result is 180, we're going in the exact opposite direction -->
+			// severe error.
 			System.out.println("ERROR: Going in exact opposite direction!");
 			return Double.MIN_VALUE;
 		}
@@ -244,7 +396,7 @@ public class Autonomous extends Command {
 	private void driveForDistance(double feet) {
 
 		initDistance = Robot.ADL.getDistance();
-		
+
 		double leftCalculatedSpeed = 0.0;
 		double rightCalculatedSpeed = 0.0;
 
@@ -265,14 +417,15 @@ public class Autonomous extends Command {
 
 			final double distanceTraveled = currentDistance - initDistance;
 			double controlRatio;
-			
+
 			// SKEWING CORRECTING CODE HERE
 			double skew = this.skew(initOrientation, currentOrientation);
 			if (skew < 0.0) {
 				// Boost left
-				leftCalculatedSpeed += -skew; // NEED TO DEVISE A WAY TO INCORPORATE THE RESULT INTO SPEED.
-			}
-			else if (skew > 0.0) {
+				leftCalculatedSpeed += -skew; // NEED TO DEVISE A WAY TO
+												// INCORPORATE THE RESULT INTO
+												// SPEED.
+			} else if (skew > 0.0) {
 				// Boost right
 				rightCalculatedSpeed += skew; // ^^^
 			}
@@ -310,10 +463,17 @@ public class Autonomous extends Command {
 		// this.turnDegreesRight(90);
 		// this.turnDegreesRight(90);
 		if (count == 0) {
-			// this.driveForDistance(10.0);
+			this.driveForDistance(10.0);
 			this.turnDegrees(90.0);
 			// this.turnDegrees(45.0);
 			// this.turnDegrees(270.0);
+			/*try {
+				executePath(decidePath());
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}*/
+			
 			count++;
 		}
 

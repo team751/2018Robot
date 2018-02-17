@@ -31,6 +31,9 @@ import edu.wpi.first.wpilibj.SpeedController;
  * directory.
  */
 public class Robot extends IterativeRobot {
+	public static final int delayTimeSeconds = 4;
+	
+	
 	public static final Drivetrain drivetrain = new Drivetrain();
 
 	public static SpeedController leftSpeedController;
@@ -81,14 +84,6 @@ public class Robot extends IterativeRobot {
 		Thread listenerThread = new Thread(ADL);
 		listenerThread.start();
 		robotDrive = new DifferentialDrive(leftSpeedController, rightSpeedController);
-
-		try {
-			stateSenderUDP = new StateSenderUDP("10.7.51.76", 6000);
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		Command autonomousCommand;
 	}
 
 	public void disabledPeriodic() {
@@ -138,6 +133,7 @@ public class Robot extends IterativeRobot {
 	 */
 	public void autonomousPeriodic() {
 		Scheduler.getInstance().run();
+		System.out.println("Auton enabled");
 		printarduinoinfo();
 		// System.out.println("Heading: " + ADL.getHeading());
 	}
