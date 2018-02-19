@@ -13,19 +13,19 @@ public class Intake extends Subsystem{
         setDefaultCommand(new IntakeController());
     }
 	
-	public void openMotion() {
+	public void eject() {
 		for(PWMVictorSPX p : intakeMotorControllers) {
 			p.set(0.75);
 		}
 	}
 	
-	public void stopMotion() {
+	public void stop() {
 		for(PWMVictorSPX p : intakeMotorControllers) {
 			p.set(0);
 		}
 	}
 	
-	public void closeMotion() {
+	public void takeIn() {
 		for(PWMVictorSPX p : intakeMotorControllers) {
 			p.set(-0.75);
 		}

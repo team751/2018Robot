@@ -196,9 +196,9 @@ public class Autonomous extends Command {
 			returnValue = new double[] { 249.65, -1, 24, -2, 10 };
 			System.out.println("Taking path: Right to right scale");
 		} else {
-			// Path = lol wut something went wrong
+			// Path = Error
 			returnValue = new double[] {};
-			System.out.println("Taking path: lol wut something went wrong");
+			System.out.println("Taking path: Error");
 		}
 
 		return returnValue;
@@ -389,6 +389,13 @@ public class Autonomous extends Command {
 	 * Note that the "lower bounds" of either range may be larger or smaller
 	 * than the "upper bounds" so the map() function may be used to reverse a
 	 * range of numbers.
+	 * 
+	 * @param value - the value to be mapped
+	 * @param inputLowerBound - the lower bound of the value
+	 * @param inputUpperBound - the upper bound of the value
+	 * @param outputLowerBound - the desired lower bound of the output
+	 * @param outputUpperBound - the desired upper bound of the output
+	 * @return the mapped value
 	 */
 	private double map(double value, double inputLowerBound, double inputUpperBound, double outputLowerBound,
 			double outputUpperBound) {
@@ -500,7 +507,6 @@ public class Autonomous extends Command {
 			 * (InterruptedException e) { // TODO Auto-generated catch block
 			 * e.printStackTrace(); }
 			 */
-
 		}
 		count++;
 	}
