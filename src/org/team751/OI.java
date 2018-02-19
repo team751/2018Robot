@@ -22,7 +22,15 @@ public class OI {
 	private int preference2 = 17; // *
 	private int preference3 = 18; // *
 	private int unused = 19;
+	
+	private int intakeLimitSwitchPin = 0;
+	private int bottomWinchLimitSwitchPin = 1; // Bottom limit switch pin
+	private int topWinchLimitSwitchPin = 2; // Top limit switch pin
  	
+	public DigitalInput bottomWinchLimitSwitch = new DigitalInput(bottomWinchLimitSwitchPin);
+	public DigitalInput topWinchLimitSwitch = new DigitalInput(topWinchLimitSwitchPin);
+	public DigitalInput intakeLimitSwitch = new DigitalInput(intakeLimitSwitchPin);
+	
  	public DigitalInput[] autoSwitches = {
  			new DigitalInput(left), // Left
  			new DigitalInput(center), // Center

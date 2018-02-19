@@ -1,6 +1,8 @@
 package src.org.team751.subsystems;
 
+import src.org.team751.Robot;
 import src.org.team751.commands.WinchController;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PWMVictorSPX;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.VictorSP;
@@ -24,6 +26,12 @@ public class Winch extends Subsystem {
     public void setSpeed(double speed){
     	winchMotorController1.set(speed);
     	winchMotorController2.set(speed);
+    }
+    
+    public void goUpAuto(){
+    	setSpeed(0.5);
+    	while(!Robot.oi.topWinchLimitSwitch.get()){}
+    	stop();
     }
     
     public void stop() {

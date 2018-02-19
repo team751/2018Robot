@@ -276,6 +276,8 @@ public class Autonomous extends Command {
 				driveForDistance(currentPath / 12.0);
 			}
 		}
+		Robot.winch.goUpAuto();
+		Robot.intake.ejectAuto();
 	}
 
 	public double addMod360(double degrees, double degrees2) {
@@ -498,7 +500,8 @@ public class Autonomous extends Command {
 	protected void execute() {
 		if (count == 0) {
 			// executePath(new double[] { 249.65, -1, 24, -2, 10 });
-			this.driveForDistance(10.0);
+			Robot.winch.goUpAuto();
+			Robot.intake.ejectAuto();
 			// this.turnDegrees(90);
 			// this.driveForDistance(5.0);
 			// this.turnDegrees(270);

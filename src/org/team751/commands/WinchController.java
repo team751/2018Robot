@@ -8,9 +8,6 @@ import edu.wpi.first.wpilibj.command.Command;
  *
  */
 public class WinchController extends Command {
-	
-	private final int bottomLimitSwitchPin = 1; // Bottom limit switch pin
-	private final int topLimitSwitchPin = 2; // Top limit switch pin
 
     public WinchController() {
         // Use requires() here to declare subsystem dependencies
@@ -23,14 +20,11 @@ public class WinchController extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	/*final double triggerRight = Robot.oi.driverStick.getRawAxis(3);
+    	final double triggerRight = Robot.oi.driverStick.getRawAxis(3);
     	final double triggerLeft = Robot.oi.driverStick.getRawAxis(2);
-    	
-		DigitalInput bottomLimitSwitch = new DigitalInput(bottomLimitSwitchPin);
-		DigitalInput topLimitSwitch = new DigitalInput(topLimitSwitchPin);
 		
-		final boolean bottomLimit = bottomLimitSwitch.get();
-		final boolean topLimit = topLimitSwitch.get();
+		final boolean bottomLimit = Robot.oi.bottomWinchLimitSwitch.get();
+		final boolean topLimit = Robot.oi.topWinchLimitSwitch.get();
     	
     	final double speed = triggerRight - triggerLeft;
     	
@@ -43,7 +37,6 @@ public class WinchController extends Command {
     	else {
     		Robot.winch.stop();
     	}
-    	*/
     }
 
     // Make this return true when this Command no longer needs to run execute()
