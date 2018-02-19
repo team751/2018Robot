@@ -4,11 +4,14 @@ import src.org.team751.Robot;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.Scheduler;
 
 /**
  *
  */
 public class JoystickDrive extends Command {
+
+	private long lastBrownout;
 
 	public JoystickDrive() {
 		// Use requires() here to declare subsystem dependencies
@@ -17,6 +20,7 @@ public class JoystickDrive extends Command {
 
 	// Called just before this Command runs the first time
 	protected void initialize() {
+		this.lastBrownout = 0;
 	}
 
 	// Called repeatedly when this Command is scheduled to run
