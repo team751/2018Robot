@@ -15,11 +15,11 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Autonomous extends Command {
-	private static double timeToDrive = 15; // Duration of the Autonomous
-											// period.
+	// Duration of the Autonomous period.
+	private static double timeToDrive = 15;
+
 	private static double leftSpeed = 0.3; // Speed for the left side.
-	private static double rightSpeed = -leftSpeed; // Speed for the right side
-													// (same as left).
+	private static double rightSpeed = -leftSpeed;
 
 	private double initDistance, initOrientation;
 
@@ -32,10 +32,14 @@ public class Autonomous extends Command {
 	// The acceptable error (in feet) for driving straight.
 	private final double DRIVING_STRAIGHT_ERROR = 0.1; // 1.2 inches.
 
-	// The angular distance (in degrees) at which the robot starts to slow down.
+	// The angular distance (in degrees) from the goal at which the robot should
+	// start slowing down.
 	// TO TUNE: If the robot is OVERTURNING: Increase this value.
 	// If the robot is UNDERTURNING: Decrease this value.
-	private final double TURNING_STOPPING_DISTANCE = 22.0;
+	private final double TURNING_STOPPING_DISTANCE = 60.0;
+
+	// The acceptable error (in degrees) for turning.
+	private final double TURNING_ERROR = 3.0;
 
 	// How much the left side can compensate for skewing.
 	// TO TUNE: If the robot is skewing to the LEFT: Increase this value
@@ -50,14 +54,13 @@ public class Autonomous extends Command {
 
 	Timer timer = new Timer();
 
-	public static boolean isNearSwitchLeft; // Flag denoting which side of the
-											// switch is our's.
-	public static boolean isScaleLeft; // Flag denoting which side of the scale
-										// is our's.
+	// Flag denoting which side of the switch is our's.
+	public static boolean isNearSwitchLeft;
+	// Flag denoting which side of the scale is our's.
+	public static boolean isScaleLeft;
 
 	// Flag denoting whether the robot is driving or not.
 	private static boolean driving = false;
-
 	public Autonomous() {
 
 	}
@@ -289,7 +292,6 @@ public class Autonomous extends Command {
 	}
 
 	private void turnDegrees(double degrees) {
-
 		double currentPosition = Robot.ADL.getOrientation() % 360;
 		final double initDegrees = currentPosition;
 		final double finalPosition = this.newHeading(currentPosition, currentPosition + degrees);
@@ -315,6 +317,8 @@ public class Autonomous extends Command {
 			}
 		}
 
+		System.out.println("Slowing Position: " + slowingPosition);
+
 		driving = true;
 		while (driving) {
 			currentPosition = Robot.ADL.getOrientation() % 360;
@@ -331,16 +335,19 @@ public class Autonomous extends Command {
 			if (degreesTraveled < angularDistance(initDegrees, slowingPosition)) {
 				controlRatio = 1.0; // Full speed
 			}
-			// Reached the stopping distance threshold, but not at goal.
-			else if (degreesTraveled < angularDistance(initDegrees, finalPosition)) {
-				final double stoppingZoneProgress = angularDistance(slowingPosition, currentPosition)
-						/ angularDistance(slowingPosition, finalPosition);
-				controlRatio = 1 - stoppingZoneProgress;
-			} // Reached the goal.
-			else {
+			// Within acceptable degrees of the goal.
+			else if (degreesTraveled >= degrees - TURNING_ERROR) {
 				System.out.println("Done turning");
 				controlRatio = 0.0;
 				driving = false;
+			} else {
+				// Reached the stopping distance threshold, but not at goal.
+				final double stoppingZoneProgress = angularDistance(slowingPosition, currentPosition)
+						/ angularDistance(slowingPosition, finalPosition);
+				controlRatio = 1 - stoppingZoneProgress;
+				if (controlRatio < 0.1) {
+					controlRatio = 0.1;
+				}
 			}
 
 			if (turnRight) {
@@ -360,7 +367,6 @@ public class Autonomous extends Command {
 		System.out.println("Final Orientation: " + currentPosition);
 	}
 
-	// }
 
 	private double angularDistance(double angle1, double angle2) {
 		return 180.0 - Math.abs(Math.abs(angle1 - angle2) - 180.0);
