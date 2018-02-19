@@ -51,17 +51,6 @@ public class Robot extends IterativeRobot {
 	public static boolean crushed;
 	public static ArduinoDataListener ADL;
 
-	private void setUpSwitchPosition() {
-		System.out.println("Gamedata getting...");
-
-		String gameData;
-
-		gameData = DriverStation.getInstance().getGameSpecificMessage();
-
-		Autonomous.isNearSwitchLeft = (gameData.charAt(0) == 'L');
-
-		System.out.println("gameData=" + gameData);
-	}
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -133,7 +122,6 @@ public class Robot extends IterativeRobot {
 	 */
 	public void autonomousPeriodic() {
 		Scheduler.getInstance().run();
-		System.out.println("Auton enabled");
 		printarduinoinfo();
 		// System.out.println("Heading: " + ADL.getHeading());
 	}

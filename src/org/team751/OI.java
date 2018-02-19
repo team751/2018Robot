@@ -14,16 +14,24 @@ public class OI {
 	public Button autoButton = new JoystickButton(driverStick, 1); // x button, 
 	public Joystick operatorStick = new Joystick(1);
 	
+	private int left = 12;
+	private int center = 13;
+	private int right = 14; // *
+	private int delay = 15; // *
+	private int preference1 = 16; // *
+	private int preference2 = 17; // *
+	private int preference3 = 18; // *
+	private int unused = 19;
  	
  	public DigitalInput[] autoSwitches = {
- 			new DigitalInput(12),
- 			new DigitalInput(13),
- 			new DigitalInput(14),
- 			new DigitalInput(15),
- 			new DigitalInput(16),
- 			new DigitalInput(17),
- 			new DigitalInput(18),
- 			new DigitalInput(19),
+ 			new DigitalInput(left), // Left
+ 			new DigitalInput(center), // Center
+ 			new DigitalInput(right), // Right 
+ 			new DigitalInput(delay), // Delay 
+ 			new DigitalInput(preference1), // Left: Prefer scale over switch. Center: Left switch is not ok. Right: Prefer scale over switch.
+ 			new DigitalInput(preference2), // Left: Scale not ok. Center: Just cross the line (no switch or scale). Right: Scale not ok.
+ 			new DigitalInput(preference3), // Left: Just cross the line. Center: Just cross the line. Right: Just cross the line.
+ 			new DigitalInput(unused), // ***Unused***
  	};
 	
 	// XBOX controller button mappings found here: https://gist.github.com/calebreister/8018231

@@ -27,13 +27,13 @@ public class Drivetrain extends Subsystem {
    // public MultiSpeedController rightSpeedController;
     
     
-    public DigitalInput switch4 = new DigitalInput (4);
+    /*public DigitalInput switch4 = new DigitalInput (4);
     public DigitalInput switch5 = new DigitalInput (5);
     public DigitalInput switch6 = new DigitalInput (6);
     public DigitalInput switch7= new DigitalInput (7);
     public DigitalInput switch8 = new DigitalInput (8);
     public DigitalInput[] switches = {switch4, switch5, switch6, switch7, switch8};
-    public boolean[] switchesStatus = {switch4.get(), switch5.get(), switch6.get(), switch7.get(), switch8.get()};
+    public boolean[] switchesStatus = {switch4.get(), switch5.get(), switch6.get(), switch7.get(), switch8.get()};*/
     
 //    public static final double WHEEL_DIAMETER = 6.0;
 //    public static final double PULSE_PER_REVOLUTION = 360;
@@ -41,7 +41,7 @@ public class Drivetrain extends Subsystem {
 //    public static final double GEAR_RATIO = 1.0; //unsure
 //    public static final double FUDGE_FACTOR = 1.0;
     
-    //public PowerDistributionPanel pdp = new PowerDistributionPanel();
+    public PowerDistributionPanel pdp = new PowerDistributionPanel();
     
 //    public Encoder leftEncoder = new Encoder(2, 3, true, EncodingType.k4X);
 //    public Encoder rightEncoder = new Encoder(0, 1, true, EncodingType.k4X);
@@ -53,13 +53,13 @@ public class Drivetrain extends Subsystem {
 //    	leftSpeedController = new MultiSpeedController(leftDriveController1,leftDriveController2,leftDriveController3);
 //        rightSpeedController = new MultiSpeedController(rightDriveController1,rightDriveController2,rightDriveController3);
     	//2016bot 345,012 | 2017bot, 135, 024
-    	leftDriveController1 = new PWMVictorSPX(3);
-    	leftDriveController2 = new PWMVictorSPX(4);
+    	leftDriveController1 = new PWMVictorSPX(1);
+    	leftDriveController2 = new PWMVictorSPX(3);
     	leftDriveController3 = new PWMVictorSPX(5);
         
     	rightDriveController1 = new PWMVictorSPX(0);
-    	rightDriveController2 = new PWMVictorSPX(1);
-    	rightDriveController3 = new PWMVictorSPX(2);
+    	rightDriveController2 = new PWMVictorSPX(2);
+    	rightDriveController3 = new PWMVictorSPX(4);
     }
     
     

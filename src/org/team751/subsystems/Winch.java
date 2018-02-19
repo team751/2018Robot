@@ -1,7 +1,7 @@
 package src.org.team751.subsystems;
 
 import src.org.team751.commands.WinchController;
-
+import edu.wpi.first.wpilibj.PWMVictorSPX;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -10,7 +10,8 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  *
  */
 public class Winch extends Subsystem {
-	public VictorSP winchMotorController = new VictorSP(6);
+	public PWMVictorSPX winchMotorController1 = new PWMVictorSPX(6);
+	public PWMVictorSPX winchMotorController2 = new PWMVictorSPX(7);
 		
     // Put methods for controlling this subsystem
     // here. Call these from Commands.
@@ -20,17 +21,14 @@ public class Winch extends Subsystem {
         setDefaultCommand(new WinchController());
     }
     
-    public void forward() {
-    	System.out.println("intake");
-    	winchMotorController.set(1.0);
+    public void setSpeed(double speed){
+    	winchMotorController1.set(speed);
+    	winchMotorController2.set(speed);
     }
     
-    public void disable() {
-    	winchMotorController.set(0.0);
-    }
-    
-    public void reverse() {
-    	winchMotorController.set(-1.0);
+    public void stop() {
+    	winchMotorController1.setSpeed(0.0);
+    	winchMotorController2.setSpeed(0.0);
     }
 }
 
