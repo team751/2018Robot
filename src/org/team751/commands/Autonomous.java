@@ -1,18 +1,9 @@
 package src.org.team751.commands;
 
 import src.org.team751.Robot;
-
 import edu.wpi.first.wpilibj.Timer;
-
 import java.util.concurrent.TimeUnit;
-
-import edu.wpi.first.wpilibj.AnalogGyro;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.PIDController;
-import edu.wpi.first.wpilibj.PIDSource;
-import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Autonomous extends Command {
 	// Duration of the Autonomous period.
@@ -23,19 +14,26 @@ public class Autonomous extends Command {
 
 	private double initDistance, initOrientation;
 
-	// The distance (in feet) at which the robot starts slowing down when
-	// driving straight.
-	// TO TUNE: If the robot is OVERSHOOTING: Increase this value.
-	// If the robot is UNDERSHOOTING: Decrease this value.
+	// More detailed instructions for tuning the below constants
+	// Can be found in Tuning Instructions.txt in this project.
+
+	/**
+	 * The distance (in feet) at which the robot starts slowing down when
+	 * driving straight. TO TUNE: If the robot is OVERSHOOTING: Increase this
+	 * value. If the robot is UNDERSHOOTING: Decrease this value. Recommended
+	 * tuning increment or decrement amount: 1.0 ft.
+	 */
 	private final double DRIVING_STRAIGHT_STOPPING_DISTANCE = 3.0;
 
 	// The acceptable error (in feet) for driving straight.
 	private final double DRIVING_STRAIGHT_ERROR = 0.1; // 1.2 inches.
 
-	// The angular distance (in degrees) from the goal at which the robot should
-	// start slowing down.
-	// TO TUNE: If the robot is OVERTURNING: Increase this value.
-	// If the robot is UNDERTURNING: Decrease this value.
+	/**
+	 * The angular distance (in degrees) from the goal at which the robot should
+	 * start slowing down. TO TUNE: If the robot is OVERTURNING: Increase this
+	 * value. If the robot is UNDERTURNING: Decrease this value. Recommended
+	 * tuning increment or decrement amount: 10.0 degrees
+	 */
 	private final double TURNING_STOPPING_DISTANCE = 60.0;
 
 	// The acceptable error (in degrees) for turning.
@@ -44,10 +42,12 @@ public class Autonomous extends Command {
 	// How much the left side can compensate for skewing.
 	// TO TUNE: If the robot is skewing to the LEFT: Increase this value
 	// Or, decrease RIGHT_SKEW_CEILING.
+	// Recommended tuning increment or decrement amount: 0.01
 	private final double LEFT_SKEW_CEILING = 0.03;
 	// How much the right side can compensate for skewing.
 	// TO TUNE: If the robot is skewing to the RIGHT: Increase this value.
 	// Or, decrease LEFT_SKEW_CEILING.
+	// Recommended tuning increment or decrement amount: 0.01
 	private final double RIGHT_SKEW_CEILING = 0.03;
 
 	private int count = 0; // Test var so execute only does something once.
@@ -61,6 +61,7 @@ public class Autonomous extends Command {
 
 	// Flag denoting whether the robot is driving or not.
 	private static boolean driving = false;
+
 	public Autonomous() {
 
 	}
@@ -317,7 +318,7 @@ public class Autonomous extends Command {
 			}
 		}
 
-		System.out.println("Slowing Position: " + slowingPosition);
+		//System.out.println("Slowing Position: " + slowingPosition);
 
 		driving = true;
 		while (driving) {
@@ -367,7 +368,6 @@ public class Autonomous extends Command {
 		System.out.println("Final Orientation: " + currentPosition);
 	}
 
-
 	private double angularDistance(double angle1, double angle2) {
 		return 180.0 - Math.abs(Math.abs(angle1 - angle2) - 180.0);
 	}
@@ -398,11 +398,16 @@ public class Autonomous extends Command {
 	 * than the "upper bounds" so the map() function may be used to reverse a
 	 * range of numbers.
 	 * 
-	 * @param value - the value to be mapped
-	 * @param inputLowerBound - the lower bound of the value
-	 * @param inputUpperBound - the upper bound of the value
-	 * @param outputLowerBound - the desired lower bound of the output
-	 * @param outputUpperBound - the desired upper bound of the output
+	 * @param value
+	 *            - the value to be mapped
+	 * @param inputLowerBound
+	 *            - the lower bound of the value
+	 * @param inputUpperBound
+	 *            - the upper bound of the value
+	 * @param outputLowerBound
+	 *            - the desired lower bound of the output
+	 * @param outputUpperBound
+	 *            - the desired upper bound of the output
 	 * @return the mapped value
 	 */
 	private double map(double value, double inputLowerBound, double inputUpperBound, double outputLowerBound,
@@ -447,7 +452,8 @@ public class Autonomous extends Command {
 					rightWasBoosted = false;
 				} else {
 					leftWasBoosted = true;
-					System.out.println("Amount added to LCS: " + this.map(-skew, 0.0, 5.0, 0.0, this.LEFT_SKEW_CEILING));
+					System.out
+							.println("Amount added to LCS: " + this.map(-skew, 0.0, 5.0, 0.0, this.LEFT_SKEW_CEILING));
 					leftCalculatedSpeed += this.map(-skew, 0.0, 1.5, 0.0, this.LEFT_SKEW_CEILING);
 				}
 			} else if (skew > 0.0) { // Boost right
@@ -456,7 +462,8 @@ public class Autonomous extends Command {
 					leftCalculatedSpeed = 0; // Decrease the left speed.
 					leftWasBoosted = false;
 				} else {
-					System.out.println("Amount added to RCS: " + this.map(skew, 0.0, 5.0, 0.0, this.RIGHT_SKEW_CEILING));
+					System.out
+							.println("Amount added to RCS: " + this.map(skew, 0.0, 5.0, 0.0, this.RIGHT_SKEW_CEILING));
 					rightCalculatedSpeed += this.map(skew, 0.0, 1.5, 0.0, this.RIGHT_SKEW_CEILING);
 					rightWasBoosted = true;
 				}

@@ -1,0 +1,33 @@
+This document details how to tune the 4 constants in Autonomous.java that affect the robot's autonomous behavior.
+A general tip for tuning these values is to start by incrementing or decrementing them by their respective recommended amounts
+(included for each constant), then reducing each increment/decrement by half until the desired behavior is achieved.
+
+Constant: DRIVING_STRAIGHT_STOPPING_DISTANCE
+	This variable denotes the distance (in feet) at which the robot starts slowing down when driving straight
+
+	TO TUNE: 
+		If the robot is OVERSHOOTING when driving straight: Increase this value.
+		If the robot is UNDERSHOOTING when driving straight: Decrease this value.
+		Recommended tuning increment or decrement amount: 1.0 ft.
+
+Constant: TURNING_STOPPING_DISTANCE
+	This variable denotes the angular distance (in degrees) from the goal at which the robot should start slowing down.
+	 
+	TO TUNE: 
+	 	If the robot is OVERTURNING: Increase this value.
+	 	If the robot is UNDERTURNING: Decrease this value.
+	 	Recommended tuning increment or decrement amount: 10.0 degrees
+
+Constant: LEFT_SKEW_CEILING
+	This variable denotes how much the left side can compensate for skewing.
+	
+	TO TUNE: 
+		If the robot is skewing to the LEFT: Increase this value OR decrease RIGHT_SKEW_CEILING.
+		Recommended tuning increment or decrement amount: 0.01
+		
+Constant: RIGHT_SKEW_CEILING
+	 This variable denotes how much the right side can compensate for skewing.
+	 
+	 TO TUNE: 
+	 	If the robot is skewing to the RIGHT: Increase this value OR decrease LEFT_SKEW_CEILING.
+	 	Recommended tuning increment or decrement amount: 0.01

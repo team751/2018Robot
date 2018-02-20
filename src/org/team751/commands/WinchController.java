@@ -1,12 +1,9 @@
 package src.org.team751.commands;
 
 import src.org.team751.Robot;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.command.Command;
 
-/**
- *
- */
+
 public class WinchController extends Command {
 
     public WinchController() {

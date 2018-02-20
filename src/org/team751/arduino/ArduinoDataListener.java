@@ -1,8 +1,5 @@
 package src.org.team751.arduino;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
@@ -58,10 +55,6 @@ public class ArduinoDataListener implements Runnable, PIDSource {
 		// ***since we only have one reedswitch now, we won't / 2, but we will
 		// ***
 		return (leftPulses + rightPulses) * Math.PI * WHEELDIAMETER / MAGNETS / 12.0;
-	}
-
-	private void refreshDistance() {
-		//
 	}
 
 	@Override

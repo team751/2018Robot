@@ -5,11 +5,6 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-import src.org.team751.Robot;
-
-//import com.kauailabs.nav6.frc.IMUAdvanced;
-
-
 public class StateSenderUDP {
 
 	private final int port;

@@ -115,17 +115,17 @@ public class Robot extends IterativeRobot {
 		Scheduler.getInstance().run();
 		printArduinoInfo();
 
-		System.out.println("Left Speed: " + Robot.drivetrain.leftDriveController1.getSpeed());
-		System.out.println("Right Speed: " + Robot.drivetrain.rightDriveController1.getSpeed());
-
-		// Current check
-		System.out.println("Total Current: " + Robot.drivetrain.pdp.getTotalCurrent());
-		System.out.print("Left Motors: " + "Motor1: " + Robot.drivetrain.pdp.getCurrent(drivetrain.leftMotor1) + ", ");
-		System.out.print("Motor2: " + Robot.drivetrain.pdp.getCurrent(drivetrain.leftMotor2) + ", ");
-		System.out.print("Motor3: " + Robot.drivetrain.pdp.getCurrent(drivetrain.leftMotor3) + ", ");
-		System.out.print("Right Motors: " + "Motor1: " + Robot.drivetrain.pdp.getCurrent(drivetrain.rightMotor1) + ", ");
-		System.out.print("Motor2: " + Robot.drivetrain.pdp.getCurrent(drivetrain.rightMotor2) + ", ");
-		System.out.println("Motor3: " + Robot.drivetrain.pdp.getCurrent(drivetrain.rightMotor3));
+//		System.out.println("Left Speed: " + Robot.drivetrain.leftDriveController1.getSpeed());
+//		System.out.println("Right Speed: " + Robot.drivetrain.rightDriveController1.getSpeed());
+//
+//		// Current check
+//		System.out.println("Total Current: " + Robot.drivetrain.pdp.getTotalCurrent());
+//		System.out.print("Left Motors: " + "Motor1: " + Robot.drivetrain.pdp.getCurrent(drivetrain.leftMotor1) + ", ");
+//		System.out.print("Motor2: " + Robot.drivetrain.pdp.getCurrent(drivetrain.leftMotor2) + ", ");
+//		System.out.print("Motor3: " + Robot.drivetrain.pdp.getCurrent(drivetrain.leftMotor3) + ", ");
+//		System.out.print("Right Motors: " + "Motor1: " + Robot.drivetrain.pdp.getCurrent(drivetrain.rightMotor1) + ", ");
+//		System.out.print("Motor2: " + Robot.drivetrain.pdp.getCurrent(drivetrain.rightMotor2) + ", ");
+//		System.out.println("Motor3: " + Robot.drivetrain.pdp.getCurrent(drivetrain.rightMotor3));
 	}
 
 	/**

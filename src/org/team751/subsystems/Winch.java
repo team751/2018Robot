@@ -2,15 +2,9 @@ package src.org.team751.subsystems;
 
 import src.org.team751.Robot;
 import src.org.team751.commands.WinchController;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PWMVictorSPX;
-import edu.wpi.first.wpilibj.Relay;
-import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
-/**
- *
- */
 public class Winch extends Subsystem {
 	public PWMVictorSPX winchMotorController1 = new PWMVictorSPX(6);
 	public PWMVictorSPX winchMotorController2 = new PWMVictorSPX(7);

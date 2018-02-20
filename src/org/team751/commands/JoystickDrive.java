@@ -1,17 +1,15 @@
 package src.org.team751.commands;
 
 import src.org.team751.Robot;
-
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.command.Scheduler;
 
-/**
- *
- */
 public class JoystickDrive extends Command {
 
 	private long lastBrownout;
+
+	// The power reduction factor applied when brownout is detected.
+	// Ex. a reduction factor of 2.0 will cut the x and y in half.
+	private final double brownoutReductionFactor = 2.0;
 
 	public JoystickDrive() {
 		// Use requires() here to declare subsystem dependencies
@@ -37,7 +35,7 @@ public class JoystickDrive extends Command {
 			// brownout is too long, reduce the power.
 			long currentTime = System.currentTimeMillis();
 			if (currentTime - this.lastBrownout > Robot.drivetrain.brownoutPeriodThreshold) {
-				Robot.robotDrive.arcadeDrive(-y / 2, x / 2, true);
+				Robot.robotDrive.arcadeDrive(-y / this.brownoutReductionFactor, x / this.brownoutReductionFactor, true);
 			}
 			this.lastBrownout = currentTime;
 		} else {
