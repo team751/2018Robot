@@ -54,7 +54,7 @@ public class ArduinoDataListener implements Runnable, PIDSource {
 		// inches convert to feet / 12
 		// ***since we only have one reedswitch now, we won't / 2, but we will
 		// ***
-		return (leftPulses + rightPulses) * Math.PI * WHEELDIAMETER / MAGNETS / 12.0;
+		return ((leftPulses + rightPulses) / 2) * Math.PI * WHEELDIAMETER / MAGNETS / 12.0;
 	}
 
 	@Override

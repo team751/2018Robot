@@ -10,6 +10,34 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
  * interface to the commands and command groups that allow control of the robot.
  */
 public class OI {
+	
+	public enum Controller { // Button mappings for the XBOX One controller
+		A(1),
+		B(2),
+		X(3),
+		Y(4),
+		LB(5),
+		RB(6),
+		LT(2), // Must use .getRawAxis()
+		RT(3), // Must use .getRaxAxis()
+		BACK(7),
+		START(8),
+		LEFT_AXIS_PRESS(9), // X-Axis: -1.000 to 1.000 (stick.GetX())
+	    					// Y-Axis: -1.000 to 1.000 (stick.GetY())
+		RIGHT_AXIS_PRESS(10);
+		
+		private int buttonNum;
+		
+		private Controller(int value) {
+			this.buttonNum = value;
+		}
+		
+		public int getButtonMapping() {
+			return this.buttonNum;
+		}
+	}
+	
+	
 	public Joystick driverStick = new Joystick(0);
 	public Button autoButton = new JoystickButton(driverStick, 1); // x button, 
 	public Joystick operatorStick = new Joystick(1);
@@ -71,4 +99,6 @@ public class OI {
     // until it is finished as determined by it's isFinished method.
     // button.whenReleased(new ExampleCommand());
 }
+
+
 

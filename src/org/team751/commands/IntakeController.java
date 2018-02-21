@@ -1,6 +1,7 @@
 package src.org.team751.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
+import src.org.team751.OI;
 import src.org.team751.Robot;
 
 public class IntakeController extends Command {
@@ -20,9 +21,9 @@ public class IntakeController extends Command {
 	protected void execute() {
 		boolean intakeLimit = Robot.oi.intakeLimitSwitch.get(); // True on high
 
-		final boolean in = Robot.oi.driverStick.getRawButton(5); // LB
-		final boolean out = Robot.oi.driverStick.getRawButton(6); // RB
-		final boolean reset = Robot.oi.driverStick.getRawButton(1); // A
+		final boolean in = Robot.oi.driverStick.getRawButton(OI.Controller.RB.getButtonMapping()); // RB
+		final boolean out = Robot.oi.driverStick.getRawButton(OI.Controller.LB.getButtonMapping()); // LB
+		final boolean reset = Robot.oi.driverStick.getRawButton(OI.Controller.A.getButtonMapping()); // A
 
 		if (!wasIntaking && in) { // If the in button was just pressed.
 			this.count = 0; // Reset the count to allow intake correcting.
@@ -49,7 +50,8 @@ public class IntakeController extends Command {
 				this.wasIntaking = true;
 				Robot.intake.takeIn();
 			}
-		} else { // If none of the above conditions are met, do not do anything
+		}
+		else { // If none of the above conditions are met, do not do anything
 			Robot.intake.stop();
 			this.wasIntaking = false;
 		}
@@ -58,14 +60,14 @@ public class IntakeController extends Command {
 	public void correctIntake() {
 		Robot.intake.eject();
 		try {
-			Thread.sleep(250);
+			Thread.sleep(75);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		Robot.intake.takeIn();
 		try {
-			Thread.sleep(250);
+			Thread.sleep(75);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

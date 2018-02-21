@@ -209,9 +209,9 @@ public class Autonomous extends Command {
 	}
 
 	private double[] decidePath() throws InterruptedException {
-		final boolean leftPos = /* Robot.oi.autoSwitches[0].get() */false;
+		final boolean leftPos = Robot.oi.autoSwitches[0].get();
 		final boolean middlePos = Robot.oi.autoSwitches[1].get();
-		final boolean rightPos = /* Robot.oi.autoSwitches[2].get() */false;
+		final boolean rightPos = Robot.oi.autoSwitches[2].get();
 
 		final boolean delay = Robot.oi.autoSwitches[3].get();
 
@@ -225,8 +225,10 @@ public class Autonomous extends Command {
 
 		setUpSwitchPosition();
 
-		System.out.println("2: " + rightPos + " 3: " + delay + " 4: " + posSpecificSwitch1 + " 5: " + posSpecificSwitch2
-				+ " 6: " + posSpecificSwitch3);
+		System.out.println("12: " + leftPos + " 13: " + middlePos + " 14: " + rightPos + 
+							" 15: " + delay + " 16: " + 
+							posSpecificSwitch1 + " 17: "+posSpecificSwitch2+" 18: "+
+							posSpecificSwitch3);
 
 		// If zero or more than one position switch is enabled,
 		// then stand still.
@@ -452,8 +454,6 @@ public class Autonomous extends Command {
 					rightWasBoosted = false;
 				} else {
 					leftWasBoosted = true;
-					System.out
-							.println("Amount added to LCS: " + this.map(-skew, 0.0, 5.0, 0.0, this.LEFT_SKEW_CEILING));
 					leftCalculatedSpeed += this.map(-skew, 0.0, 1.5, 0.0, this.LEFT_SKEW_CEILING);
 				}
 			} else if (skew > 0.0) { // Boost right
@@ -462,8 +462,6 @@ public class Autonomous extends Command {
 					leftCalculatedSpeed = 0; // Decrease the left speed.
 					leftWasBoosted = false;
 				} else {
-					System.out
-							.println("Amount added to RCS: " + this.map(skew, 0.0, 5.0, 0.0, this.RIGHT_SKEW_CEILING));
 					rightCalculatedSpeed += this.map(skew, 0.0, 1.5, 0.0, this.RIGHT_SKEW_CEILING);
 					rightWasBoosted = true;
 				}
@@ -511,18 +509,14 @@ public class Autonomous extends Command {
 
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
+		
 		if (count == 0) {
-			// executePath(new double[] { 249.65, -1, 24, -2, 10 });
-			Robot.winch.goUpAuto();
-			Robot.intake.ejectAuto();
-			// this.turnDegrees(90);
-			// this.driveForDistance(5.0);
-			// this.turnDegrees(270);
-			/*
-			 * try { this.executePath(this.decidePath()); } catch
-			 * (InterruptedException e) { // TODO Auto-generated catch block
-			 * e.printStackTrace(); }
-			 */
+			try {
+				this.executePath(this.decidePath());
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		count++;
 	}
