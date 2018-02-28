@@ -5,6 +5,13 @@ import edu.wpi.first.wpilibj.Timer;
 import java.util.concurrent.TimeUnit;
 import edu.wpi.first.wpilibj.command.Command;
 
+/**
+ * 
+ * NOTE WHEN TESTING PATH FOLLOWING: DISABLE THE WINCH/ELEVATOR TO AVOID ANY
+ * CHANCE OF DAMAGING THE ROBOT.
+ *
+ */
+
 public class Autonomous extends Command {
 	// Duration of the Autonomous period.
 	private static double timeToDrive = 15;
@@ -100,7 +107,7 @@ public class Autonomous extends Command {
 		if ((posSpecificSwitch3) || (!isNearSwitchLeft && !isScaleLeft) || (!isNearSwitchLeft && posSpecificSwitch2)) {
 			// Path = Left to auto line
 			// Go 140 in.
-			returnValue = new double[] { 140 };
+			returnValue = new double[] { 140, -3 };
 		} else if (isScaleLeft && isNearSwitchLeft) {
 			// If scale preferred, travel to scale.
 			// If not, travel to switch.
@@ -123,7 +130,7 @@ public class Autonomous extends Command {
 			returnValue = new double[] { 249.65, -2, 24, -1, 10 };
 		} else {
 			// Path = lol wut something went wrong
-			returnValue = new double[] {};
+			returnValue = new double[] {-3};
 		}
 
 		return returnValue;
@@ -141,7 +148,7 @@ public class Autonomous extends Command {
 
 			// Path = Middle to auto line
 			// Go 48 in., turn right, go 71.25 in., turn left, go 92 in.
-			returnValue = new double[] { 48, -2, 71.25, -1, 92 };
+			returnValue = new double[] { 48, -2, 71.25, -1, 92, -3 };
 			System.out.println("Path: Middle to auto line");
 		} else if (isNearSwitchLeft) {
 			// Path = Middle to Left Switch
@@ -157,7 +164,7 @@ public class Autonomous extends Command {
 			System.out.println("Path: Middle to right switch");
 		} else {
 			// Path = lol wut something went wrong
-			returnValue = new double[] {};
+			returnValue = new double[] {-3};
 		}
 
 		return returnValue;
@@ -173,7 +180,7 @@ public class Autonomous extends Command {
 		if ((posSpecificSwitch3) || (isNearSwitchLeft && isScaleLeft) || (isNearSwitchLeft && posSpecificSwitch2)) {
 			// Path = Right to auto line
 			// Go 140 in.
-			returnValue = new double[] { 140 };
+			returnValue = new double[] { 140, -3};
 			System.out.println("Taking path: Right to auto line");
 		} else if (!isScaleLeft && !isNearSwitchLeft) {
 			// If scale preferred, travel to scale.
@@ -201,7 +208,7 @@ public class Autonomous extends Command {
 			System.out.println("Taking path: Right to right scale");
 		} else {
 			// Path = Error
-			returnValue = new double[] {};
+			returnValue = new double[] {-3};
 			System.out.println("Taking path: Error");
 		}
 
@@ -225,10 +232,8 @@ public class Autonomous extends Command {
 
 		setUpSwitchPosition();
 
-		System.out.println("12: " + leftPos + " 13: " + middlePos + " 14: " + rightPos + 
-							" 15: " + delay + " 16: " + 
-							posSpecificSwitch1 + " 17: "+posSpecificSwitch2+" 18: "+
-							posSpecificSwitch3);
+		System.out.println("12: " + leftPos + " 13: " + middlePos + " 14: " + rightPos + " 15: " + delay + " 16: "
+				+ posSpecificSwitch1 + " 17: " + posSpecificSwitch2 + " 18: " + posSpecificSwitch3);
 
 		// If zero or more than one position switch is enabled,
 		// then stand still.
@@ -271,19 +276,26 @@ public class Autonomous extends Command {
 	}
 
 	public void executePath(double[] path) {
+		boolean dropCube = true;
+		
 		for (double currentPath : path) {
 			if (currentPath < 0) {
-				if (currentPath != -1) {
-					turnDegrees(270);
-				} else {
+				if (currentPath == -1) {
 					turnDegrees(90);
+				} else if(currentPath == -3){
+					dropCube = false;
+				} else {
+					turnDegrees(270);
 				}
 			} else {
 				driveForDistance(currentPath / 12.0);
 			}
 		}
-		Robot.winch.goUpAuto();
-		Robot.intake.ejectAuto();
+		
+		if(dropCube){
+			Robot.winch.goUpAuto();
+			Robot.intake.ejectAuto();
+		}
 	}
 
 	public double addMod360(double degrees, double degrees2) {
@@ -320,7 +332,7 @@ public class Autonomous extends Command {
 			}
 		}
 
-		//System.out.println("Slowing Position: " + slowingPosition);
+		// System.out.println("Slowing Position: " + slowingPosition);
 
 		driving = true;
 		while (driving) {
@@ -334,7 +346,6 @@ public class Autonomous extends Command {
 			// System.out.println("Slowing Position: " + slowingPosition +
 			// "\n");
 
-			// TODO
 			if (degreesTraveled < angularDistance(initDegrees, slowingPosition)) {
 				controlRatio = 1.0; // Full speed
 			}
@@ -509,8 +520,8 @@ public class Autonomous extends Command {
 
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
-		
-		if (count == 0) {
+
+		/*if (count == 0) {
 			try {
 				this.executePath(this.decidePath());
 			} catch (InterruptedException e) {
@@ -518,7 +529,7 @@ public class Autonomous extends Command {
 				e.printStackTrace();
 			}
 		}
-		count++;
+		count++;*/
 	}
 
 	// Make this return true when this Command no longer needs to run execute()

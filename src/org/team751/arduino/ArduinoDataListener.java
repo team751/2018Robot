@@ -27,7 +27,7 @@ public class ArduinoDataListener implements Runnable, PIDSource {
 		sourceType = PIDSourceType.kDisplacement;
 
 		try {
-			port = new SerialPort(9600, SerialPort.Port.kUSB);
+			port = new SerialPort(9600, SerialPort.Port.kMXP);
 			port.setReadBufferSize(1);
 			port.setTimeout(0.001);
 		} catch (RuntimeException e) {
