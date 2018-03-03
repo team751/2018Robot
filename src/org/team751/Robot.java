@@ -42,6 +42,9 @@ public class Robot extends IterativeRobot {
 	public static StateSenderUDP stateSenderUDP;
 	public static boolean crushed;
 	public static ArduinoDataListener ADL;
+	public static boolean autoEnabled = false;
+	
+	private int autoCount = 0;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -81,6 +84,7 @@ public class Robot extends IterativeRobot {
 			autonomousCommand.start();
 		}
 		crushed = false;
+		autoEnabled = true;
 	}
 
 	/**
@@ -96,9 +100,10 @@ public class Robot extends IterativeRobot {
 		// teleop starts running. If you want the autonomous to
 		// continue until interrupted by another command, remove
 		// this line or comment it out.
+		//
 		if (autonomousCommand != null)
 			autonomousCommand.cancel();
-
+		autoEnabled = false;
 	}
 
 	/**
@@ -106,6 +111,10 @@ public class Robot extends IterativeRobot {
 	 * to reset subsystems before shutting down.
 	 */
 	public void disabledInit() {
+		if(autoEnabled){
+			autonomousCommand.cancel();
+		}
+		System.out.println("disabled autoenabled:"+autoEnabled);
 	}
 
 	/**
@@ -115,17 +124,17 @@ public class Robot extends IterativeRobot {
 		Scheduler.getInstance().run();
 		printArduinoInfo();
 
-//		System.out.println("Left Speed: " + Robot.drivetrain.leftDriveController1.getSpeed());
-//		System.out.println("Right Speed: " + Robot.drivetrain.rightDriveController1.getSpeed());
-//
-//		// Current check
-//		System.out.println("Total Current: " + Robot.drivetrain.pdp.getTotalCurrent());
-//		System.out.print("Left Motors: " + "Motor1: " + Robot.drivetrain.pdp.getCurrent(drivetrain.leftMotor1) + ", ");
-//		System.out.print("Motor2: " + Robot.drivetrain.pdp.getCurrent(drivetrain.leftMotor2) + ", ");
-//		System.out.print("Motor3: " + Robot.drivetrain.pdp.getCurrent(drivetrain.leftMotor3) + ", ");
-//		System.out.print("Right Motors: " + "Motor1: " + Robot.drivetrain.pdp.getCurrent(drivetrain.rightMotor1) + ", ");
-//		System.out.print("Motor2: " + Robot.drivetrain.pdp.getCurrent(drivetrain.rightMotor2) + ", ");
-//		System.out.println("Motor3: " + Robot.drivetrain.pdp.getCurrent(drivetrain.rightMotor3));
+		//System.out.println("Left Speed: " + Robot.drivetrain.leftDriveController1.getSpeed());
+		//System.out.println("Right Speed: " + Robot.drivetrain.rightDriveController1.getSpeed());
+
+		// Current check
+		//System.out.println("Total Current: " + Robot.drivetrain.pdp.getTotalCurrent());
+		//System.out.print("Left Motors: " + "Motor1: " + Robot.drivetrain.pdp.getCurrent(drivetrain.leftMotor1) + ", ");
+		//System.out.print("Motor2: " + Robot.drivetrain.pdp.getCurrent(drivetrain.leftMotor2) + ", ");
+		//System.out.print("Motor3: " + Robot.drivetrain.pdp.getCurrent(drivetrain.leftMotor3) + ", ");
+		//System.out.print("Right Motors: " + "Motor1: " + Robot.drivetrain.pdp.getCurrent(drivetrain.rightMotor1) + ", ");
+		//System.out.print("Motor2: " + Robot.drivetrain.pdp.getCurrent(drivetrain.rightMotor2) + ", ");
+		//System.out.println("Motor3: " + Robot.drivetrain.pdp.getCurrent(drivetrain.rightMotor3));
 	}
 
 	/**
