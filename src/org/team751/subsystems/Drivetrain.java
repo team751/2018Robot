@@ -30,7 +30,7 @@ public class Drivetrain extends Subsystem {
 	// Any voltage below this point will be considered a brownout.
 	public final double brownoutVoltageThreshold = 8.0;
 	
-		// If the robot "brownsout" for longer than this period,
+	// If the robot "brownsout" for longer than this period,
 	// power will be reduced to the various motors on the robot.
 	public final int brownoutPeriodThreshold = 75;
 
