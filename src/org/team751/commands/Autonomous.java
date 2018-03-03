@@ -1,73 +1,63 @@
 package src.org.team751.commands;
 
 import src.org.team751.Robot;
-import edu.wpi.first.wpilibj.Timer;
-import java.util.concurrent.TimeUnit;
-import edu.wpi.first.wpilibj.command.Command;
 
-/**
- * 
- * NOTE WHEN TESTING PATH FOLLOWING: DISABLE THE WINCH/ELEVATOR TO AVOID ANY
- * CHANCE OF DAMAGING THE ROBOT.
- *
- */
+import edu.wpi.first.wpilibj.Timer;
+
+import java.util.concurrent.TimeUnit;
+
+import edu.wpi.first.wpilibj.AnalogGyro;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.PIDSource;
+import edu.wpi.first.wpilibj.PIDSourceType;
+import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Autonomous extends Command {
-	// Duration of the Autonomous period.
-	private static double timeToDrive = 15;
-
+	private static double timeToDrive = 15; // Duration of the Autonomous
+											// period.
 	private static double leftSpeed = 0.3; // Speed for the left side.
-	private static double rightSpeed = -leftSpeed;
+	private static double rightSpeed = -leftSpeed; // Speed for the right side
+													// (same as left).
 
 	private double initDistance, initOrientation;
 
-	// More detailed instructions for tuning the below constants
-	// Can be found in Tuning Instructions.txt in this project.
-
-	/**
-	 * The distance (in feet) at which the robot starts slowing down when
-	 * driving straight. TO TUNE: If the robot is OVERSHOOTING: Increase this
-	 * value. If the robot is UNDERSHOOTING: Decrease this value. Recommended
-	 * tuning increment or decrement amount: 1.0 ft.
-	 */
+	// The distance (in feet) at which the robot starts slowing down when
+	// driving straight.
+	// TO TUNE: If the robot is OVERSHOOTING: Increase this value.
+	// If the robot is UNDERSHOOTING: Decrease this value.
 	private final double DRIVING_STRAIGHT_STOPPING_DISTANCE = 3.0;
 
 	// The acceptable error (in feet) for driving straight.
 	private final double DRIVING_STRAIGHT_ERROR = 0.1; // 1.2 inches.
 
-	/**
-	 * The angular distance (in degrees) from the goal at which the robot should
-	 * start slowing down. TO TUNE: If the robot is OVERTURNING: Increase this
-	 * value. If the robot is UNDERTURNING: Decrease this value. Recommended
-	 * tuning increment or decrement amount: 10.0 degrees
-	 */
-	private final double TURNING_STOPPING_DISTANCE = 60.0;
-
-	// The acceptable error (in degrees) for turning.
-	private final double TURNING_ERROR = 3.0;
+	// The angular distance (in degrees) at which the robot starts to slow down.
+	// TO TUNE: If the robot is OVERTURNING: Increase this value.
+	// If the robot is UNDERTURNING: Decrease this value.
+	private final double TURNING_STOPPING_DISTANCE = 22.0;
 
 	// How much the left side can compensate for skewing.
 	// TO TUNE: If the robot is skewing to the LEFT: Increase this value
 	// Or, decrease RIGHT_SKEW_CEILING.
-	// Recommended tuning increment or decrement amount: 0.01
 	private final double LEFT_SKEW_CEILING = 0.03;
 	// How much the right side can compensate for skewing.
 	// TO TUNE: If the robot is skewing to the RIGHT: Increase this value.
 	// Or, decrease LEFT_SKEW_CEILING.
-	// Recommended tuning increment or decrement amount: 0.01
 	private final double RIGHT_SKEW_CEILING = 0.03;
 
 	private int count = 0; // Test var so execute only does something once.
 
 	Timer timer = new Timer();
 
-	// Flag denoting which side of the switch is our's.
-	public static boolean isNearSwitchLeft;
-	// Flag denoting which side of the scale is our's.
-	public static boolean isScaleLeft;
+	public static boolean isNearSwitchLeft; // Flag denoting which side of the
+											// switch is our's.
+	public static boolean isScaleLeft; // Flag denoting which side of the scale
+										// is our's.
 
 	// Flag denoting whether the robot is driving or not.
 	private static boolean driving = false;
+	private double targetTimeMillis;
 
 	public Autonomous() {
 
@@ -114,20 +104,20 @@ public class Autonomous extends Command {
 			if (posSpecificSwitch1) {
 				// Path = Left to Left scale
 				// Go 249.65 in., turn right, go 24 in., turn left, Go 10 in.
-				returnValue = new double[] { 249.65, -2, 24, -1, 10 };
+				returnValue = new double[] { 249.65, -4, -2, 24, -1, 10 };
 			} else {
 				// Path = Left to Left switch
 				// Go 128 in., turn right, go 19.75 in.
-				returnValue = new double[] { 128, -2, 19.75 };
+				returnValue = new double[] { 128, -4, -2, 19.75 };
 			}
 		} else if (isNearSwitchLeft && !isScaleLeft) {
 			// Path = Left to Left switch
 			// Go 128 in., turn right, go 19.75 in.
-			returnValue = new double[] { 128, -2, 19.75 };
+			returnValue = new double[] { 128, -4, -2, 19.75 };
 		} else if (isScaleLeft && !posSpecificSwitch2) {
 			// Path = Left to Left scale
 			// Go 249.65 in., turn right, go 24 in., turn left, Go 10 in.
-			returnValue = new double[] { 249.65, -2, 24, -1, 10 };
+			returnValue = new double[] { 249.65, -2, 24, -4, -1, 10 };
 		} else {
 			// Path = lol wut something went wrong
 			returnValue = new double[] {-3};
@@ -154,13 +144,13 @@ public class Autonomous extends Command {
 			// Path = Middle to Left Switch
 			// Go 48 in., turn left, go 112.25 in., turn right, go 100 in,
 			// turn right, go 10 inches.
-			returnValue = new double[] { 48, -1, 112.25, -2, 100, -2, 10 };
+			returnValue = new double[] { 48, -1, 112.25, -2, 100, -4, -2, 10 };
 			System.out.println("Path: Middle to left switch");
 		} else if (!isNearSwitchLeft) {
 			// Path = Middle to Right Switch
 			// Go 48 in., turn right, go 101.25 in, turn left, go 100 in,
 			// turn right, go 10 inches.
-			returnValue = new double[] { 48, -2, 101.25, -1, 100, -2, 10 };
+			returnValue = new double[] { 48, -2, 101.25, -1, 100, -4, -2, 10 };
 			System.out.println("Path: Middle to right switch");
 		} else {
 			// Path = lol wut something went wrong
@@ -180,7 +170,7 @@ public class Autonomous extends Command {
 		if ((posSpecificSwitch3) || (isNearSwitchLeft && isScaleLeft) || (isNearSwitchLeft && posSpecificSwitch2)) {
 			// Path = Right to auto line
 			// Go 140 in.
-			returnValue = new double[] { 140, -3};
+			returnValue = new double[] { 140, -3 };
 			System.out.println("Taking path: Right to auto line");
 		} else if (!isScaleLeft && !isNearSwitchLeft) {
 			// If scale preferred, travel to scale.
@@ -188,23 +178,23 @@ public class Autonomous extends Command {
 			if (posSpecificSwitch1) {
 				// Path = Right to Right scale
 				// Go 249.65 in., turn left, go 24 in., turn right, Go 10 in.
-				returnValue = new double[] { 249.65, -1, 24, -2, 10 };
+				returnValue = new double[] { 249.65, -1, -4, 24, -2, 10 };
 				System.out.println("Taking path: Right to right scale");
 			} else {
 				// Path = Right to Right switch
 				// Go 128 in., turn left, go 19.75 in.
-				returnValue = new double[] { 128, -1, 19.75 };
+				returnValue = new double[] { 128, -1, -4, 19.75 };
 				System.out.println("Taking path: Right to right switch");
 			}
 		} else if (!isNearSwitchLeft && isScaleLeft) {
 			// Path = Right to Right switch
 			// Go 128 in., turn left, go 19.75 in.
-			returnValue = new double[] { 128, -1, 19.75 };
+			returnValue = new double[] { 128, -1, -4, 19.75 };
 			System.out.println("Taking path: Right to right switch");
 		} else if (isScaleLeft && !posSpecificSwitch2) {
 			// Path = Right to Right scale
 			// Go 249.65 in., turn left, go 24 in., turn right, Go 10 in.
-			returnValue = new double[] { 249.65, -1, 24, -2, 10 };
+			returnValue = new double[] { 249.65, -1, 24, -4, -2, 10 };
 			System.out.println("Taking path: Right to right scale");
 		} else {
 			// Path = Error
@@ -216,9 +206,9 @@ public class Autonomous extends Command {
 	}
 
 	private double[] decidePath() throws InterruptedException {
-		final boolean leftPos = Robot.oi.autoSwitches[0].get();
+		final boolean leftPos = /* Robot.oi.autoSwitches[0].get() */false;
 		final boolean middlePos = Robot.oi.autoSwitches[1].get();
-		final boolean rightPos = Robot.oi.autoSwitches[2].get();
+		final boolean rightPos = /* Robot.oi.autoSwitches[2].get() */false;
 
 		final boolean delay = Robot.oi.autoSwitches[3].get();
 
@@ -232,8 +222,8 @@ public class Autonomous extends Command {
 
 		setUpSwitchPosition();
 
-		System.out.println("12: " + leftPos + " 13: " + middlePos + " 14: " + rightPos + " 15: " + delay + " 16: "
-				+ posSpecificSwitch1 + " 17: " + posSpecificSwitch2 + " 18: " + posSpecificSwitch3);
+		System.out.println("2: " + rightPos + " 3: " + delay + " 4: " + posSpecificSwitch1 + " 5: " + posSpecificSwitch2
+				+ " 6: " + posSpecificSwitch3);
 
 		// If zero or more than one position switch is enabled,
 		// then stand still.
@@ -275,29 +265,6 @@ public class Autonomous extends Command {
 		timer.start();
 	}
 
-	public void executePath(double[] path) {
-		boolean dropCube = true;
-		
-		for (double currentPath : path) {
-			if (currentPath < 0) {
-				if (currentPath == -1) {
-					turnDegrees(90);
-				} else if(currentPath == -3){
-					dropCube = false;
-				} else {
-					turnDegrees(270);
-				}
-			} else {
-				driveForDistance(currentPath / 12.0);
-			}
-		}
-		
-		if(dropCube){
-			Robot.winch.goUpAuto();
-			Robot.intake.ejectAuto();
-		}
-	}
-
 	public double addMod360(double degrees, double degrees2) {
 		double result = degrees + degrees2;
 		if (result >= 360.0) {
@@ -307,6 +274,7 @@ public class Autonomous extends Command {
 	}
 
 	private void turnDegrees(double degrees) {
+
 		double currentPosition = Robot.ADL.getOrientation() % 360;
 		final double initDegrees = currentPosition;
 		final double finalPosition = this.newHeading(currentPosition, currentPosition + degrees);
@@ -332,10 +300,8 @@ public class Autonomous extends Command {
 			}
 		}
 
-		// System.out.println("Slowing Position: " + slowingPosition);
-
 		driving = true;
-		while (driving) {
+		while (driving && Robot.autoEnabled && !(System.currentTimeMillis() >= targetTimeMillis)) {
 			currentPosition = Robot.ADL.getOrientation() % 360;
 			degreesTraveled = this.angularDistance(initDegrees, currentPosition);
 
@@ -346,22 +312,20 @@ public class Autonomous extends Command {
 			// System.out.println("Slowing Position: " + slowingPosition +
 			// "\n");
 
+			// TODO
 			if (degreesTraveled < angularDistance(initDegrees, slowingPosition)) {
 				controlRatio = 1.0; // Full speed
 			}
-			// Within acceptable degrees of the goal.
-			else if (degreesTraveled >= degrees - TURNING_ERROR) {
-				System.out.println("Done turning");
-				controlRatio = 0.0;
-				driving = false;
-			} else {
-				// Reached the stopping distance threshold, but not at goal.
+			// Reached the stopping distance threshold, but not at goal.
+			else if (degreesTraveled < angularDistance(initDegrees, finalPosition)) {
 				final double stoppingZoneProgress = angularDistance(slowingPosition, currentPosition)
 						/ angularDistance(slowingPosition, finalPosition);
 				controlRatio = 1 - stoppingZoneProgress;
-				if (controlRatio < 0.1) {
-					controlRatio = 0.1;
-				}
+			} // Reached the goal.
+			else {
+				System.out.println("Done turning");
+				controlRatio = 0.0;
+				driving = false;
 			}
 
 			if (turnRight) {
@@ -380,6 +344,8 @@ public class Autonomous extends Command {
 		System.out.println("Degrees Traveled: " + degreesTraveled);
 		System.out.println("Final Orientation: " + currentPosition);
 	}
+
+	// }
 
 	private double angularDistance(double angle1, double angle2) {
 		return 180.0 - Math.abs(Math.abs(angle1 - angle2) - 180.0);
@@ -411,16 +377,11 @@ public class Autonomous extends Command {
 	 * than the "upper bounds" so the map() function may be used to reverse a
 	 * range of numbers.
 	 * 
-	 * @param value
-	 *            - the value to be mapped
-	 * @param inputLowerBound
-	 *            - the lower bound of the value
-	 * @param inputUpperBound
-	 *            - the upper bound of the value
-	 * @param outputLowerBound
-	 *            - the desired lower bound of the output
-	 * @param outputUpperBound
-	 *            - the desired upper bound of the output
+	 * @param value - the value to be mapped
+	 * @param inputLowerBound - the lower bound of the value
+	 * @param inputUpperBound - the upper bound of the value
+	 * @param outputLowerBound - the desired lower bound of the output
+	 * @param outputUpperBound - the desired upper bound of the output
 	 * @return the mapped value
 	 */
 	private double map(double value, double inputLowerBound, double inputUpperBound, double outputLowerBound,
@@ -446,7 +407,8 @@ public class Autonomous extends Command {
 		initOrientation = Robot.ADL.getOrientation();
 		driving = true;
 
-		while (driving) {
+		while (driving && Robot.autoEnabled && 
+				!(System.currentTimeMillis() >= targetTimeMillis)) {
 			final double currentDistance = Robot.ADL.getDistance();
 			final double currentOrientation = Robot.ADL.getOrientation();
 
@@ -465,6 +427,7 @@ public class Autonomous extends Command {
 					rightWasBoosted = false;
 				} else {
 					leftWasBoosted = true;
+					System.out.println("Amount added to LCS: " + this.map(-skew, 0.0, 5.0, 0.0, this.LEFT_SKEW_CEILING));
 					leftCalculatedSpeed += this.map(-skew, 0.0, 1.5, 0.0, this.LEFT_SKEW_CEILING);
 				}
 			} else if (skew > 0.0) { // Boost right
@@ -473,6 +436,7 @@ public class Autonomous extends Command {
 					leftCalculatedSpeed = 0; // Decrease the left speed.
 					leftWasBoosted = false;
 				} else {
+					System.out.println("Amount added to RCS: " + this.map(skew, 0.0, 5.0, 0.0, this.RIGHT_SKEW_CEILING));
 					rightCalculatedSpeed += this.map(skew, 0.0, 1.5, 0.0, this.RIGHT_SKEW_CEILING);
 					rightWasBoosted = true;
 				}
@@ -518,18 +482,53 @@ public class Autonomous extends Command {
 		System.out.println("Current Orientation: " + test2);
 	}
 
-	// Called repeatedly when this Command is scheduled to run
-	protected void execute() {
 
-		/*if (count == 0) {
-			try {
-				this.executePath(this.decidePath());
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+	public void executePath(double[] path) {
+		boolean dropCube = true;
+		
+		for (double currentPath : path) {
+			if(targetTimeMillis != System.currentTimeMillis()){
+				if (currentPath < 0) {
+					if (currentPath == -1) {
+						turnDegrees(90);
+					} else if(currentPath == -3){
+						dropCube = false;
+					}else if(currentPath == -4){
+						Robot.winch.goUpAuto();
+					} else {
+						turnDegrees(270);
+					}
+				} else {
+					driveForDistance(currentPath / 12.0);
+				}
+			}else{
+				break;
 			}
 		}
-		count++;*/
+		
+		if(dropCube){
+			Robot.intake.ejectAuto();
+		}
+	}
+	
+	// Called repeatedly when this Command is scheduled to run
+	protected void execute() {
+		if (count == 0) {
+			targetTimeMillis = System.currentTimeMillis()+15000;
+			
+			// executePath(new double[] { 249.65, -1, 24, -2, 10 });
+			//Robot.winch.goUpAuto();
+			//Robot.intake.ejectAuto();
+			// this.turnDegrees(90);
+			//this.driveForDistance(5.0);
+			this.turnDegrees(270);
+			/*
+			 * try { this.executePath(this.decidePath()); } catch
+			 * (InterruptedException e) { // TODO Auto-generated catch block
+			 * e.printStackTrace(); }
+			 */
+		}
+		count++;
 	}
 
 	// Make this return true when this Command no longer needs to run execute()
