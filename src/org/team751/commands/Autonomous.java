@@ -66,25 +66,20 @@ public class Autonomous extends Command {
 	private void setUpSwitchPosition() {
 		System.out.println("Gamedata getting...");
 
-		/*
-		 * String gameData;
-		 * 
-		 * gameData = DriverStation.getInstance().getGameSpecificMessage();
-		 * 
-		 * if (gameData.isEmpty()) {
-		 * System.out.println("We are not running this in a competition");
-		 * return; }
-		 * 
-		 * isNearSwitchLeft = (gameData.charAt(0) == 'L');
-		 * 
-		 * isScaleLeft = (gameData.charAt(1) == 'L');
-		 * 
-		 * System.out.println("gameData=" + gameData);
-		 */
-
-		isNearSwitchLeft = false;
-
-		isScaleLeft = false;
+		String gameData;
+		  
+		gameData = DriverStation.getInstance().getGameSpecificMessage();
+		  
+		if (gameData.isEmpty()) {
+		   System.out.println("We are not running this in a competition");
+		   return; 
+		}
+		  
+		isNearSwitchLeft = (gameData.charAt(0) == 'L');
+		  
+		isScaleLeft = (gameData.charAt(1) == 'L');
+		  
+		System.out.println("gameData=" + gameData);
 	}
 
 	private double[] chooseLeftPath(final boolean posSpecificSwitch1, final boolean posSpecificSwitch2,
@@ -95,29 +90,34 @@ public class Autonomous extends Command {
 		// or the switch is on the right and the scale is not allowed,
 		// just cross the auto line.
 		if ((posSpecificSwitch3) || (!isNearSwitchLeft && !isScaleLeft) || (!isNearSwitchLeft && posSpecificSwitch2)) {
+			// Revised
 			// Path = Left to auto line
 			// Go 140 in.
-			returnValue = new double[] { 140, -3 };
+			returnValue = new double[] { 50, -1, 20, -2, 90, -3 };
 		} else if (isScaleLeft && isNearSwitchLeft) {
 			// If scale preferred, travel to scale.
 			// If not, travel to switch.
 			if (posSpecificSwitch1) {
+				// Revised
 				// Path = Left to Left scale
 				// Go 249.65 in., turn right, go 24 in., turn left, Go 10 in.
-				returnValue = new double[] { 249.65, -4, -2, 24, -1, 10 };
+				returnValue = new double[] { 267, -2, 20, -4, -1, 29 };
 			} else {
+				// Revised
 				// Path = Left to Left switch
 				// Go 128 in., turn right, go 19.75 in.
-				returnValue = new double[] { 128, -4, -2, 19.75 };
+				returnValue = new double[] { 170, -4, -2, 8};
 			}
 		} else if (isNearSwitchLeft && !isScaleLeft) {
+			// Revised
 			// Path = Left to Left switch
 			// Go 128 in., turn right, go 19.75 in.
-			returnValue = new double[] { 128, -4, -2, 19.75 };
+			returnValue = new double[] { 170, -4, -2, 8};
 		} else if (isScaleLeft && !posSpecificSwitch2) {
+			// Revised
 			// Path = Left to Left scale
 			// Go 249.65 in., turn right, go 24 in., turn left, Go 10 in.
-			returnValue = new double[] { 249.65, -2, 24, -4, -1, 10 };
+			returnValue = new double[] { 267, -2, 20, -4, -1, 29 };
 		} else {
 			// Path = lol wut something went wrong
 			returnValue = new double[] {-3};
@@ -136,21 +136,24 @@ public class Autonomous extends Command {
 				|| posSpecificSwitch3) {
 			// TODO: Switch 7 is Left/Right auto path, not just auto path.
 
+			// Revised
 			// Path = Middle to auto line
 			// Go 48 in., turn right, go 71.25 in., turn left, go 92 in.
-			returnValue = new double[] { 48, -2, 71.25, -1, 92, -3 };
+			returnValue = new double[] { 48, -2, 76.5, -1, 92, -3 };
 			System.out.println("Path: Middle to auto line");
 		} else if (isNearSwitchLeft) {
+			// Revised
 			// Path = Middle to Left Switch
 			// Go 48 in., turn left, go 112.25 in., turn right, go 100 in,
 			// turn right, go 10 inches.
-			returnValue = new double[] { 48, -1, 112.25, -2, 100, -4, -2, 10 };
+			returnValue = new double[] { 40, -1, 137, -2, 99, -4, -2, 16 };
 			System.out.println("Path: Middle to left switch");
 		} else if (!isNearSwitchLeft) {
+			// Revised
 			// Path = Middle to Right Switch
 			// Go 48 in., turn right, go 101.25 in, turn left, go 100 in,
 			// turn right, go 10 inches.
-			returnValue = new double[] { 48, -2, 101.25, -1, 100, -4, -2, 10 };
+			returnValue = new double[] { 68, -2, 81, -1, 90, -4, -1, 20 };
 			System.out.println("Path: Middle to right switch");
 		} else {
 			// Path = lol wut something went wrong
@@ -168,33 +171,38 @@ public class Autonomous extends Command {
 		// or the switch is on the right and the scale is not allowed,
 		// just cross the auto line.
 		if ((posSpecificSwitch3) || (isNearSwitchLeft && isScaleLeft) || (isNearSwitchLeft && posSpecificSwitch2)) {
+			// Revised
 			// Path = Right to auto line
 			// Go 140 in.
-			returnValue = new double[] { 140, -3 };
+			returnValue = new double[] { 50, -2, 20, -1, 90, -3 };
 			System.out.println("Taking path: Right to auto line");
 		} else if (!isScaleLeft && !isNearSwitchLeft) {
 			// If scale preferred, travel to scale.
 			// If not, travel to switch.
 			if (posSpecificSwitch1) {
+				// Revised
 				// Path = Right to Right scale
 				// Go 249.65 in., turn left, go 24 in., turn right, Go 10 in.
-				returnValue = new double[] { 249.65, -1, -4, 24, -2, 10 };
+				returnValue = new double[] { 267, -1, 20, -2, -4, 29 };
 				System.out.println("Taking path: Right to right scale");
 			} else {
+				// Revised
 				// Path = Right to Right switch
 				// Go 128 in., turn left, go 19.75 in.
-				returnValue = new double[] { 128, -1, -4, 19.75 };
+				returnValue = new double[] { 170, -1, -4, 8};
 				System.out.println("Taking path: Right to right switch");
 			}
 		} else if (!isNearSwitchLeft && isScaleLeft) {
+			// Revised
 			// Path = Right to Right switch
 			// Go 128 in., turn left, go 19.75 in.
-			returnValue = new double[] { 128, -1, -4, 19.75 };
+			returnValue = new double[] { 170, -1, -4, 8 };
 			System.out.println("Taking path: Right to right switch");
 		} else if (isScaleLeft && !posSpecificSwitch2) {
+			// Revised
 			// Path = Right to Right scale
 			// Go 249.65 in., turn left, go 24 in., turn right, Go 10 in.
-			returnValue = new double[] { 249.65, -1, 24, -4, -2, 10 };
+			returnValue = new double[] { 267, -1, 20, -2, -4, 29 };
 			System.out.println("Taking path: Right to right scale");
 		} else {
 			// Path = Error
@@ -206,9 +214,9 @@ public class Autonomous extends Command {
 	}
 
 	private double[] decidePath() throws InterruptedException {
-		final boolean leftPos = /* Robot.oi.autoSwitches[0].get() */false;
+		final boolean leftPos = Robot.oi.autoSwitches[0].get();
 		final boolean middlePos = Robot.oi.autoSwitches[1].get();
-		final boolean rightPos = /* Robot.oi.autoSwitches[2].get() */false;
+		final boolean rightPos = Robot.oi.autoSwitches[2].get();
 
 		final boolean delay = Robot.oi.autoSwitches[3].get();
 

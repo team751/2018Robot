@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.SpeedController;
 
 /**
@@ -122,6 +123,8 @@ public class Robot extends IterativeRobot {
 	 */
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
+		SmartDashboard.putNumber("Left Pulses", Robot.ADL.getLeftPulses());
+		SmartDashboard.putNumber("Right Pulses", Robot.ADL.getLeftPulses());
 		printArduinoInfo();
 
 		//System.out.println("Left Speed: " + Robot.drivetrain.leftDriveController1.getSpeed());

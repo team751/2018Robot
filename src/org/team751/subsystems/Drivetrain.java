@@ -18,13 +18,13 @@ public class Drivetrain extends Subsystem {
 	public MultiSpeedController leftSpeedController;
 	public MultiSpeedController rightSpeedController;
 
-	public final int leftMotor1 = 1;
-	public final int leftMotor2 = 3;
+	public final int leftMotor1 = 3;
+	public final int leftMotor2 = 4;
 	public final int leftMotor3 = 5;
 
 	public final int rightMotor1 = 0;
-	public final int rightMotor2 = 2;
-	public final int rightMotor3 = 4;
+	public final int rightMotor2 = 1;
+	public final int rightMotor3 = 2;
 
 	// The minimum allowed voltage for the PDP.
 	// Any voltage below this point will be considered a brownout.
