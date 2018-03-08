@@ -21,8 +21,8 @@ public class IntakeController extends Command {
 	protected void execute() {
 		boolean intakeLimit = Robot.oi.intakeLimitSwitch.get(); // True on high
 
-		final boolean in = Robot.oi.driverStick.getRawButton(OI.Controller.RB.getButtonMapping()); // RB
-		final boolean out = Robot.oi.driverStick.getRawButton(OI.Controller.LB.getButtonMapping()); // LB
+		final boolean out = Robot.oi.driverStick.getRawButton(OI.Controller.RB.getButtonMapping()); // RB
+		final boolean in = Robot.oi.driverStick.getRawButton(OI.Controller.LB.getButtonMapping()); // LB
 		final boolean reset = Robot.oi.driverStick.getRawButton(OI.Controller.A.getButtonMapping()); // A
 
 		if (!wasIntaking && in) { // If the in button was just pressed.

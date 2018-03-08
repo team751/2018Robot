@@ -6,9 +6,15 @@ import edu.wpi.first.wpilibj.command.Command;
 
 public class WinchController extends Command {
 
+	private boolean topToggle;
+	private boolean bottomToggle;
+	
 	public WinchController() {
 		// Use requires() here to declare subsystem dependencies
 		requires(Robot.winch);
+		
+		topToggle = false;
+		bottomToggle = false;
 	}
 
 	// Called just before this Command runs the first time
@@ -26,8 +32,15 @@ public class WinchController extends Command {
 		final boolean bottomLimit = Robot.oi.bottomWinchLimitSwitch.get();
 		final boolean topLimit = Robot.oi.topWinchLimitSwitch.get();
 
-		final double speed = triggerRight - triggerLeft;
+		final double speed = triggerLeft - triggerRight;
+		
+		final boolean upToggleButton = Robot.oi.driverStick.getRawButton(4);
+		final boolean downToggleButton = Robot.oi.driverStick.getRawButton(1);
 
+//		if (!(upToggleButton&&downToggleButton)) && (! topToggle) && (! bottomToggle)){
+//			topToggle = upToggleButton;
+//			bottomToggle = bottomToggleButton;
+//		}
 		// If going up and we haven't reached the top...
 		if (speed > 0.0 && !topLimit) {
 			Robot.winch.setSpeed(speed);

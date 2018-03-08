@@ -86,7 +86,7 @@ public class ArduinoDataListener implements Runnable, PIDSource {
 			overwrite = false;
 		} else {
 			message = message.substring(startOfMessage + 1, endOfMessage);
-			System.out.println(message);
+//			System.out.println(message);
 			String[] data = message.split("-");
 			this.orientation = Double.valueOf(data[0]);
 			this.leftPulses = Long.valueOf(data[1]);

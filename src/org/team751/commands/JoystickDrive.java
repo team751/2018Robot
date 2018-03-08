@@ -39,7 +39,7 @@ public class JoystickDrive extends Command {
 //			}
 //			this.lastBrownout = currentTime;
 //		} else {
-			Robot.robotDrive.arcadeDrive(y, x, true);
+			Robot.robotDrive.arcadeDrive(-y, x, true);
 //		}
 	}
 
