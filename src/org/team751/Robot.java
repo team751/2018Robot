@@ -71,6 +71,7 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void disabledPeriodic() {
+		Scheduler.getInstance().run();
 		this.printArduinoInfo();
 	}
 
@@ -93,7 +94,7 @@ public class Robot extends IterativeRobot {
 	 */
 	public void autonomousPeriodic() {
 		Scheduler.getInstance().run();
-		this.printArduinoInfo();
+//		this.printArduinoInfo();
 	}
 
 	public void teleopInit() {

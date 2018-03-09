@@ -519,24 +519,32 @@ public class Autonomous extends Command {
 		}
 	}
 	
+	protected void driveForward (double time){
+		if (time <= 2.5){
+			Robot.drivetrain.setLeftSpeed(leftSpeed);
+			Robot.drivetrain.setRightSpeed(rightSpeed);
+		}
+	}
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
-		if (count == 0) {
-			targetTimeMillis = System.currentTimeMillis()+15000;
+//		if (count == 0) {
+//			targetTimeMillis = System.currentTimeMillis()+15000;
 			
 			// executePath(new double[] { 249.65, -1, 24, -2, 10 });
 			//Robot.winch.goUpAuto();
 			//Robot.intake.ejectAuto();
 			// this.turnDegrees(90);
 			//this.driveForDistance(5.0);
-			this.turnDegrees(270);
+//			this.turnDegrees(270);
 			/*
 			 * try { this.executePath(this.decidePath()); } catch
 			 * (InterruptedException e) { // TODO Auto-generated catch block
 			 * e.printStackTrace(); }
 			 */
-		}
-		count++;
+//		}
+//		count++;
+		double time = timer.get();
+		driveForward(time);
 	}
 
 	// Make this return true when this Command no longer needs to run execute()

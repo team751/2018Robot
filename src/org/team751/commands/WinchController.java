@@ -6,15 +6,15 @@ import edu.wpi.first.wpilibj.command.Command;
 
 public class WinchController extends Command {
 
-	private boolean topToggle;
-	private boolean bottomToggle;
+	private boolean toTopToggle;
+	private boolean toBottomToggle;
 	
 	public WinchController() {
 		// Use requires() here to declare subsystem dependencies
 		requires(Robot.winch);
 		
-		topToggle = false;
-		bottomToggle = false;
+		toTopToggle = false;
+		toBottomToggle = false;
 	}
 
 	// Called just before this Command runs the first time
@@ -37,17 +37,40 @@ public class WinchController extends Command {
 		final boolean upToggleButton = Robot.oi.driverStick.getRawButton(4);
 		final boolean downToggleButton = Robot.oi.driverStick.getRawButton(1);
 
-//		if (!(upToggleButton&&downToggleButton)) && (! topToggle) && (! bottomToggle)){
-//			topToggle = upToggleButton;
-//			bottomToggle = bottomToggleButton;
-//		}
+		if ((!(upToggleButton&&downToggleButton)) && (! topToggle) && (! bottomToggle)){
+			if (upToggleButton){
+				toTopToggle = upToggleButton;
+			}else if (downToggleButton){
+				toBottomToggle = downToggleButton;
+			}
+			
+			
+		}
+		
+		if(speed != 0.0){
+			toTopToggle = false;
+			toBottomToggle = false;
+		}
+		
+		if (topLimit){
+			toTopToggle = false;
+		}
+		if (bottomLimit){
+			toBottomToggle = false;
+		}
 		// If going up and we haven't reached the top...
 		if (speed > 0.0 && !topLimit) {
 			Robot.winch.setSpeed(speed);
 		}
 		// If going down and we haven't reached the bottom...
 		else if (speed < 0.0 && !bottomLimit) {
+			if (speed < -0.5){					//added to prevent breaking lifter until we find altrnitive
+				Robot.winch.setSpeed(-0.5);
+			}else{
+				
+			
 			Robot.winch.setSpeed(speed);
+			}
 		/*} else if (!(bottomToggle && topToggle)) {
 			if (bottomToggle && !bottomLimit) {
 				Robot.winch.toBottom();
@@ -55,7 +78,11 @@ public class WinchController extends Command {
 			else if (topToggle && !topLimit) {
 				Robot.winch.toTop();
 			}*/
-		} else {
+		} else if (toTopToggle){
+			Robot.winch.setSpeed(0.45);
+		} else if (toBottomToggle){
+			Robot.winch.setSpeed(-0.3);
+		}else{
 			Robot.winch.stop();
 		}
 	}
