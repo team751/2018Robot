@@ -44,8 +44,8 @@ const boolean debug = false; // Debug flag.
 void setup() {
   Serial.begin(9600);
   Serial.setTimeout(10);
-  pinMode(3,INPUT_PULLUP);
-  pinMode(2,INPUT_PULLUP);
+  pinMode(2, INPUT_PULLUP);
+  pinMode(3, INPUT_PULLUP);
   attachInterrupt(digitalPinToInterrupt(3), leftInterrupt, RISING);  //Left wheel interrupt on a lo to hi
   attachInterrupt(digitalPinToInterrupt(2), rightInterrupt, RISING); //Right wheel interrupt on a lo to hi
   initializeIMU();
@@ -70,6 +70,7 @@ void leftInterrupt() {
   }
   leftLastMicros = currentMicros;
   leftPulses++;
+  rightPulses++; //cloning left and right
 }
 
 void rightInterrupt() {

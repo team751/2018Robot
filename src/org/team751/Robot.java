@@ -72,6 +72,7 @@ public class Robot extends IterativeRobot {
 
 	public void disabledPeriodic() {
 		Scheduler.getInstance().run();
+		System.out.println("pulses: " + ADL.getLeftPulses());
 		this.printArduinoInfo();
 	}
 
@@ -106,6 +107,8 @@ public class Robot extends IterativeRobot {
 		if (autonomousCommand != null)
 			autonomousCommand.cancel();
 		autoEnabled = false;
+		
+		
 	}
 
 	/**

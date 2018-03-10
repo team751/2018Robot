@@ -16,6 +16,10 @@ public class WinchController extends Command {
 		toTopToggle = false;
 		toBottomToggle = false;
 	}
+	
+	public void sendUp(){
+		toTopToggle = true;
+	}
 
 	// Called just before this Command runs the first time
 	protected void initialize() {

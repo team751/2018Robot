@@ -19,6 +19,8 @@ public class Winch extends Subsystem {
 		// Set the default command for a subsystem here.
 		setDefaultCommand(new WinchController());
 	}
+	
+	
 
 	public void setSpeed(double speed) {
 		winchMotorController1.set(speed);
